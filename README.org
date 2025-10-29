@@ -1,0 +1,33 @@
+#+title: Readme
+
+* WEB SYSTEM FINAL SYSTEM
+This is a system that will track garbage collection. It will use GPS on to track
+the path of trucks in real time, give notifications when garbage collection is
+due, allow users to give feed backs, etc.
+
+** How to work together (when commiting messages)
+1. only make changes on your branch (ex. Even for even-branch, daniel for
+   daniel-branch)
+2. *DON'T USE* ~git push --force~
+3. use ~git rebase~ before pushing anything, make sure it does not conflict with
+   commit history
+4. always sync with the testing branch!! (~git rebase testing~)
+5. include a descriptive title
+6. use descriptive message in your commit
+7. make sure your commits are small
+8. git push origin main
+
+
+** Where to edit?
+The project will be using Laravel + inertia js + react (with ts)
+*** Frontend
+- edit at ~resources/js/pages/{role-name}/{file-name}~
+*** Backend
+
+** Branches:
+- main - tested changed, bug-free
+- testing - dito ittest yung features/code
+- even-branch - branch where Rieven will push and work on
+- jom-branch - branch where Jom will push and work on
+- daniel-branch - branch where Daniel will push and work on
+- emman-branch - branch where Emman will push and work on
