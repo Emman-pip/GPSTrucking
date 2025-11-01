@@ -9,8 +9,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
+import { useState } from 'react';
 
 export default function Register() {
+    const [ role, setRole ] = useState('Resident')
+    const toggleRole = () => {
+        if (role == 'Resident')
+            setRole('Barangay Official');
+        else
+            setRole('Resident');
+    }
+
     return (
         <AuthLayout
             title="Create an account"
@@ -26,6 +35,32 @@ export default function Register() {
                 {({ processing, errors }) => (
                     <>
                         <div className="grid gap-6">
+
+                            <div className="grid gap-2"
+
+                                onClick={() => {
+                                    toggleRole();
+                                }}
+                            >
+                                <Label htmlFor="role">Role</Label>
+                                <Input
+                                    id="role"
+                                    type="text"
+                                    required
+                                    autoFocus
+                                    tabIndex={0}
+                                    autoComplete="role"
+                                    name="role"
+                                    value={role}
+                                    placeholder="Role"
+                                />
+                                <InputError
+                                    message={errors.role}
+                                    className="mt-2"
+                                />
+                            </div>
+
+
                             <div className="grid gap-2">
                                 <Label htmlFor="name">Name</Label>
                                 <Input
