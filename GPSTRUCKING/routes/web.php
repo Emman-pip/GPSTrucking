@@ -15,7 +15,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/evaluate-user', function () {
         $user = Auth::user();
         if ($user->role_id === 2)
-            return response('Hi resident');
+            return redirect()->route('resident.dashboard');
         else if ($user->role_id === 3)
             return response('Hi barangay');
         else if ($user->role_id === 1)
@@ -24,3 +24,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 require __DIR__.'/settings.php';
+require __DIR__.'/resident.php';
