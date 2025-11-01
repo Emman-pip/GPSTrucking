@@ -13,4 +13,8 @@ class Barangay extends Model
     public function dropSites(){
         return $this->hasMany(DropSite::class);
     }
+
+    public function routes(){
+        return $this->hasMany(Route::class);
+    }
 }
