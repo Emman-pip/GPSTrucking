@@ -1,0 +1,86 @@
+#+title: Backend
+
+* Database Schema
+** Code for chart
+#+TITLE: DBDIAGRAM CHART
+#+BEGIN_SRC txt
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+Table users {
+  id integer [primary key]
+  username varchar
+  role_id foreign_key
+}
+
+Table barangay_official_info {
+  id integer [primary key]
+  barangay_id varchar
+  proof_of_identity varchar
+  contact_number varchar
+  email varchar
+  user_id foreign_key
+}
+
+Table roles {
+  id integer [primary key]
+  role_name varchar unique
+}
+
+Table barangays {
+  id integer [primary key]
+  name varchar
+  coordinates json
+}
+
+Table routes {
+  id integer [primary key]
+  barangay_id foreign_key
+  coordinates json
+  pick_up_schedule_id foreign_key
+}
+
+Table residency {
+  id integer [primary key]
+  user_id foreign_key
+  barangay_id foreign_key
+}
+
+Table dropSites {
+  id integer [primary key]
+  coordinates json
+  barangay_id foreign_key
+}
+
+Table messages {
+  id integer [primary key]
+  staff_id foreign_key
+  user_id foreign_key
+}
+
+Table pick_up_schedule {
+  id integer [primary key]
+  day_of_the_week json
+  time time
+  barangay_id foreign_key
+}
+
+Ref: "barangays"."id" < "routes"."barangay_id"
+
+Ref: "roles"."id" < "users"."role_id"
+
+Ref: "barangays"."id" < "dropSites"."barangay_id"
+
+Ref: "barangays"."id" < "residency"."barangay_id"
+
+Ref: "users"."id" < "messages"."staff_id"
+
+Ref: "users"."id" < "messages"."user_id"
+
+Ref: "barangays"."id" - "pick_up_schedule"."barangay_id"
+
+Ref: "pick_up_schedule"."id" > "routes"."pick_up_schedule_id"
+
+Ref: "users"."id" - "barangay_official_info"."user_id"
+#+END_SRC
+** SS of Diagram
+[[file:./documentation-media/ER-DIAGRAM.png]]

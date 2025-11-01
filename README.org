@@ -15,7 +15,16 @@ due, allow users to give feed backs, etc.
 5. include a descriptive title
 6. use descriptive message in your commit
 7. make sure your commits are small
-8. git push origin main
+
+** How to commit a change you made
+1. ~git add {filename(s)-here}~
+2. ~git commit -m "Message here...."~
+3. (optional) push changes to your branch ~git push origin {branch-name}~
+
+
+
+   /IMPORTANT: NEVER PUSH TO THE *MAIN* BRANCH (main developer lang pwede)/
+
 
 
 ** Where to edit?
