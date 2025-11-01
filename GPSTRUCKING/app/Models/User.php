@@ -59,8 +59,12 @@ class User extends Authenticatable
         return $this->hasOne(BarangayOfficialInformation::class);
     }
 
-    public function messages(){
-        return $this->hasMany(Message::class);
+    public function to(){
+        return $this->hasMany(Message::class, 'to');
+    }
+
+    public function from(){
+        return $this->hasMany(Message::class, 'from');
     }
 
     public function residency(){
