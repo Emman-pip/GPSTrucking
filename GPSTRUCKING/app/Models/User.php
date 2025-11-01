@@ -55,6 +55,10 @@ class User extends Authenticatable
         return $this->hasOne(Role::class);
     }
 
+    public function barangayOfficialInfo(){
+        return $this->hasOne(BarangayOfficialInformation::class);
+    }
+
     public function messages(){
         return $this->hasMany(Message::class);
     }
