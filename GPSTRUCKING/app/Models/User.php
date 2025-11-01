@@ -50,7 +50,12 @@ class User extends Authenticatable
             'two_factor_confirmed_at' => 'datetime',
         ];
     }
+
     public function role(){
         return $this->hasOne(Role::class);
+    }
+
+    public function messages(){
+        return $this->hasMany(Message::class);
     }
 }
