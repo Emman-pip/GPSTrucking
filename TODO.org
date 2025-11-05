@@ -1,0 +1,35 @@
+* Order of Things
+
+* Barangay
+- [ ] should have a form for passing credentials
+- [ ] be able to set routes, drop sites, etc. on their sites
+- [ ] should have a way to contact trucks
+- [ ] settings
+- [ ] app-header
+- [ ] dashboard
+- [ ] profile
+- [ ] residents using the application
+- [ ] send broadcast messages
+
+
+* Resident
+- [ ] should be able to see:
+  - [ ] Map of their area only
+  - [ ] routes in their barangay
+  - [ ] dropsites in their barangay
+    - [ ] information about the dropsite
+    - [ ] picture about the dropsite
+- [ ] contact the barangay for garbage collection-related problem
+- [ ] file complaints
+- [ ] AI chatbot
+- [ ] receive broadcast notifications
+
+* Admin
+- [ ] see the all users
+  - [ ] barangay
+  - [ ] resident
+- [ ] creation of barangay users
+- [ ] approval of barangay official accounts
+- [ ] analytics
+  - [ ] how many users
+  - [ ] user growth

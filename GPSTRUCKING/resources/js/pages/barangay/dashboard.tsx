@@ -1,21 +1,21 @@
-import MapView, { getLocation } from '@/components/map/MapView';
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
-import AppLayout from '@/layouts/resident/app-layout';
+import MapView from '@/components/map/MapView';
+import AppLayout from '@/layouts/barangay/app-layout'
+import barangay from '@/routes/barangay';
 import resident from '@/routes/resident';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
-        href: resident.dashboard.url()
+        title: 'Barangay Personel Dashboard',
+        href: barangay.dashboard.url()
     }
 ];
 
 export default function Dashboard() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard" />
+            <Head title="Barangay Personel Dashboard" />
             <div className="p-4">
                 <MapView />
             </div>
