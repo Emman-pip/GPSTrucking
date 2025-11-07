@@ -6,8 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Barangay extends Model
 {
+    protected $fillable = [
+        'name',
+        'coordinates'
+    ];
+
     public function residency(){
         return $this->belongsTo(Residency::class);
+    }
+
+    public function barangayResidency(){
+        return $this->belongsTo(BarangayOfficialInformation::class);
     }
 
     public function dropSites(){

@@ -17,12 +17,12 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/evaluate-user', function () {
-        $user = Auth::user();
-        if ($user->role_id === 2)
+        $role = Auth::user()->role->name;
+        if ($role === 'resident')
             return redirect()->route('resident.dashboard');
-        else if ($user->role_id === 3)
+        else if ($role === 'barangay')
             return redirect()->route('barangay.dashboard');
-        else if ($user->role_id === 1)
+        else if ($role === 'admin')
             return response('Hi admin');
     })->name('evaluate-user');
 });

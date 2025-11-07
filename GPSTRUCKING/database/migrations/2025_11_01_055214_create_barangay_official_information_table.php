@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('barangay_official_information', function (Blueprint $table) {
             $table->id();
             $table->string('barangay_official_id'); // path to image of official barangay id
+            $table->foreignId('barangay_id')->constrained('barangays', 'id');
             $table->string('proof_of_identity'); // path to proof of identity
             $table->string('contact_number');
             $table->string('email');
