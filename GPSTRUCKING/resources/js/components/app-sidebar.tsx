@@ -10,18 +10,49 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import { SharedData, type NavItem } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
+import { BookOpen, Folder, LayoutGrid, User } from 'lucide-react';
 import AppLogo from './app-logo';
+import barangay from '@/routes/barangay';
+import { BarangayMenuContent } from './barangay/user-menu-content';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Resident Dashboard',
         href: '#',
         icon: LayoutGrid,
     },
 ];
+
+
+
+const adminMainNavItems: NavItem[] = [
+    {
+        title: 'Admin Dashboard',
+        href: '#',
+        icon: LayoutGrid,
+    },
+];
+
+const BarangayMainNavItems: NavItem[] = [
+    {
+        title: 'Dashboard',
+        href: barangay.dashboard.url(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Profile',
+        href: barangay.profile.url(),
+        icon: User,
+    },
+    {
+        title: 'Chats',
+        href: barangay.chats.url(),
+        icon: LayoutGrid,
+    },
+];
+
 
 const footerNavItems: NavItem[] = [
     {
@@ -37,6 +68,7 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { auth } = usePage<SharedData>().props;
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -52,7 +84,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={auth.user.role_id === 3 ? BarangayMainNavItems : auth.user.role_id === 2 ? mainNavItems : adminMainNavItems} />
             </SidebarContent>
 
             <SidebarFooter>
