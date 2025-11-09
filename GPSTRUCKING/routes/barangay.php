@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BarangayController;
+use App\Http\Controllers\BarangayOfficialInformationController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -18,21 +19,14 @@ Route::middleware(['auth', 'verified',])->group(function () {
     // must be verified first
     Route::middleware(['ensure_verified'])->group(function() {
         // for barangay dashboard
-        Route::get('/barangay/dashboard', function () {
-            return Inertia::render('barangay/dashboard');
-        })->name('barangay.dashboard');
-
+        Route::get('/barangay/dashboard', [BarangayController::class, 'dashboard'] )->name('barangay.dashboard');
         // for barangay personel profile
-        Route::get('/barangay/profile', function () {
-            return response('profile of barangay');
-        })->name('barangay.profile');
+        Route::get('/barangay/profile', [BarangayController::class, 'profile'])->name('barangay.profile');
 
         // for barangay to resident chat
-        Route::get('/barangay/chats', function () {
-            return response('chats');
-        })->name('barangay.chats');
+        Route::get('/barangay/chats', [BarangayController::class, 'chat'])->name('barangay.chats');
     });
     // for form
-    Route::get('/barangay/create-profile', [BarangayController::class, 'displayProfileForm'])->name('barangay.barangay-profile-form');
-    Route::post('/barangay/create-profile', [BarangayController::class, 'submitProfileForm'])->name('barangay.submit-barangay-profile-form');
+    Route::get('/barangay/create-profile', [BarangayOfficialInformationController::class, 'displayProfileForm'])->name('barangay.barangay-profile-form');
+    Route::post('/barangay/create-profile', [BarangayOfficialInformationController::class, 'submitProfileForm'])->name('barangay.submit-barangay-profile-form');
 });
