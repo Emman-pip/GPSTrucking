@@ -28,20 +28,41 @@ class BarangayOfficialInformationController extends Controller
         return Inertia::render('barangay/editProfile', [ 'barangay' => $barangay ]);
     }
 
-    public function updateProfileFormText(Request $request) {
+    public function updateContactInfo(Request $request) {
+        $user = Auth::user();
+        $validated = [];
+        if ($request["email"] === $user->barangayOfficialInfo->email) {
+            $validated = $request->validate([
+                'contact_number' => ['required', 'digits:11'],
+            ]);
+        } else {
+            $validated = $request->validate([
+                'contact_number' => ['required', 'digits:11'],
+                'email' => ['required', 'email', 'unique:barangay_official_information,email'],
+            ]);
+        }
+        $user->barangayOfficialInfo->update($validated);
+        return redirect()->route('barangay.profile');
+    }
+
+    public function updateAssignment(Request $request) {
         $user = Auth::user();
         $validated = $request->validate([
             /* 'barangay_official_id' => ['required', 'mimes:jpg,png,pdf'], */
             /* 'proof_of_identity' => ['required', 'file', 'mimes:jpg,png,pdf,jpeg'], */
-            'contact_number' => [ 'required', 'digits:11' ],
-            'email' => [ 'required', 'email', 'unique:barangay_official_information,email' ],
+            // 'contact_number' => [ 'required', 'digits:11' ],
+            // 'email' => [ 'required', 'email', 'unique:barangay_official_information,email' ],
             'barangay_id' => ['required', 'exists:barangays,id'],
         ]);
+
         $user->barangayOfficialInfo->update($validated);
+
+        // change the status to unverified after the barangay designation is changed
+        $user->isVerified = false;
+        $user->save();
         return redirect()->route('barangay.profile');
-        // $barangays = Barangay::all()->select(['id', 'name']);
-        // return Inertia::render('barangay/profileForm', ['barangays' => $barangays]);
     }
+
 
     public function updateProfileFormFiles(Request $request) {
         $user = Auth::user();

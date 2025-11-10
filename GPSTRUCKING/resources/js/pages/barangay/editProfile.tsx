@@ -1,5 +1,15 @@
 
 import { useState } from "react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Command, CommandGroup, CommandItem, CommandInput } from "@/components/ui/command";
 import { ChevronsUpDown, Edit } from "lucide-react";
@@ -39,158 +49,215 @@ export interface User {
     barangay_official_info: BarangayOfficialInformation;
 }
 
-export default function editProfile( { barangay } : {
+export function EditContactInformation({ user } : {user : User}) {
+    const { data, setData, put, processing, errors } = useForm({
+        'contact_number': user.barangay_official_info.contact_number,
+        'email': user.barangay_official_info.email
+    });
+
+
+    function submitForm(e: FormEvent) {
+        if (!e.target.checkValidity()){
+            return;
+        }
+        e.preventDefault();
+        put(barangay.contact.update().url);
+    }
+
+  return (
+    <Dialog>
+        <DialogTrigger asChild>
+          <Edit/>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <form onSubmit={submitForm}>
+          <DialogHeader>
+            <DialogTitle>Edit contact information</DialogTitle>
+            <DialogDescription>
+              Make changes to your contact information here. Click save when you&apos;re
+              done.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4">
+            <div className="grid gap-3">
+              <Label htmlFor="contact_number">Contact Number</Label>
+                <Input onChange={(e) => setData('contact_number', e.target.value)} id="contact_number" name="contact_number" defaultValue={user.barangay_official_info.contact_number} pattern="[0-9]{11}" maxLength={11} required/>
+                { errors.contact_number && <div className="text-red-500">{errors.contact_number}</div> }
+
+            </div>
+            <div className="grid gap-3">
+              <Label htmlFor="email">Barangay Email</Label>
+              <Input onChange={(e) => setData('email', e.target.value)} id="email" name="email" defaultValue={user.barangay_official_info.email} required />
+          { errors.email && <div className="text-red-500">{errors.email}</div> }
+            </div>
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+          <Button type="submit">Save changes</Button>
+          </DialogFooter>
+      </form>
+        </DialogContent>
+    </Dialog>
+  )
+}
+
+
+export default function editProfile({ barangay }: {
     barangay: Barangay;
 }) {
-    const user : User = usePage().props.auth.user;
-    console.log(user);
+    const user: User = usePage().props.auth.user;
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Barangay Personel Dashboard" />
- <main className="min-h-screen p-4 md:p-8 transition-colors duration-300">
-      <div className="max-w-4xl mx-auto">
-        {/* Header Card */}
-        <div className="bg-white dark:bg-black rounded-3xl shadow-lg overflow-hidden mb-6 transition-colors duration-300">
-          <div className="bg-gradient-to-r from-green-600 to-green-800 dark:from-green-700 dark:to-green-800 px-8 py-6">
-            <h1 className="text-3xl font-bold text-white">Barangay Official Profile</h1>
-            <p className="text-green-100 dark:text-green-200 mt-1">
-              Official Information and Documents
-            </p>
-          </div>
-        </div>
+            <main className="min-h-screen p-4 md:p-8 transition-colors duration-300">
+                <div className="max-w-4xl mx-auto">
+                    {/* Header Card */}
+                    <div className="bg-white dark:bg-black rounded-3xl shadow-lg overflow-hidden mb-6 transition-colors duration-300">
+                        <div className="bg-gradient-to-r from-green-600 to-green-800 dark:from-green-700 dark:to-green-800 px-8 py-6">
+                            <h1 className="text-3xl font-bold text-white">Barangay Official Profile</h1>
+                            <p className="text-green-100 dark:text-green-200 mt-1">
+                                Official Information and Documents
+                            </p>
+                        </div>
+                    </div>
 
-        {/* Main Content Grid */}
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Personal Information Card */}
-          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 space-y-5 transition-colors duration-300">
-            <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
-              <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
-                <User className="w-5 h-5 text-green-600 dark:text-green-400" />
-              </div>
-            <div className="flex justify-between w-full items-center">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Personal Details</h2>
-                <Link href={profile.edit().url}>
-                    <Edit />
-                </Link>
-            </div>
-            </div>
+                    {/* Main Content Grid */}
+                    <div className="grid md:grid-cols-2 gap-6">
+                        {/* Personal Information Card */}
+                        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 space-y-5 transition-colors duration-300">
+                            <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
+                                <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
+                                    <User className="w-5 h-5 text-green-600 dark:text-green-400" />
+                                </div>
+                                <div className="flex justify-between w-full items-center">
+                                    <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Personal Details</h2>
+                                    <Link href={profile.edit().url}>
+                                        <Edit />
+                                    </Link>
+                                </div>
+                            </div>
 
-            <div className="space-y-4">
-              <div>
-                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Username</label>
-                <p className="text-gray-900 dark:text-gray-100 font-medium mt-1">{user.name}</p>
-              </div>
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Username</label>
+                                    <p className="text-gray-900 dark:text-gray-100 font-medium mt-1">{user.name}</p>
+                                </div>
 
-              <div>
-                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Login Email</label>
-                <div className="flex items-center gap-2 mt-1">
-                  <Mail className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                  <p className="text-gray-900 dark:text-gray-100">{user.email}</p>
+                                <div>
+                                    <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Login Email</label>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <Mail className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                                        <p className="text-gray-900 dark:text-gray-100">{user.email}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Contact Information Card */}
+                        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 space-y-5 transition-colors duration-300">
+                            <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
+                                <div className="p-2 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg">
+                                    <Phone className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                                </div>
+                                <div className="flex justify-between items-center w-full">
+                                    <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Contact Information</h2>
+                                    <EditContactInformation user={user}/>
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Contact Number</label>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <Phone className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                                        <p className="text-gray-900 dark:text-gray-100">
+                                            {user.barangay_official_info.contact_number}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Barangay Email</label>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <Mail className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                                        <p className="text-gray-900 dark:text-gray-100">
+                                            {user.barangay_official_info.email}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Barangay Assignment Card */}
+                        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 transition-colors duration-300">
+                            <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
+                                <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
+                                    <MapPin className="w-5 h-5 text-green-600 dark:text-green-400" />
+                                </div>
+                                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Assignment</h2>
+                            </div>
+
+                            <div className="mt-5">
+                                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Barangay Official Of</label>
+                                <p className="text-xl font-semibold text-gray-900 dark:text-gray-100 mt-2">{barangay.name}</p>
+                            </div>
+                        </div>
+
+                        {/* Documents Card */}
+                        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 transition-colors duration-300">
+                            <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
+                                <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
+                                    <FileText className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                                </div>
+                                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Official Documents</h2>
+                            </div>
+
+                            <div className="mt-5 space-y-3">
+                                <a
+                                    href={'/storage/' + user.barangay_official_info.barangay_official_id}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-3 p-4 bg-gradient-to-r from-green-50 to-indigo-50 dark:from-green-900/30 dark:to-indigo-900/30 rounded-xl hover:shadow-md dark:hover:from-green-900/50 dark:hover:to-indigo-900/50 transition-all duration-200 group"
+                                >
+                                    <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg group-hover:bg-green-200 dark:group-hover:bg-green-900/70 transition-colors">
+                                        <CreditCard className="w-5 h-5 text-green-600 dark:text-green-400" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className="font-medium text-gray-900 dark:text-gray-100 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">Official Barangay ID</p>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                            Click to view document
+                                        </p>
+                                    </div>
+                                    <svg className="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-green-600 dark:group-hover:text-green-400 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </a>
+
+                                <a
+                                    href={'/storage/' + user.barangay_official_info.proof_of_identity}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-xl hover:shadow-md dark:hover:from-purple-900/50 dark:hover:to-pink-900/50 transition-all duration-200 group"
+                                >
+                                    <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg group-hover:bg-purple-200 dark:group-hover:bg-purple-900/70 transition-colors">
+                                        <FileText className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className="font-medium text-gray-900 dark:text-gray-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Valid ID</p>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                            Click to view document
+                                        </p>
+                                    </div>
+                                    <svg className="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-purple-600 dark:group-hover:text-purple-400 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Contact Information Card */}
-          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 space-y-5 transition-colors duration-300">
-            <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
-              <div className="p-2 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg">
-                <Phone className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-              </div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Contact Information</h2>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Contact Number</label>
-                <div className="flex items-center gap-2 mt-1">
-                  <Phone className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                  <p className="text-gray-900 dark:text-gray-100">
-                    {user.barangay_official_info.contact_number}
-                  </p>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Barangay Email</label>
-                <div className="flex items-center gap-2 mt-1">
-                  <Mail className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                  <p className="text-gray-900 dark:text-gray-100">
-                    {user.barangay_official_info.email}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Barangay Assignment Card */}
-          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 transition-colors duration-300">
-            <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
-              <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
-                <MapPin className="w-5 h-5 text-green-600 dark:text-green-400" />
-              </div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Assignment</h2>
-            </div>
-
-            <div className="mt-5">
-              <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Barangay Official Of</label>
-              <p className="text-xl font-semibold text-gray-900 dark:text-gray-100 mt-2">{barangay.name}</p>
-            </div>
-          </div>
-
-          {/* Documents Card */}
-          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 transition-colors duration-300">
-            <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
-              <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
-                <FileText className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-              </div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Official Documents</h2>
-            </div>
-
-            <div className="mt-5 space-y-3">
-              <a
-                href={'/storage/' + user.barangay_official_info.barangay_official_id}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 p-4 bg-gradient-to-r from-green-50 to-indigo-50 dark:from-green-900/30 dark:to-indigo-900/30 rounded-xl hover:shadow-md dark:hover:from-green-900/50 dark:hover:to-indigo-900/50 transition-all duration-200 group"
-              >
-                <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg group-hover:bg-green-200 dark:group-hover:bg-green-900/70 transition-colors">
-                  <CreditCard className="w-5 h-5 text-green-600 dark:text-green-400" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900 dark:text-gray-100 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">Official Barangay ID</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Click to view document
-                  </p>
-                </div>
-                <svg className="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-green-600 dark:group-hover:text-green-400 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </a>
-
-              <a
-                href={'/storage/' + user.barangay_official_info.proof_of_identity}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-xl hover:shadow-md dark:hover:from-purple-900/50 dark:hover:to-pink-900/50 transition-all duration-200 group"
-              >
-                <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg group-hover:bg-purple-200 dark:group-hover:bg-purple-900/70 transition-colors">
-                  <FileText className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900 dark:text-gray-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Valid ID</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Click to view document
-                  </p>
-                </div>
-                <svg className="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-purple-600 dark:group-hover:text-purple-400 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
+            </main>
         </AppLayout>);
 }
