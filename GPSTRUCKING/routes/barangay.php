@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BarangayController;
 use App\Http\Controllers\BarangayOfficialInformationController;
+use App\Http\Controllers\MapController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -27,7 +28,7 @@ Route::middleware(['auth', 'verified',])->group(function () {
         // for barangay to resident chat
         Route::get('/barangay/chats', [BarangayController::class, 'chat'])->name('barangay.chats');
 
-        Route::get('/barangay/map', [BarangayController::class, 'map'])->name('barangay.map');
+        Route::get('/barangay/map', [MapController::class, 'map'])->name('barangay.map');
     });
     // for form
     Route::get('/barangay/create-profile', [BarangayOfficialInformationController::class, 'displayProfileForm'])->name('barangay.barangay-profile-form');

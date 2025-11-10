@@ -20,8 +20,4 @@ class BarangayController extends Controller
     public function chat() {
         return response('chats');
     }
-
-    public function map() {
-        return response('customize map here');
-    }
 }
