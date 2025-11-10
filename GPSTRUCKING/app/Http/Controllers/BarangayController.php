@@ -15,10 +15,6 @@ class BarangayController extends Controller
         return Inertia::render('barangay/dashboard');
     }
 
-    public function profile() {
-        return response('profile of barangay');
-    }
-
     public function chat() {
         return response('chats');
     }

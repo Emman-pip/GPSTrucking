@@ -12,6 +12,16 @@ const breadcrumbs: BreadcrumbItem[] = [
     }
 ];
 
+// create a map that can:
+// give initial coordinates (of barangay)
+// give an option to get accurate GPS information
+// give the barangay the capability to add
+//    new markers (dropsites)
+//       description
+//       photo
+//       location
+//    new routes
+//
 export default function Dashboard() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

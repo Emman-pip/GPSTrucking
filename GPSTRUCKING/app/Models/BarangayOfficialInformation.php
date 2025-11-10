@@ -20,6 +20,6 @@ class BarangayOfficialInformation extends Model
     }
 
     public function barangay(){
-        return $this->hasOne(Barangay::class);
+        return $this->hasOne(Barangay::class, 'id');
     }
 }

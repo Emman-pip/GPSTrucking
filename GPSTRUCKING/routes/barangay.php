@@ -21,7 +21,7 @@ Route::middleware(['auth', 'verified',])->group(function () {
         // for barangay dashboard
         Route::get('/barangay/dashboard', [BarangayController::class, 'dashboard'] )->name('barangay.dashboard');
         // for barangay personel profile
-        Route::get('/barangay/profile', [BarangayController::class, 'profile'])->name('barangay.profile');
+        Route::get('/barangay/profile', [BarangayOfficialInformationController::class, 'profile'])->name('barangay.profile');
 
         // for barangay to resident chat
         Route::get('/barangay/chats', [BarangayController::class, 'chat'])->name('barangay.chats');
@@ -29,4 +29,6 @@ Route::middleware(['auth', 'verified',])->group(function () {
     // for form
     Route::get('/barangay/create-profile', [BarangayOfficialInformationController::class, 'displayProfileForm'])->name('barangay.barangay-profile-form');
     Route::post('/barangay/create-profile', [BarangayOfficialInformationController::class, 'submitProfileForm'])->name('barangay.submit-barangay-profile-form');
+    Route::get('/barangay/profile-edit', [BarangayOfficialInformationController::class, 'profile'])->name('barangay.profile.edit');
+    Route::put('/barangay/profile-update', [BarangayOfficialInformationController::class, 'updateProfileFormText'])->name('barangay.profile.update');
 });

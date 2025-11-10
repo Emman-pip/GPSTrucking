@@ -6,6 +6,7 @@ use App\Models\Barangay;
 use App\Models\BarangayOfficialInformation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class BarangayOfficialInformationController extends Controller
@@ -17,6 +18,35 @@ class BarangayOfficialInformationController extends Controller
         }
         $barangays = Barangay::all()->select(['id', 'name']);
         return Inertia::render('barangay/profileForm', ['barangays' => $barangays]);
+    }
+
+    public function profile() {
+        $user = Auth::user();
+        $info = $user->barangayOfficialInfo;
+        $barangay = $info->barangay;
+        $barangay['coordinates'] =  json_decode($barangay['coordinates']);
+        return Inertia::render('barangay/editProfile', [ 'barangay' => $barangay ]);
+    }
+
+    public function updateProfileFormText(Request $request) {
+        $user = Auth::user();
+        $validated = $request->validate([
+            /* 'barangay_official_id' => ['required', 'mimes:jpg,png,pdf'], */
+            /* 'proof_of_identity' => ['required', 'file', 'mimes:jpg,png,pdf,jpeg'], */
+            'contact_number' => [ 'required', 'digits:11' ],
+            'email' => [ 'required', 'email', 'unique:barangay_official_information,email' ],
+            'barangay_id' => ['required', 'exists:barangays,id'],
+        ]);
+        $user->barangayOfficialInfo->update($validated);
+        return redirect()->route('barangay.profile');
+        // $barangays = Barangay::all()->select(['id', 'name']);
+        // return Inertia::render('barangay/profileForm', ['barangays' => $barangays]);
+    }
+
+    public function updateProfileFormFiles(Request $request) {
+        $user = Auth::user();
+        $user->barangayOfficialInfo->update($request);
+        return redirect()->route('barangay.profile');
     }
 
     public function submitProfileForm(Request $request) {
