@@ -21,6 +21,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Route::aliasMiddleware('ensure_verified', EnsureVerified::class);
+        Route::aliasMiddleware('ensure_has_profile', EnsureVerified::class);
     }
 }

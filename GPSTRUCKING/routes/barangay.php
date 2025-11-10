@@ -17,7 +17,7 @@ use Inertia\Inertia;
  */
 Route::middleware(['auth', 'verified',])->group(function () {
     // must be verified first
-    Route::middleware(['ensure_verified'])->group(function() {
+    Route::middleware(['ensure_has_profile'])->group(function() {
         // for barangay dashboard
         Route::get('/barangay/dashboard', [BarangayController::class, 'dashboard'] )->name('barangay.dashboard');
 
@@ -25,6 +25,9 @@ Route::middleware(['auth', 'verified',])->group(function () {
 
         // for barangay to resident chat
         Route::get('/barangay/chats', [BarangayController::class, 'chat'])->name('barangay.chats');
+
+
+        // mapupunta dapat dito yung
     });
     // for form
     Route::get('/barangay/create-profile', [BarangayOfficialInformationController::class, 'displayProfileForm'])->name('barangay.barangay-profile-form');
