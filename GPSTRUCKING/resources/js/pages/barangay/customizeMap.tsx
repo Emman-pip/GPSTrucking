@@ -27,7 +27,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 //    new routes
 //
 export default function CustomizeMap({ barangayData } : {barangayData : Barangay}) {
-    console.log(barangayData);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Customize Map" />
