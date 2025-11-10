@@ -11,10 +11,6 @@ import { Calendar, CirclePlus, CloudAlert, LucideChartArea, PersonStanding, Mess
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Barangay Personel Dashboard',
-        href: barangay.dashboard().url
-    },
-    {
         title: 'Customize Map',
         href: barangay.map().url
     }
