@@ -27,6 +27,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { User, Mail, Phone, MapPin, FileText, CreditCard } from 'lucide-react';
 import profile from "@/routes/profile";
+import { Spinner } from "@/components/ui/spinner";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -73,7 +74,7 @@ export function EditBarangayAssignment({ barangay: barangayName, barangays } : {
   return (
     <Dialog>
         <DialogTrigger asChild>
-          <Edit/>
+          <Edit className="cursor-pointer"/>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <form onSubmit={submitForm}>
@@ -155,7 +156,7 @@ export function EditContactInformation({ user } : {user : User}) {
   return (
     <Dialog>
         <DialogTrigger asChild>
-          <Edit/>
+          <Edit className="cursor-pointer"/>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <form onSubmit={submitForm}>
@@ -192,6 +193,75 @@ export function EditContactInformation({ user } : {user : User}) {
 }
 
 
+export function EditFiles({ user } : {user : User}) {
+    const { data, setData, post, processing, errors } = useForm({
+        _method: "PUT",
+        'barangay_official_id': user.barangay_official_info.barangay_official_id,
+        'proof_of_identity': user.barangay_official_info.proof_of_identity,
+    });
+
+
+    function submitProof(e:FormEvent) {
+        if (!e.target.checkValidity()){
+            return;
+        }
+        e.preventDefault();
+        post(barangay.validId.update().url,
+           {
+               preserveScroll: true
+        });
+    }
+
+    function submitBarangayID(e:FormEvent) {
+        if (!e.target.checkValidity()){
+            return;
+        }
+        e.preventDefault();
+        post(barangay.officialId.update().url, {
+            preserveScroll: true
+        });
+    }
+
+  return (
+    <Dialog>
+        <DialogTrigger asChild>
+          <Edit className="cursor-pointer" />
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Replace Documents</DialogTitle>
+            <DialogDescription>
+              Make changes to your documents here. Upload files and it will automatically be replaced.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 pt-2">
+            <form onSubmit={submitBarangayID} className="grid gap-3">
+              <Label htmlFor="contact_number">Official Barangay ID</Label>
+              <Input type="file" onChange={(e) => {setData('barangay_official_id', e.target.files[0])}} id="contact_number" name="contact_number" required />
+                { errors.barangay_official_id && <div className="text-red-500">{errors.barangay_official_id}</div> }
+              <Button disabled={processing} type="submit">{processing && <Spinner />}Save</Button>
+            </form>
+                  <form onSubmit={submitProof} className="grid gap-3">
+              <Label htmlFor="proof_of_identity">Valid ID</Label>
+              <Input type="file" onChange={(e) => {
+                  setData('proof_of_identity', e.target.files[0])
+              }} id="proof_of_identity" name="proof_of_identity" required />
+                { errors.proof_of_identity && <div className="text-red-500">{errors.proof_of_identity}</div> }
+              <Button disabled={processing} type="submit">{processing && <Spinner />}Save</Button>
+            </form>
+          </div>
+          <DialogFooter className="pt-2">
+            <DialogClose asChild>
+              <Button variant="outline">Close</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+    </Dialog>
+  )
+}
+
+
+
 export default function editProfile({ barangay, barangays }: {
     barangay: Barangay;
     barangays: Barangay[];
@@ -204,7 +274,7 @@ export default function editProfile({ barangay, barangays }: {
                 <div className="max-w-4xl mx-auto">
                     {/* Header Card */}
                     <div className="bg-white dark:bg-black rounded-3xl shadow-lg overflow-hidden mb-6 transition-colors duration-300">
-                        <div className="bg-gradient-to-r from-green-600 to-green-800 dark:from-green-700 dark:to-green-800 px-8 py-6">
+                        <div className="bg-gradient-to-r from-green-600 to-green-800 dark:from-green-600 dark:to-green-800 px-8 py-6">
                             <h1 className="text-3xl font-bold text-white">Barangay Official Profile</h1>
                             <p className="text-green-100 dark:text-green-200 mt-1">
                                 Official Information and Documents
@@ -303,7 +373,10 @@ export default function editProfile({ barangay, barangays }: {
                                 <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
                                     <FileText className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                                 </div>
-                                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Official Documents</h2>
+                                <div className="flex justify-between items-center w-full">
+                                    <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Official Documents</h2>
+                                    <EditFiles user={user}/>
+                                </div>
                             </div>
 
                             <div className="mt-5 space-y-3">

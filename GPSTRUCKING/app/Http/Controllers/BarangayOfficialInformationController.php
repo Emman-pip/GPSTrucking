@@ -24,7 +24,6 @@ class BarangayOfficialInformationController extends Controller
         $user = Auth::user();
         $info = $user->barangayOfficialInfo;
         $barangay = $info->barangay;
-        // dd($barangay);
         $barangays = Barangay::all()->select(['name', 'id']);
         $barangay['coordinates'] =  json_decode($barangay['coordinates']);
         return Inertia::render('barangay/editProfile', [ 'barangay' => $barangay, 'barangays' => $barangays ]);
@@ -64,12 +63,55 @@ class BarangayOfficialInformationController extends Controller
         return redirect()->route('barangay.profile');
     }
 
+    // TODO update profile form files!!!
+    public function updateOfficialId(Request $request) {
 
-    public function updateProfileFormFiles(Request $request) {
+        $validated = $request->validate([
+            'barangay_official_id' => ['required', 'file', 'mimes:jpg,png,pdf'],
+        ]);
+
         $user = Auth::user();
-        $user->barangayOfficialInfo->update($request);
+        $path_valid_id = $request->file('barangay_official_id')->store("media/barangay/{$user->id}/ID", 'public');
+
+        // delete the photos in the storage then replace the filenames by the saved ones
+        Storage::disk('public')->delete($user->barangayOfficialInfo->barangay_official_id);
+
+        $validated = [
+            'barangay_official_id' => $path_valid_id,
+        ];
+
+        $user->barangayOfficialInfo->update($validated);
+
+        $user->isVerified = false;
+        $user->save();
+
         return redirect()->route('barangay.profile');
     }
+
+    public function updateValidID(Request $request) {
+
+        $validated = $request->validate([
+            'proof_of_identity' => ['required', 'file', 'mimes:jpg,png,pdf'],
+        ]);
+
+        $user = Auth::user();
+        $path_proof_id = $request->file('proof_of_identity')->store("media/barangay/{$user->id}/proofs", 'public');
+
+        // delete the photos in the storage then replace the filenames by the saved ones
+        Storage::disk('public')->delete($user->barangayOfficialInfo->proof_of_identity);
+
+        $validated = [
+            'proof_of_identity' => $path_proof_id,
+        ];
+
+        $user->barangayOfficialInfo->update($validated);
+
+        $user->isVerified = false;
+        $user->save();
+
+        return redirect()->route('barangay.profile');
+    }
+
 
     public function submitProfileForm(Request $request) {
         $user = Auth::user();
