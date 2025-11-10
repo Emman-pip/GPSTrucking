@@ -1,4 +1,7 @@
 
+import { ChevronsUpDown } from "lucide-react";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Command, CommandGroup, CommandItem, CommandInput } from "@/components/ui/command";
 import { useState } from "react";
 import {
   Dialog,
@@ -10,9 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { Command, CommandGroup, CommandItem, CommandInput } from "@/components/ui/command";
-import { ChevronsUpDown, Edit } from "lucide-react";
+import { Edit } from "lucide-react";
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/barangay/app-layout'
@@ -49,6 +50,90 @@ export interface User {
     barangay_official_info: BarangayOfficialInformation;
 }
 
+
+export function EditBarangayAssignment({ barangay: barangayName, barangays } : { barangay: string, barangays : Barangay[]}) {
+    const barangay_id : number = usePage().props.auth.user.barangay_official_info.barangay_id;
+    const { data, setData, put, processing, errors } = useForm({
+        'barangay_id': barangay_id,
+        'barangay': barangayName,
+    });
+
+
+    function submitForm(e: FormEvent) {
+        if (!e.target.checkValidity()){
+            return;
+        }
+        e.preventDefault();
+        put(barangay.assignment.update().url, {
+            preserveScroll: true
+        });
+    }
+
+    const [open, setOpen] = useState(false);
+  return (
+    <Dialog>
+        <DialogTrigger asChild>
+          <Edit/>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <form onSubmit={submitForm}>
+          <DialogHeader>
+            <DialogTitle>Barangay Assignment</DialogTitle>
+            <DialogDescription>
+              Make changes to your barangay information here. Click save when you&apos;re
+              done.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4">
+            <div className="grid gap-3">
+              <Label htmlFor="contact_number">Barangay</Label>
+                    <div className="space-y-2">
+                        <Popover open={open} onOpenChange={setOpen}>
+                            <PopoverTrigger className="w-full flex justify-between items-center border px-3 py-2 rounded-lg dark:bg-neutral-800 dark:text-white">
+                                {data.barangay || "Select Barangay"}
+                                <ChevronsUpDown className="h-4 w-4 opacity-50" />
+                            </PopoverTrigger>
+
+                            <PopoverContent className="p-2 w-[250px]">
+                                <Command>
+                                    <CommandInput placeholder="Search barangay (Limited to Malvar batangas)..." />
+                                    <CommandGroup className="max-h-[30vh] overflow-y-auto">
+                                        {barangays.map((brgy, index) => (
+                                            <CommandItem
+                                                key={index}
+                                                onMouseDown={() => {
+                                                    setData("barangay", brgy.name);
+                                                    setData("barangay_id", brgy.id);
+                                                    console.log("selected", data);
+                                                }}
+                                                onSelect={() => {
+                                                    setOpen(false);
+                                                }}
+                                            >
+                                                {brgy.name}
+                                            </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                </Command>
+                            </PopoverContent>
+                        </Popover>
+                        { errors.barangay_id && <div className="text-red-500">{errors.barangay_id}</div> }
+                    </div>
+            </div>
+          </div>
+          <DialogFooter className="pt-2">
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+          <Button type="submit">Save changes</Button>
+          </DialogFooter>
+      </form>
+        </DialogContent>
+    </Dialog>
+  )
+}
+
+
 export function EditContactInformation({ user } : {user : User}) {
     const { data, setData, put, processing, errors } = useForm({
         'contact_number': user.barangay_official_info.contact_number,
@@ -61,7 +146,10 @@ export function EditContactInformation({ user } : {user : User}) {
             return;
         }
         e.preventDefault();
-        put(barangay.contact.update().url);
+        put(barangay.contact.update().url,
+           {
+            preserveScroll: true
+        });
     }
 
   return (
@@ -104,8 +192,9 @@ export function EditContactInformation({ user } : {user : User}) {
 }
 
 
-export default function editProfile({ barangay }: {
+export default function editProfile({ barangay, barangays }: {
     barangay: Barangay;
+    barangays: Barangay[];
 }) {
     const user: User = usePage().props.auth.user;
     return (
@@ -196,12 +285,15 @@ export default function editProfile({ barangay }: {
                                 <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
                                     <MapPin className="w-5 h-5 text-green-600 dark:text-green-400" />
                                 </div>
+                            <div className="flex justify-between items-center w-full">
                                 <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Assignment</h2>
+                                <EditBarangayAssignment barangay={barangay.name} barangays={barangays}/>
+                            </div>
                             </div>
 
                             <div className="mt-5">
                                 <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Barangay Official Of</label>
-                                <p className="text-xl font-semibold text-gray-900 dark:text-gray-100 mt-2">{barangay.name}</p>
+                                <p className="text-xl font-semibold text-gray-900 dark:text-gray-100 mt-2">{(barangay.name)}</p>
                             </div>
                         </div>
 
