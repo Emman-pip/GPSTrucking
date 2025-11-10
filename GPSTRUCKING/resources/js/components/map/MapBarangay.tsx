@@ -16,7 +16,7 @@ import { Button } from "../ui/button";
 
 
 
-export default function MapBarangay({ coordinates }:
+export default function MapBarangay({ barangayCoordinates }:
                                     {
                                         barangayCoordinates: [number, number]
                                     }) {
@@ -28,11 +28,11 @@ export default function MapBarangay({ coordinates }:
         mapStyle={MAP_STYLE}
         style={{ borderRadius: 19, height: 500}}
         initialViewState={{
-          longitude: coordinates[0], // Malvar default
-          latitude: coordinates[1],
+          longitude: barangayCoordinates[0], // Malvar default
+          latitude: barangayCoordinates[1],
           zoom: 14,
         }}>
-            <Marker longitude={coordinates[0]} latitude={coordinates[1]} anchor="center">
+            <Marker longitude={barangayCoordinates[0]} latitude={barangayCoordinates[1]} anchor="center">
                 <Drawer direction="right">
                     <DrawerTrigger>Open</DrawerTrigger>
                     <DrawerContent>

@@ -26,12 +26,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 //       location
 //    new routes
 //
-export default function CustomizeMap() {
+export default function CustomizeMap({ barangayData } : {barangayData : Barangay}) {
+    console.log(barangayData);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Barangay Personel Dashboard" />
+            <Head title="Customize Map" />
             <main className="p-4 flex flex-col gap-2">
-                hi po
+                <MapBarangay barangayCoordinates={barangayData.coordinates}/>
             </main>
         </AppLayout>
     );
