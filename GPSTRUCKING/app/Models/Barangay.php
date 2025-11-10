@@ -16,7 +16,7 @@ class Barangay extends Model
     }
 
     public function barangayResidency(){
-        return $this->belongsTo(BarangayOfficialInformation::class);
+        return $this->hasMany(BarangayOfficialInformation::class, 'barangay_id');
     }
 
     public function dropSites(){
