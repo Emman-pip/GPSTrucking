@@ -1,24 +1,24 @@
 * Order of Things
 
 * Barangay
-- [ ] fix the app-header
+- [-] fix the app-header
   - [ ] Home
     - will contain the map
     - dashboard
   - [ ] Chats
     - send announcements
     - private messages
-  - [ ] settings -> for barangay only
-  - [ ] profile
+  - [X] settings -> for barangay only
+  - [X] profile
   - [ ] residents list
 
 - [ ] should have a form for passing credentials
 - [ ] be able to set routes, drop sites, etc. on their sites
 - [ ] should have a way to contact trucks
-- [ ] settings
+- [X] settings
 - [ ] app-header
 - [ ] dashboard
-- [ ] profile
+- [X] profile
 - [ ] residents using the application
 - [ ] send broadcast messages
 
