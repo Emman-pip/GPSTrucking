@@ -12,7 +12,9 @@ class BarangayController extends Controller
 {
     // barangay stuff here
     public function dashboard() {
-        return Inertia::render('barangay/dashboard');
+        $barangay = Auth::user()->barangayOfficialInfo->barangay;
+        $barangay['coordinates'] = json_decode($barangay['coordinates']);
+        return Inertia::render('barangay/dashboard', [ 'barangay' => $barangay]);
     }
 
     public function chat() {

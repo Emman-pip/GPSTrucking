@@ -5,7 +5,7 @@ import type { MapRef, MapStyle } from "@vis.gl/react-maplibre";
 import { LucideTrash, MapPin, MapPinCheck, MapPinned, MapPinOff, Trash, Trash2 } from "lucide-react";
 import { type } from "os";
 
-const MAP_STYLE: MapStyle = {
+export const MAP_STYLE: MapStyle = {
   version: 8,
   sources: {
     osm: {
