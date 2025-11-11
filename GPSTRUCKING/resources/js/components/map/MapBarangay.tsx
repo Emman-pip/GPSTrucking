@@ -31,6 +31,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { error } from "console";
 
 export interface PickUpSite {
     id?: number;
@@ -41,11 +42,12 @@ export interface PickUpSite {
     barangay?: string;
 }
 
-function EditDropSite({setOpen, open, pickUpSite} : { setOpen: Dispatch<SetStateAction<boolean>>; open: boolean; pickUpSite: PickUpSite }) {
-    const {data, setData, post, processing} = useForm({
+function EditDropSite({setOpen, open, pickUpSite, refreshData} : { setOpen: Dispatch<SetStateAction<boolean>>; open: boolean; pickUpSite: PickUpSite, refreshData:void }) {
+    const {data, setData, put, processing, errors} = useForm({
+        id: pickUpSite?.id,
         coordinates: pickUpSite?.description,
         image: pickUpSite?.description,
-        description: pickUpSite?.description
+        description: pickUpSite?.description,
     })
 
     useEffect(()=>{
@@ -55,6 +57,22 @@ function EditDropSite({setOpen, open, pickUpSite} : { setOpen: Dispatch<SetState
             description: pickUpSite?.description
         })
     }, [ open ])
+
+    const handleUpdateDescription = (e:FormEvent) => {
+        if (!e.target.checkValidity()){
+            return;
+        }
+        e.preventDefault();
+        console.log("HEREE")
+        put(barangay.update.dropsites.description().url, {
+            onSuccess: ()=>{
+                refreshData();
+                setOpen(false);
+            },
+            onError: (e) => console.log("error", e)
+        })
+    }
+
     return <Dialog onOpenChange={setOpen} open={open}>
         <DialogContent>
             <DialogHeader>
@@ -67,11 +85,16 @@ function EditDropSite({setOpen, open, pickUpSite} : { setOpen: Dispatch<SetState
                             <Button type="submit">Update Photo</Button>
                         </div>
                     </form>
-                    <form>
+                    <form onSubmit={handleUpdateDescription}>
                         <div className="flex flex-col gap-2">
                             <Label htmlFor="description">Description</Label>
-                            <Textarea onChange={(e) => setData(prev => ({ ...prev, description: e.target.value }))} value={data?.description} required/>
-                        <Button>Save Description</Button>
+                            <Textarea onChange={(e) => {
+                                setData(prev => ({ ...prev, description: e.target.value }))
+                                setData(prev => ({ ...prev, id: pickUpSite.id }))
+                            }} value={data?.description} required/>
+                            {errors?.description && <div className="text-red-500">{errors?.description}</div>}
+                            {errors?.id && <div className="text-red-500">{errors?.id}</div>}
+                            <Button>Save Description</Button>
                         </div>
                     </form>
                     <Button className="w-full mt-2" variant="secondary"><MapPin/>Reposition Marker</Button>
@@ -97,7 +120,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
     const user = usePage().props.auth.user;
 
     const [dropSites, setDropSites] = useState<PickUpSite[]>();
-    console.log(`${window.location.origin}${barangay.get.dropsites().url}?barangay_id=${user.barangay_official_info.barangay_id}`);
+    /* console.log(`${window.location.origin}${barangay.get.dropsites().url}?barangay_id=${user.barangay_official_info.barangay_id}`); */
 
     function getDropsites() {
         fetch(`${window.location.origin}${barangay.get.dropsites().url}?barangay_id=${user.barangay_official_info.barangay_id}`)
@@ -128,7 +151,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
 
     const submitNewPickUpSite = (e:FormEvent) => {
         e.preventDefault();
-        console.log('Submitting', newPickUpSite);
+        /* console.log('Submitting', newPickUpSite); */
 
         post(barangay.new.dropsite().url, {
             forceFormData: true,
@@ -147,9 +170,9 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
         )
     }
 
-    const pickUpHandler = (e:MapMouseEvent) => {
-        console.log("hi")
-    }
+    /* const pickUpHandler = (e:MapMouseEvent) => {
+*     console.log("hi")
+* } */
 
     const [isMarking, setIsMarking] = useState<Boolean>(false)
     const [drawerOpen, setDrawerOpen] = useState(false)
@@ -180,12 +203,10 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
                 map.getCanvas().style.cursor = "";
                 return;
             }
-            console.log("here")
             map.getCanvas().style.cursor = "url('/resources/MapPinAdd.svg') 8 8, pointer"
         }}
         onClick={(e:MapMouseEvent) => {
             if (isMarking && withControls) {
-                console.log("DONE");
                 setIsMarking(false);
                 setNewPickUpSite({ coordinates: [e.lngLat.lng, e.lngLat.lat ] })
                 setDrawerOpen(true)
@@ -196,7 +217,6 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
         try {
             dropsite.coordinates = JSON.parse(dropsite.coordinates);
         } catch {}
-        console.log(dropsite);
         return <Marker  key={dropsite.id} longitude={dropsite?.coordinates[0]} latitude={dropsite?.coordinates[1]} anchor="center">
             <Drawer direction="bottom">
                 <DrawerTrigger><MapPin size={30} className="cursor-pointer p-1 hover:scale-210 transition-all duration-100 shadow-xl bg-green-500 text-white rounded-3xl"/></DrawerTrigger>
@@ -265,6 +285,6 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
                 </form>
             </DrawerContent>
         </Drawer>
-        <EditDropSite open={openEdit} setOpen={setOpenEdit} pickUpSite={dropSiteToEdit}/>
+        <EditDropSite open={openEdit} setOpen={setOpenEdit} pickUpSite={dropSiteToEdit} refreshData={getDropsites} />
     </>
 }

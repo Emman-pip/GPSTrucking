@@ -30,9 +30,11 @@ Route::middleware(['auth', 'verified',])->group(function () {
         // TODO lagay dito na dapat verified din yung user as barangay!!!
         Route::get('/barangay/chats', [BarangayController::class, 'chat'])->name('barangay.chats');
 
+        // for pickup sites
         Route::get('/barangay/map', [MapController::class, 'map'])->name('barangay.map');
         Route::post('barangay/create-pickup-site', [DropSiteController::class, 'post'])->name('barangay.new.dropsite');
         Route::get('barangay/get-pickup-sites', [DropSiteController::class, 'dropSites'])->name('barangay.get.dropsites');
+        Route::put('barangay/update-pickup-description', [DropSiteController::class, 'updateDescription'])->name('barangay.update.dropsites.description');
     });
     // for form
     Route::get('/barangay/create-profile', [BarangayOfficialInformationController::class, 'displayProfileForm'])->name('barangay.barangay-profile-form');

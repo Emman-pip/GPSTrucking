@@ -30,4 +30,14 @@ class DropSiteController extends Controller
         $barangay_id = $request['barangay_id'];
         return response()->json(DropSite::where('barangay_id', $barangay_id)->get());
     }
+
+    public function updateDescription(Request $request) {
+        $validated = $request->validate([
+            'description' => ['required' ],
+            'id' => ['required', 'exists:drop_sites,id']
+        ]);
+
+        DropSite::find($validated['id'])->update([ 'description' => $validated['description'] ]);
+        return redirect()->route('barangay.map');
+    }
 }
