@@ -52,5 +52,4 @@ class DropSiteController extends Controller
         $path = $request->file('image')->store("dropsites/{$dropsite->barangay_id}", 'public');
         DropSite::find($validated['id'])->update([ 'image' => $path ]);
     }
-
 }
