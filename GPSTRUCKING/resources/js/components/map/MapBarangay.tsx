@@ -162,8 +162,8 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
                 <DrawerContent>
                     <DrawerHeader>
                         <DrawerTitle>Pick Up Site Information</DrawerTitle>
-                        <DrawerDescription className="flex flex-col items-center justify-center">
-                            <div className="break-all">{dropsite.description}</div>
+                        <DrawerDescription className="flex flex-col items-center gap-2 justify-center">
+                            <div className="break-all md:w-[50vw] w-full text-justify">{dropsite.description}</div>
                             <img className="w-[50vh]" src={window.location.origin + '/storage/' + dropsite.image} />
                         </DrawerDescription>
 
