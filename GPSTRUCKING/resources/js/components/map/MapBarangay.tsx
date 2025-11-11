@@ -1,5 +1,6 @@
-import { FullscreenControl, MapMouseEvent, MapRef } from "@vis.gl/react-maplibre"
+import { FullscreenControl, Layer, MapMouseEvent, MapRef, Source } from "@vis.gl/react-maplibre"
 import { GeolocateControl, Map, Marker, NavigationControl, ScaleControl, TerrainControl } from "@vis.gl/react-maplibre";
+import { cn } from "@/lib/utils";
 import { DropSite, MAP_STYLE } from "./MapView"
 import { Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
 import {
@@ -33,6 +34,7 @@ import {
 } from "@/components/ui/dialog"
 import { error } from "console";
 import { EditDropSite } from "./EditDropSite";
+import { disable } from "@/routes/two-factor";
 
 export interface PickUpSite {
     id?: number;
@@ -56,7 +58,6 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
     const user = usePage().props.auth.user;
 
     const [dropSites, setDropSites] = useState<PickUpSite[]>();
-    /* console.log(`${window.location.origin}${barangay.get.dropsites().url}?barangay_id=${user.barangay_official_info.barangay_id}`); */
 
     function getDropsites() {
         fetch(`${window.location.origin}${barangay.get.dropsites().url}?barangay_id=${user.barangay_official_info.barangay_id}`)
@@ -106,10 +107,6 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
         )
     }
 
-    /* const pickUpHandler = (e:MapMouseEvent) => {
-*     console.log("hi")
-* } */
-
     const [isMarking, setIsMarking] = useState<Boolean>(false)
     const [drawerOpen, setDrawerOpen] = useState(false)
     const [openEdit, setOpenEdit] = useState(false)
@@ -117,6 +114,26 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
 
     const handleCreateMarker = () => {
         setIsMarking(true);
+    }
+
+    const [ points, setPoints ] = useState<[number, number][]>([]);
+    const [isSettingRoute, setIsSettingRoute] = useState<boolean>(false);
+
+    const lineGeoJSON = {
+        type: 'FeatureCollection',
+        features: [{
+            type: 'Feature',
+            geometry: {
+                type: 'LineString',
+                coordinates: points
+            }
+        }]
+    }; //: null;
+
+    const handleRouteCreate = (e: MapMouseEvent) => {
+        if (!isSettingRoute) return;
+        const { lng, lat } = e.lngLat;
+        setPoints(prev => [...prev, [lng, lat]]);
     }
 
     return <><Map
@@ -135,13 +152,14 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
         onMouseMove={() => {
             if (!withControls) return;
             const map = mapRef.current?.getMap();
-            if (!isMarking) {
+            if (!isMarking && !isSettingRoute) {
                 map.getCanvas().style.cursor = "";
                 return;
             }
             map.getCanvas().style.cursor = "url('/resources/MapPinAdd.svg') 8 8, pointer"
         }}
         onClick={(e:MapMouseEvent) => {
+            handleRouteCreate(e);
             if (isMarking && withControls) {
                 setIsMarking(false);
                 setNewPickUpSite({ coordinates: [e.lngLat.lng, e.lngLat.lat ] })
@@ -149,6 +167,17 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
             }
         }}
     >
+        <Source type="geojson" data={lineGeoJSON}>
+            <Layer
+                id="line"
+                type="line"
+                paint={{
+                    'line-color': 'blue',
+                    'line-width': 6,
+                    'line-opacity': 0.8
+                }}
+            ></Layer>
+        </Source>
     {dropSites && dropSites.map(dropsite => {
         try {
             dropsite.coordinates = JSON.parse(dropsite.coordinates);
@@ -192,9 +221,24 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
     }
         <FullscreenControl />
     </Map>
-        { withControls && <section>
-            <Button onClick={handleCreateMarker}>Add a Pickup Site</Button>
-            <Button onClick={handleCreateMarker}>Add a Route</Button>
+        { withControls && <section className="flex">
+            <Button disabled={isSettingRoute} onClick={(e)=>handleCreateMarker}>Add a Pickup Site</Button>
+            <div className={isSettingRoute ? "w-full flex gap-2 justify-end items-center" : ""}>
+                {!isSettingRoute && <Button onClick={() => {setIsSettingRoute(true); setPoints([])}}>Add a Route</Button>}
+                {isSettingRoute && <div className="flex gap-2">
+                    <Button onClick={() => {setIsSettingRoute(false)}}>Save</Button>
+                    <Button onClick={() => {
+                        const tmp = [...points];
+                        tmp.pop();
+                        setPoints(tmp);
+                    }}
+                        variant={"outline"}>
+                        Undo
+                    </Button>
+                    <Button variant={"destructive"} onClick={() => {setPoints([]);setIsSettingRoute(false)}}>Cancel</Button>
+                </div>
+                }
+            </div>
 
         </section>
         }
