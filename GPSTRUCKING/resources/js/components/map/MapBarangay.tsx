@@ -23,8 +23,10 @@ import { Spinner } from "../ui/spinner";
 import DropSiteController from "@/actions/App/Http/Controllers/DropSiteController";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -39,15 +41,46 @@ export interface PickUpSite {
     barangay?: string;
 }
 
-function EditDropSite({setOpen, open} : { setOpen: Dispatch<SetStateAction<boolean>>; open: boolean }) {
+function EditDropSite({setOpen, open, pickUpSite} : { setOpen: Dispatch<SetStateAction<boolean>>; open: boolean; pickUpSite: PickUpSite }) {
+    const {data, setData, post, processing} = useForm({
+        coordinates: pickUpSite?.description,
+        image: pickUpSite?.description,
+        description: pickUpSite?.description
+    })
+
+    useEffect(()=>{
+        setData({
+            coordinates: pickUpSite?.description,
+            image: pickUpSite?.description,
+            description: pickUpSite?.description
+        })
+    }, [ open ])
     return <Dialog onOpenChange={setOpen} open={open}>
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>Are you absolutely sure?</DialogTitle>
+                <DialogTitle>Edit Pick Up Site</DialogTitle>
                 <DialogDescription>
-                    This action cannot be undone. This will permanently delete your account
-                    and remove your data from our servers.
+                    <form>
+                        <div className="flex flex-col gap-2">
+                            <Label htmlFor="image">Image of the Site</Label>
+                            <Input id="image" name="image" type="file" onChange={e => setData(prev => ({ ...prev, "image": e.target.files[0] }))} required />
+                            <Button type="submit">Update Photo</Button>
+                        </div>
+                    </form>
+                    <form>
+                        <div className="flex flex-col gap-2">
+                            <Label htmlFor="description">Description</Label>
+                            <Textarea onChange={(e) => setData(prev => ({ ...prev, description: e.target.value }))} value={data?.description} required/>
+                        <Button>Save Description</Button>
+                        </div>
+                    </form>
+                    <Button className="w-full mt-2" variant="secondary"><MapPin/>Reposition Marker</Button>
                 </DialogDescription>
+                <DialogFooter>
+                    <DialogClose>
+                        <Button variant="outline" className="">Cancel</Button>
+                    </DialogClose>
+                </DialogFooter>
             </DialogHeader>
         </DialogContent>
     </Dialog>
@@ -121,6 +154,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
     const [isMarking, setIsMarking] = useState<Boolean>(false)
     const [drawerOpen, setDrawerOpen] = useState(false)
     const [openEdit, setOpenEdit] = useState(false)
+    const [dropSiteToEdit, setDropSiteToEdit] = useState<PickUpSite | null>(null)
 
     const handleCreateMarker = () => {
         setIsMarking(true);
@@ -177,7 +211,10 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
                     </DrawerHeader>
                     <DrawerFooter>
                         <div className="flex justify-center gap-2">
-                            {withControls && <Button className="w-fit" onClick={() => setOpenEdit(true)}>Edit</Button>}
+                            {withControls && <Button className="w-fit" onClick={() => {
+                                setDropSiteToEdit(dropsite);
+                                setOpenEdit(true);
+                            }}>Edit</Button>}
                             <DrawerClose>
                                 <Button variant="outline">Close</Button>
                             </DrawerClose>
@@ -228,6 +265,6 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
                 </form>
             </DrawerContent>
         </Drawer>
-        <EditDropSite open={openEdit} setOpen={setOpenEdit} />
+        <EditDropSite open={openEdit} setOpen={setOpenEdit} pickUpSite={dropSiteToEdit}/>
     </>
 }
