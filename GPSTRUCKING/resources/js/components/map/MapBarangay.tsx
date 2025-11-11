@@ -45,15 +45,16 @@ export interface PickUpSite {
 function EditDropSite({setOpen, open, pickUpSite, refreshData} : { setOpen: Dispatch<SetStateAction<boolean>>; open: boolean; pickUpSite: PickUpSite, refreshData:void }) {
     const {data, setData, put, processing, errors} = useForm({
         id: pickUpSite?.id,
-        coordinates: pickUpSite?.description,
-        image: pickUpSite?.description,
+        coordinates: pickUpSite?.coordinates,
+        image: pickUpSite?.image,
         description: pickUpSite?.description,
     })
 
     useEffect(()=>{
         setData({
-            coordinates: pickUpSite?.description,
-            image: pickUpSite?.description,
+            id: pickUpSite?.id,
+            coordinates: pickUpSite?.coordinates,
+            image: pickUpSite?.image,
             description: pickUpSite?.description
         })
     }, [ open ])
@@ -73,15 +74,43 @@ function EditDropSite({setOpen, open, pickUpSite, refreshData} : { setOpen: Disp
         })
     }
 
+    const handleUpdateImage = (e:FormEvent) => {
+        if (!e.target.checkValidity()){
+            return;
+        }
+        e.preventDefault();
+        console.log("HEREE")
+        router.post(barangay.update.dropsites.image().url,
+                    {...data, _method:'put'},
+                    {
+            forceFormData:true,
+            onSuccess: ()=>{
+                refreshData();
+                setOpen(false);
+            },
+            onError: (e) => console.log("error", e)})
+        /* put(barangay.update.dropsites.image().url, {
+*     onSuccess: ()=>{
+*         refreshData();
+*         setOpen(false);
+*     },
+*     onError: (e) => console.log("error", e) */
+        /* }) */
+    }
+
     return <Dialog onOpenChange={setOpen} open={open}>
         <DialogContent>
             <DialogHeader>
                 <DialogTitle>Edit Pick Up Site</DialogTitle>
                 <DialogDescription>
-                    <form>
+                    <form onSubmit={handleUpdateImage}>
                         <div className="flex flex-col gap-2">
                             <Label htmlFor="image">Image of the Site</Label>
-                            <Input id="image" name="image" type="file" onChange={e => setData(prev => ({ ...prev, "image": e.target.files[0] }))} required />
+                            <Input id="image" name="image" type="file" onChange={e => {
+                                setData(prev => ({ ...prev, id: pickUpSite.id }))
+                                setData(prev => ({ ...prev, "image": e.target.files[0] }))
+                            }} required />
+                            {errors?.image && <div className="text-red-500">{errors?.image}</div>}
                             <Button type="submit">Update Photo</Button>
                         </div>
                     </form>
@@ -93,7 +122,6 @@ function EditDropSite({setOpen, open, pickUpSite, refreshData} : { setOpen: Disp
                                 setData(prev => ({ ...prev, id: pickUpSite.id }))
                             }} value={data?.description} required/>
                             {errors?.description && <div className="text-red-500">{errors?.description}</div>}
-                            {errors?.id && <div className="text-red-500">{errors?.id}</div>}
                             <Button>Save Description</Button>
                         </div>
                     </form>

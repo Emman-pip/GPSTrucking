@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class DropSiteController extends Controller
 {
@@ -38,6 +39,18 @@ class DropSiteController extends Controller
         ]);
 
         DropSite::find($validated['id'])->update([ 'description' => $validated['description'] ]);
-        return redirect()->route('barangay.map');
     }
+
+
+    public function updateImage(Request $request) {
+        $validated = $request->validate([
+            'id' => ['required', 'exists:drop_sites,id'],
+            'image' => ['required', 'file', 'mimes:jpg,png' ],
+        ]);
+        $dropsite = DropSite::find($validated['id']);
+        Storage::disk('public')->delete($dropsite->image);
+        $path = $request->file('image')->store("dropsites/{$dropsite->barangay_id}", 'public');
+        DropSite::find($validated['id'])->update([ 'image' => $path ]);
+    }
+
 }
