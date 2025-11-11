@@ -35,6 +35,7 @@ import {
 import { error } from "console";
 import { EditDropSite } from "./EditDropSite";
 import { disable } from "@/routes/two-factor";
+import { CreateRoute } from "./CreateRoute";
 
 export interface PickUpSite {
     id?: number;
@@ -59,14 +60,19 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
 
     const [dropSites, setDropSites] = useState<PickUpSite[]>();
 
-    function getDropsites() {
+    function refresh() {
         fetch(`${window.location.origin}${barangay.get.dropsites().url}?barangay_id=${user.barangay_official_info.barangay_id}`)
             .then(res => res.json())
             .then(res => setDropSites(res))
+        setIsMarking(false);
+        setIsSettingRoute(false);
+        setOpenEdit(false);
+        setOpenNewRoute(false);
+        setPoints([]);
     }
 
     useEffect(()=>{
-        getDropsites();
+        refresh();
 
         document.body.onkeydown = (e) => {
             if (e.key == 'Escape') {
@@ -100,7 +106,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
                     image: null,
                     description: null
                 });
-                getDropsites();
+                refresh();
             },
             onError: (e)=>console.log(e)
         }
@@ -110,6 +116,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
     const [isMarking, setIsMarking] = useState<Boolean>(false)
     const [drawerOpen, setDrawerOpen] = useState(false)
     const [openEdit, setOpenEdit] = useState(false)
+    const [openNewRoute, setOpenNewRoute] = useState(false)
     const [dropSiteToEdit, setDropSiteToEdit] = useState<PickUpSite | null>(null)
 
     const handleCreateMarker = () => {
@@ -174,7 +181,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
                 paint={{
                     'line-color': 'blue',
                     'line-width': 6,
-                    'line-opacity': 0.8
+                    'line-opacity': 0.5
                 }}
             ></Layer>
         </Source>
@@ -226,7 +233,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
             <div className={isSettingRoute ? "w-full flex gap-2 justify-end items-center" : ""}>
                 {!isSettingRoute && <Button onClick={() => {setIsSettingRoute(true); setPoints([])}}>Add a Route</Button>}
                 {isSettingRoute && <div className="flex gap-2">
-                    <Button onClick={() => {setIsSettingRoute(false)}}>Save</Button>
+                    <Button onClick={() => {setOpenNewRoute(true)}}>Save</Button>
                     <Button onClick={() => {
                         const tmp = [...points];
                         tmp.pop();
@@ -272,6 +279,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
                 </form>
             </DrawerContent>
         </Drawer>
-        <EditDropSite open={openEdit} setOpen={setOpenEdit} pickUpSite={dropSiteToEdit} refreshData={getDropsites} />
+        <EditDropSite open={openEdit} setOpen={setOpenEdit} pickUpSite={dropSiteToEdit} refreshData={refresh} />
+        <CreateRoute open={openNewRoute} setOpen={setOpenNewRoute} pickUpSite={dropSiteToEdit} coordinatesArray={points} setCoordinates={setPoints} refreshData={refresh} />
     </>
 }

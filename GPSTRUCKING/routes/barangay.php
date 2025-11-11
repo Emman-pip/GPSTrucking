@@ -4,6 +4,7 @@ use App\Http\Controllers\BarangayController;
 use App\Http\Controllers\BarangayOfficialInformationController;
 use App\Http\Controllers\DropSiteController;
 use App\Http\Controllers\MapController;
+use App\Http\Controllers\RouteController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -47,5 +48,6 @@ Route::middleware(['auth', 'verified',])->group(function () {
     Route::put('/barangay/update-assignment', [BarangayOfficialInformationController::class, 'updateAssignment'])->name('barangay.assignment.update');
     Route::put('/barangay/update-barangay-official-id', [BarangayOfficialInformationController::class, 'updateOfficialId'])->name('barangay.official-id.update');
     Route::put('/barangay/update-valid-id', [BarangayOfficialInformationController::class, 'updateValidID'])->name('barangay.valid-id.update');
-    // create routes for files update
+    // for routes
+    Route::post('/barangay/create-route', [RouteController::class, 'create'])->name('barangay.create.route');
 });
