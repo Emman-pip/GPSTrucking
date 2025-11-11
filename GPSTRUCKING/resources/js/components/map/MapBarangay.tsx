@@ -199,7 +199,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
 
                         <div>
                             <Label htmlFor="image">Image of the Site <small>optional</small></Label>
-                            <Input id="image" name="image" type="file" onChange={e => setNewPickUpSite(prev => ({...prev, "image": e.target.files[0] }))} />
+                            <Input id="image" name="image" type="file" onChange={e => setNewPickUpSite(prev => ({...prev, "image": e.target.files[0] }))} required/>
                         </div>
                         <div>
                             <Label htmlFor="description">Description <small>*</small></Label>

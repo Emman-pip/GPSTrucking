@@ -52,4 +52,13 @@ class DropSiteController extends Controller
         $path = $request->file('image')->store("dropsites/{$dropsite->barangay_id}", 'public');
         DropSite::find($validated['id'])->update([ 'image' => $path ]);
     }
+
+    public function updateCoordinates(Request $request) {
+        $validated = $request->validate([
+            'id' => ['required', 'exists:drop_sites,id'],
+            'coordinates' => ['required', 'array'],
+            'coordinates.*' => ['required'],
+        ]);
+        DropSite::find($validated['id'])->update([ 'coordinates' => $validated['coordinates'] ]);
+    }
 }

@@ -33,7 +33,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { error } from "console";
-import { PickUpSite } from "./MapBarangay";
+import MapBarangay, { PickUpSite } from "./MapBarangay";
+import { MapRetLocation } from "./MapRetLocation";
 
 export function EditDropSite({setOpen, open, pickUpSite, refreshData} : { setOpen: Dispatch<SetStateAction<boolean>>; open: boolean; pickUpSite: PickUpSite, refreshData:void }) {
     const {data, setData, put, processing, errors} = useForm({
@@ -91,6 +92,17 @@ export function EditDropSite({setOpen, open, pickUpSite, refreshData} : { setOpe
         /* }) */
     }
 
+    const [ openRelocate, setOpenRelocate ] = useState(false);
+
+    const handleCoordinatesUpdate = (coords: [number, number]) => {
+        router.put(barangay.update.dropsites.coordinates().url, {
+            'id': pickUpSite?.id,
+            'coordinates': coords
+        }, {
+            onSuccess: () => refreshData(),
+        });
+    }
+
     return <Dialog onOpenChange={setOpen} open={open}>
         <DialogContent>
             <DialogHeader>
@@ -118,7 +130,14 @@ export function EditDropSite({setOpen, open, pickUpSite, refreshData} : { setOpe
                             <Button>Save Description</Button>
                         </div>
                     </form>
-                    <Button className="w-full mt-2" variant="secondary"><MapPin/>Reposition Marker</Button>
+                    <Dialog onOpenChange={setOpenRelocate} open={openRelocate}>
+                        <DialogTrigger>
+                            <Button className="w-full mt-2" variant="secondary"><MapPin/>Reposition Marker</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <MapRetLocation coordinates={pickUpSite?.coordinates} open={openRelocate}  setOpen={ setOpenRelocate } update={handleCoordinatesUpdate} refresh={refreshData}/>
+                        </DialogContent>
+                    </Dialog>
                 </DialogDescription>
                 <DialogFooter>
                     <DialogClose>
