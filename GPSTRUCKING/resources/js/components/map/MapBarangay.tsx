@@ -222,7 +222,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
         <FullscreenControl />
     </Map>
         { withControls && <section className="flex">
-            <Button disabled={isSettingRoute} onClick={(e)=>handleCreateMarker}>Add a Pickup Site</Button>
+            <Button disabled={isSettingRoute} onClick={handleCreateMarker}>Add a Pickup Site</Button>
             <div className={isSettingRoute ? "w-full flex gap-2 justify-end items-center" : ""}>
                 {!isSettingRoute && <Button onClick={() => {setIsSettingRoute(true); setPoints([])}}>Add a Route</Button>}
                 {isSettingRoute && <div className="flex gap-2">
