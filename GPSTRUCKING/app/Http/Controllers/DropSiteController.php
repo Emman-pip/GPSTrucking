@@ -61,4 +61,10 @@ class DropSiteController extends Controller
         ]);
         DropSite::find($validated['id'])->update([ 'coordinates' => $validated['coordinates'] ]);
     }
+
+    public function delete(Request $request, $id) {
+        $dropsite = DropSite::find($id);
+        Storage::disk('public')->delete($dropsite->image);
+        $dropsite->delete();
+    }
 }

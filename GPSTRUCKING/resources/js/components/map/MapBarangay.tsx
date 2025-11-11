@@ -43,6 +43,8 @@ export interface PickUpSite {
     barangay?: string;
 }
 
+// TODO ROUTES!!!!
+// manually add routes by hand
 
 export default function MapBarangay({ barangayCoordinates, withControls = false }: {
     barangayCoordinates: [number, number],

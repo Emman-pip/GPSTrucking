@@ -1,4 +1,14 @@
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { FullscreenControl, MapMouseEvent, MapRef } from "@vis.gl/react-maplibre"
 import { GeolocateControl, Map, Marker, NavigationControl, ScaleControl, TerrainControl } from "@vis.gl/react-maplibre";
 import { DropSite, MAP_STYLE } from "./MapView"
@@ -14,7 +24,7 @@ import {
     DrawerTrigger,
 } from "@/components/ui/drawer"
 import { Button } from "../ui/button";
-import { MapPin, MapPinPlus } from "lucide-react";
+import { MapPin, MapPinPlus, Trash } from "lucide-react";
 import { router, useForm, usePage } from "@inertiajs/react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -103,10 +113,43 @@ export function EditDropSite({setOpen, open, pickUpSite, refreshData} : { setOpe
         });
     }
 
+    const handleDeleteSite = () => {
+        console.log("hi")
+
+        router.delete(barangay.delete.dropsites(pickUpSite?.id).url, {
+            onSuccess: () => {refreshData(); setOpen(false)}
+        });
+    }
+
+
     return <Dialog onOpenChange={setOpen} open={open}>
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>Edit Pick Up Site</DialogTitle>
+                <DialogTitle >
+                    <div className="flex justify-between items-center">
+                        Edit Pick Up Site
+                        <div className="p-2">
+                            <AlertDialog>
+                                <AlertDialogTrigger>
+                                    <Trash className="text-red-300 hover:text-red-500 transition-all duration-100 cursor-pointer" />
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            This action cannot be undone. This will permanently delete this pick up site
+                                            and remove the data from our servers.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction  onClick={() => handleDeleteSite()}>Continue</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        </div>
+                    </div>
+                </DialogTitle>
                 <DialogDescription>
                     <form onSubmit={handleUpdateImage}>
                         <div className="flex flex-col gap-2">
@@ -131,7 +174,7 @@ export function EditDropSite({setOpen, open, pickUpSite, refreshData} : { setOpe
                         </div>
                     </form>
                     <Dialog onOpenChange={setOpenRelocate} open={openRelocate}>
-                        <DialogTrigger>
+                        <DialogTrigger className="w-full">
                             <Button className="w-full mt-2" variant="secondary"><MapPin/>Reposition Marker</Button>
                         </DialogTrigger>
                         <DialogContent>
