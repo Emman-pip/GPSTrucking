@@ -1,7 +1,7 @@
 import { FullscreenControl, MapMouseEvent, MapRef } from "@vis.gl/react-maplibre"
 import { GeolocateControl, Map, Marker, NavigationControl, ScaleControl, TerrainControl } from "@vis.gl/react-maplibre";
 import { DropSite, MAP_STYLE } from "./MapView"
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
 import {
     Drawer,
     DrawerClose,
@@ -21,6 +21,14 @@ import { Textarea } from "../ui/textarea";
 import barangay from "@/routes/barangay";
 import { Spinner } from "../ui/spinner";
 import DropSiteController from "@/actions/App/Http/Controllers/DropSiteController";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 export interface PickUpSite {
     id?: number;
@@ -29,6 +37,20 @@ export interface PickUpSite {
     description?: string;
     barangay_id?: number;
     barangay?: string;
+}
+
+function EditDropSite({setOpen, open} : { setOpen: Dispatch<SetStateAction<boolean>>; open: boolean }) {
+    return <Dialog onOpenChange={setOpen} open={open}>
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>Are you absolutely sure?</DialogTitle>
+                <DialogDescription>
+                    This action cannot be undone. This will permanently delete your account
+                    and remove your data from our servers.
+                </DialogDescription>
+            </DialogHeader>
+        </DialogContent>
+    </Dialog>
 }
 
 
@@ -52,6 +74,17 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
 
     useEffect(()=>{
         getDropsites();
+
+        document.body.onkeydown = (e) => {
+            if (e.key == 'Escape') {
+                setIsMarking(false);
+                setNewPickUpSite({
+                    coordinates: null,
+                    image: null,
+                    description: null
+                });
+            }
+        }
     }, [])
 
     const {data:newPickUpSite, setData:setNewPickUpSite, post, processing} = useForm({
@@ -87,6 +120,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
 
     const [isMarking, setIsMarking] = useState<Boolean>(false)
     const [drawerOpen, setDrawerOpen] = useState(false)
+    const [openEdit, setOpenEdit] = useState(false)
 
     const handleCreateMarker = () => {
         setIsMarking(true);
@@ -130,21 +164,24 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
         } catch {}
         console.log(dropsite);
         return <Marker  key={dropsite.id} longitude={dropsite?.coordinates[0]} latitude={dropsite?.coordinates[1]} anchor="center">
-            <Drawer direction="right">
+            <Drawer direction="bottom">
                 <DrawerTrigger><MapPin size={30} className="cursor-pointer p-1 hover:scale-210 transition-all duration-100 shadow-xl bg-green-500 text-white rounded-3xl"/></DrawerTrigger>
                 <DrawerContent>
                     <DrawerHeader>
                         <DrawerTitle>Pick Up Site Information</DrawerTitle>
-                        <DrawerDescription>
+                        <DrawerDescription className="flex flex-col items-center justify-center">
                             <div className="break-all">{dropsite.description}</div>
-                            <img src={window.location.origin + '/storage/' + dropsite.image}/>
+                            <img className="w-[50vh]" src={window.location.origin + '/storage/' + dropsite.image}/>
                         </DrawerDescription>
 
                     </DrawerHeader>
                     <DrawerFooter>
-                        <DrawerClose>
-                            <Button variant="outline">Close</Button>
-                        </DrawerClose>
+                        <div className="flex justify-center gap-2">
+                            {withControls && <Button className="w-fit" onClick={() => setOpenEdit(true)}>Edit</Button>}
+                            <DrawerClose>
+                                <Button variant="outline">Close</Button>
+                            </DrawerClose>
+                        </div>
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
@@ -158,7 +195,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
         <FullscreenControl />
     </Map>
         { withControls && <section>
-            <Button onClick={handleCreateMarker}>Create a Pickup Site</Button>
+            <Button onClick={handleCreateMarker}>Add a Pickup Site</Button>
         </section>
         }
 
@@ -191,5 +228,6 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
                 </form>
             </DrawerContent>
         </Drawer>
+        <EditDropSite open={openEdit} setOpen={setOpenEdit} />
     </>
 }
