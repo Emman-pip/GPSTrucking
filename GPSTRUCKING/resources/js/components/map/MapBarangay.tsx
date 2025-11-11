@@ -14,10 +14,12 @@ import {
 } from "@/components/ui/drawer"
 import { Button } from "../ui/button";
 import { MapPinPlus } from "lucide-react";
-import { useForm } from "@inertiajs/react";
+import { router, useForm } from "@inertiajs/react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
+import barangay from "@/routes/barangay";
+import { Spinner } from "../ui/spinner";
 
 export interface PickUpSite {
     id?: number;
@@ -36,11 +38,30 @@ export default function MapBarangay({ barangayCoordinates }: {
     const mapRef = useRef<MapRef | null>(null);
     const map = mapRef.current?.getMap();
 
-    const [newPickUpSite, setNewPickUpSite] = useState<PickUpSite>()
+    const {data:newPickUpSite, setData:setNewPickUpSite, post, processing} = useForm({
+        coordinates: null,
+        image: null,
+        description: null
+    })
 
     const submitNewPickUpSite = (e:FormEvent) => {
         e.preventDefault();
         console.log('Submitting', newPickUpSite);
+
+        post(barangay.new.dropsite().url, {
+            forceFormData: true,
+            onSuccess: () => {
+                setDrawerOpen(false);
+                setIsMarking(false);
+                setNewPickUpSite({
+                    coordinates: null,
+                    image: null,
+                    description: null
+                });
+            },
+            onError: (e)=>console.log(e)
+        }
+        )
     }
 
     const pickUpHandler = (e:MapMouseEvent) => {
@@ -118,7 +139,7 @@ export default function MapBarangay({ barangayCoordinates }: {
 
                         <div>
                             <Label htmlFor="image">Image of the Site <small>optional</small></Label>
-                            <Input id="image" name="image" type="file" onChange={e => setNewPickUpSite(prev => ({...prev, "image": e.target.files }))} multiple />
+                            <Input id="image" name="image" type="file" onChange={e => setNewPickUpSite(prev => ({...prev, "image": e.target.files[0] }))} />
                         </div>
                         <div>
                             <Label htmlFor="description">Description <small>*</small></Label>
@@ -126,7 +147,7 @@ export default function MapBarangay({ barangayCoordinates }: {
                         </div>
                     </DrawerHeader>
                     <DrawerFooter>
-                        <Button type="submit">Add new pickup site</Button>
+                        <Button type="submit" disabled={processing}> {processing && <Spinner/>}Add new pickup site</Button>
                         <DrawerClose>
                             <Button className="w-full" variant="outline">Cancel</Button>
                         </DrawerClose>

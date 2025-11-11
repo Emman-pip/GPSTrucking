@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BarangayController;
 use App\Http\Controllers\BarangayOfficialInformationController;
+use App\Http\Controllers\DropSiteController;
 use App\Http\Controllers\MapController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -19,16 +20,18 @@ use Inertia\Inertia;
 Route::middleware(['auth', 'verified',])->group(function () {
     // must be verified first
     Route::middleware(['ensure_has_profile'])->group(function() {
-        // TODO lagay dito na dapat verified din yung user as barangay!!!
         // for barangay dashboard
         Route::get('/barangay/dashboard', [BarangayController::class, 'dashboard'] )->name('barangay.dashboard');
 
         Route::get('/barangay/profile', [BarangayOfficialInformationController::class, 'profile'])->name('barangay.profile');
 
         // for barangay to resident chat
+
+        // TODO lagay dito na dapat verified din yung user as barangay!!!
         Route::get('/barangay/chats', [BarangayController::class, 'chat'])->name('barangay.chats');
 
         Route::get('/barangay/map', [MapController::class, 'map'])->name('barangay.map');
+        Route::post('barangay/create-pickup-site', [DropSiteController::class, 'post'])->name('barangay.new.dropsite');
     });
     // for form
     Route::get('/barangay/create-profile', [BarangayOfficialInformationController::class, 'displayProfileForm'])->name('barangay.barangay-profile-form');
