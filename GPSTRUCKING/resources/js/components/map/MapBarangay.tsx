@@ -151,15 +151,17 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
         try {
             dropsite.coordinates = JSON.parse(dropsite.coordinates);
         } catch {}
-        return <Marker  key={dropsite.id} longitude={dropsite?.coordinates[0]} latitude={dropsite?.coordinates[1]} anchor="center">
+        return <Marker key={dropsite.id} longitude={dropsite?.coordinates[0]} latitude={dropsite?.coordinates[1]} anchor="center">
             <Drawer direction="bottom">
-                <DrawerTrigger><MapPin size={30} className="cursor-pointer p-1 hover:scale-210 transition-all duration-100 shadow-xl bg-green-500 text-white rounded-3xl"/></DrawerTrigger>
+                <DrawerTrigger>
+                    <MapPin size={30} className="cursor-pointer p-1 hover:scale-210 transition-all duration-100 shadow-xl bg-green-500 text-white rounded-3xl" />
+                </DrawerTrigger>
                 <DrawerContent>
                     <DrawerHeader>
                         <DrawerTitle>Pick Up Site Information</DrawerTitle>
                         <DrawerDescription className="flex flex-col items-center justify-center">
                             <div className="break-all">{dropsite.description}</div>
-                            <img className="w-[50vh]" src={window.location.origin + '/storage/' + dropsite.image}/>
+                            <img className="w-[50vh]" src={window.location.origin + '/storage/' + dropsite.image} />
                         </DrawerDescription>
 
                     </DrawerHeader>
