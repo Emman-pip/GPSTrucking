@@ -1,6 +1,6 @@
 import { FullscreenControl, MapMouseEvent, MapRef } from "@vis.gl/react-maplibre"
 import { GeolocateControl, Map, Marker, NavigationControl, ScaleControl, TerrainControl } from "@vis.gl/react-maplibre";
-import { MAP_STYLE } from "./MapView"
+import { DropSite, MAP_STYLE } from "./MapView"
 import { FormEvent, useEffect, useRef, useState } from "react";
 import {
     Drawer,
@@ -13,13 +13,14 @@ import {
     DrawerTrigger,
 } from "@/components/ui/drawer"
 import { Button } from "../ui/button";
-import { MapPinPlus } from "lucide-react";
-import { router, useForm } from "@inertiajs/react";
+import { MapPin, MapPinPlus } from "lucide-react";
+import { router, useForm, usePage } from "@inertiajs/react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import barangay from "@/routes/barangay";
 import { Spinner } from "../ui/spinner";
+import DropSiteController from "@/actions/App/Http/Controllers/DropSiteController";
 
 export interface PickUpSite {
     id?: number;
@@ -31,12 +32,27 @@ export interface PickUpSite {
 }
 
 
-export default function MapBarangay({ barangayCoordinates }: {
-    barangayCoordinates: [number, number]
+export default function MapBarangay({ barangayCoordinates, withControls = false }: {
+    barangayCoordinates: [number, number],
+    withControls?: boolean
 }) {
 
     const mapRef = useRef<MapRef | null>(null);
     const map = mapRef.current?.getMap();
+    const user = usePage().props.auth.user;
+
+    const [dropSites, setDropSites] = useState<PickUpSite[]>();
+    console.log(`${window.location.origin}${barangay.get.dropsites().url}?barangay_id=${user.barangay_official_info.barangay_id}`);
+
+    function getDropsites() {
+        fetch(`${window.location.origin}${barangay.get.dropsites().url}?barangay_id=${user.barangay_official_info.barangay_id}`)
+            .then(res => res.json())
+            .then(res => setDropSites(res))
+    }
+
+    useEffect(()=>{
+        getDropsites();
+    }, [])
 
     const {data:newPickUpSite, setData:setNewPickUpSite, post, processing} = useForm({
         coordinates: null,
@@ -58,6 +74,7 @@ export default function MapBarangay({ barangayCoordinates }: {
                     image: null,
                     description: null
                 });
+                getDropsites();
             },
             onError: (e)=>console.log(e)
         }
@@ -84,7 +101,12 @@ export default function MapBarangay({ barangayCoordinates }: {
             latitude: barangayCoordinates[1],
             zoom: 14,
         }}
+        maxBounds={[
+            [121.08, 13.93],
+            [121.20, 14.10]
+        ]}
         onMouseMove={() => {
+            if (!withControls) return;
             const map = mapRef.current?.getMap();
             if (!isMarking) {
                 map.getCanvas().style.cursor = "";
@@ -94,7 +116,7 @@ export default function MapBarangay({ barangayCoordinates }: {
             map.getCanvas().style.cursor = "url('/resources/MapPinAdd.svg') 8 8, pointer"
         }}
         onClick={(e:MapMouseEvent) => {
-            if (isMarking) {
+            if (isMarking && withControls) {
                 console.log("DONE");
                 setIsMarking(false);
                 setNewPickUpSite({ coordinates: [e.lngLat.lng, e.lngLat.lat ] })
@@ -102,23 +124,32 @@ export default function MapBarangay({ barangayCoordinates }: {
             }
         }}
     >
-        <Marker longitude={barangayCoordinates[0]} latitude={barangayCoordinates[1]} anchor="center">
+    {dropSites && dropSites.map(dropsite => {
+        try {
+            dropsite.coordinates = JSON.parse(dropsite.coordinates);
+        } catch {}
+        console.log(dropsite);
+        return <Marker  key={dropsite.id} longitude={dropsite?.coordinates[0]} latitude={dropsite?.coordinates[1]} anchor="center">
             <Drawer direction="right">
-                <DrawerTrigger>Open</DrawerTrigger>
+                <DrawerTrigger><MapPin size={30} className="cursor-pointer p-1 hover:scale-210 transition-all duration-100 shadow-xl bg-green-500 text-white rounded-3xl"/></DrawerTrigger>
                 <DrawerContent>
                     <DrawerHeader>
-                        <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-                        <DrawerDescription>This action cannot be undone.</DrawerDescription>
+                        <DrawerTitle>Pick Up Site Information</DrawerTitle>
+                        <DrawerDescription>
+                            <div className="break-all">{dropsite.description}</div>
+                            <img src={window.location.origin + '/storage/' + dropsite.image}/>
+                        </DrawerDescription>
+
                     </DrawerHeader>
                     <DrawerFooter>
-                        <Button>Submit</Button>
                         <DrawerClose>
-                            <Button variant="outline">Cancel</Button>
+                            <Button variant="outline">Close</Button>
                         </DrawerClose>
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
         </Marker>
+    })}
 
         {newPickUpSite?.coordinates && <Marker onClick={() => setDrawerOpen(true)} longitude={newPickUpSite.coordinates[0]} latitude={newPickUpSite.coordinates[1]} anchor="center">
             <MapPinPlus className="h-10 w-10 bg-red-500 rounded-4xl text-white p-3" />
@@ -126,9 +157,10 @@ export default function MapBarangay({ barangayCoordinates }: {
     }
         <FullscreenControl />
     </Map>
-        <section>
+        { withControls && <section>
             <Button onClick={handleCreateMarker}>Create a Pickup Site</Button>
         </section>
+        }
 
         <Drawer onOpenChange={setDrawerOpen} open={drawerOpen} direction="right">
             <DrawerContent>
@@ -149,7 +181,11 @@ export default function MapBarangay({ barangayCoordinates }: {
                     <DrawerFooter>
                         <Button type="submit" disabled={processing}> {processing && <Spinner/>}Add new pickup site</Button>
                         <DrawerClose>
-                            <Button className="w-full" variant="outline">Cancel</Button>
+                            <Button className="w-full" variant="outline" onClick={() =>{
+                                setIsMarking(false)
+                                setNewPickUpSite(prev => ({...prev, coordinates: null}))
+                            }
+                            }>Cancel</Button>
                         </DrawerClose>
                     </DrawerFooter>
                 </form>

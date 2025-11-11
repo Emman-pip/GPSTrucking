@@ -32,6 +32,7 @@ Route::middleware(['auth', 'verified',])->group(function () {
 
         Route::get('/barangay/map', [MapController::class, 'map'])->name('barangay.map');
         Route::post('barangay/create-pickup-site', [DropSiteController::class, 'post'])->name('barangay.new.dropsite');
+        Route::get('barangay/get-pickup-sites', [DropSiteController::class, 'dropSites'])->name('barangay.get.dropsites');
     });
     // for form
     Route::get('/barangay/create-profile', [BarangayOfficialInformationController::class, 'displayProfileForm'])->name('barangay.barangay-profile-form');

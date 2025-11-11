@@ -31,7 +31,7 @@ export default function CustomizeMap({ barangayData } : {barangayData : Barangay
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Customize Map" />
             <main className="p-4 flex flex-col gap-2">
-                <MapBarangay barangayCoordinates={barangayData.coordinates}/>
+                <MapBarangay barangayCoordinates={barangayData.coordinates} withControls={true}/>
             </main>
         </AppLayout>
     );

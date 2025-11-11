@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Barangay;
 use App\Models\DropSite;
 use Exception;
 use Illuminate\Http\Request;
@@ -23,5 +24,10 @@ class DropSiteController extends Controller
         $path = $request->file('image')->store("dropsites/{$barangay_id}", 'public');
         $validated['image'] = $path;
         DropSite::create($validated);
+    }
+
+    public function dropSites(Request $request) {
+        $barangay_id = $request['barangay_id'];
+        return response()->json(DropSite::where('barangay_id', $barangay_id)->get());
     }
 }
