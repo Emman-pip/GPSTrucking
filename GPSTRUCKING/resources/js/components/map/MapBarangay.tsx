@@ -154,7 +154,10 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
         return <Marker key={dropsite.id} longitude={dropsite?.coordinates[0]} latitude={dropsite?.coordinates[1]} anchor="center">
             <Drawer direction="bottom">
                 <DrawerTrigger>
-                    <MapPin size={30} className="cursor-pointer p-1 hover:scale-210 transition-all duration-100 shadow-xl bg-green-500 text-white rounded-3xl" />
+                    <MapPin
+                        size={30}
+                        className="cursor-pointer p-2 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-green-500 to-green-600 text-white rounded-full ring-2 ring-green-200 dark:ring-green-800"
+                    />
                 </DrawerTrigger>
                 <DrawerContent>
                     <DrawerHeader>
@@ -189,6 +192,8 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
     </Map>
         { withControls && <section>
             <Button onClick={handleCreateMarker}>Add a Pickup Site</Button>
+            <Button onClick={handleCreateMarker}>Add a Route</Button>
+
         </section>
         }
 
