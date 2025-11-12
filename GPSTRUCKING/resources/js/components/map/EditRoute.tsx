@@ -67,37 +67,6 @@ import {
 import { Combobox } from "./CreateRoute";
 
 
-const days = [
-  {
-    value: "Monday",
-    label: "Monday",
-  },
-  {
-    value: "Tuesday",
-    label: "Tuesday",
-  },
-
-  {
-    value: "Wednesday",
-    label: "Wednesday",
-  },
-  {
-    value: "Thursday",
-    label: "Thursday",
-  },
-  {
-    value: "Friday",
-    label: "Friday",
-  },
-  {
-    value: "Saturday",
-    label: "Saturday",
-  },
-  {
-    value: "Sunday",
-    label: "Sunday",
-  },
-]
 export function EditRoute({
     setOpen,
     open,
@@ -111,22 +80,24 @@ export function EditRoute({
         route: Route|null;
         withControls: boolean;
     }) {
-    const {data, setData, post, processing, errors} = useForm({
+    const {data, setData, put, processing, errors} = useForm({
+        'sched_id': route?.schedule.id,
         'day_of_the_week': route?.schedule.day_of_the_week,
         'time': route?.schedule.time,
-        'coordinates': route?.coordinates,
     });
 
     useEffect(()=>{
-        setData(prev => ({...prev, coordinates: route?.coordinates }))
         setData(prev => ({...prev, time: route?.schedule.time }))
         setData(prev => ({...prev, day_of_the_week: route?.schedule.day_of_the_week }))
+        setData(prev => ({...prev, sched_id: route?.schedule.id }))
     }, [open])
 
     const handleSave = (e:FormEvent) => {
         e.preventDefault();
-        () => setData(prev => ({...prev, coordinates: route?.coordinates }))
-        console.log(data, route);
+        put(barangay.update.route().url, {
+            onSuccess: ()=>{router.get("#")},
+            onError: (e)=>console.log("ERROR", e)
+        })
     }
 
     return <Dialog onOpenChange={setOpen}

@@ -52,4 +52,7 @@ Route::middleware(['auth', 'verified',])->group(function () {
     Route::post('/barangay/create-route', [RouteController::class, 'create'])->name('barangay.create.route');
     // get routes information
     Route::get('/barangay/get-routes', [RouteController::class, 'get'])->name('barangay.get.routes');
+    // updating routes
+    Route::put('/barangay/update-route', [RouteController::class, 'update'])->name('barangay.update.route');
+    Route::delete('/barangay/delete-route-id', [RouteController::class, 'delete'])->name('barangay.delete.route');
 });

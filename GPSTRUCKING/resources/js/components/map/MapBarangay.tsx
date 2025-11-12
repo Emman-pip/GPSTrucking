@@ -88,6 +88,13 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
     const [routes, setRoutes] = useState<Route[]>();
 
     function refresh() {
+        setIsMarking(false);
+        setIsSettingRoute(false);
+        setOpenEdit(false);
+        setOpenNewRoute(false);
+        setPoints([]);
+        setOpenEditRoute(false);
+
         fetch(`${window.location.origin}${barangay.get.dropsites().url}?barangay_id=${user.barangay_official_info.barangay_id}`)
             .then(res => res.json())
             .then(res => setDropSites(res))
@@ -99,12 +106,6 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
                 console.log('res', res);
                 setRoutes(res);
             })
-
-        setIsMarking(false);
-        setIsSettingRoute(false);
-        setOpenEdit(false);
-        setOpenNewRoute(false);
-        setPoints([]);
     }
 
     useEffect(()=>{
