@@ -53,6 +53,9 @@ class RouteController extends Controller
     }
 
     public function delete($id) {
-        //
+        $id = Route::find($id);
+        $ps = PickUpSchedule::find($id->pickup_id);
+        $id->delete();
+        $ps->delete();
     }
 }

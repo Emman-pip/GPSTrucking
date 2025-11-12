@@ -54,5 +54,5 @@ Route::middleware(['auth', 'verified',])->group(function () {
     Route::get('/barangay/get-routes', [RouteController::class, 'get'])->name('barangay.get.routes');
     // updating routes
     Route::put('/barangay/update-route', [RouteController::class, 'update'])->name('barangay.update.route');
-    Route::delete('/barangay/delete-route-id', [RouteController::class, 'delete'])->name('barangay.delete.route');
+    Route::delete('/barangay/delete-route-{id}', [RouteController::class, 'delete'])->name('barangay.delete.route');
 });

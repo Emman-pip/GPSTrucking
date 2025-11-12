@@ -100,6 +100,13 @@ export function EditRoute({
         })
     }
 
+    const handleDelete = () => {
+        router.delete(barangay.delete.route(route?.id).url, {
+            onSuccess: ()=>{router.get("#")},
+            onError: (e)=>console.log("ERROR", e)
+        })
+    }
+
     return <Dialog onOpenChange={setOpen}
                    open={open}>
         <DialogContent>
@@ -107,7 +114,7 @@ export function EditRoute({
                 <DialogTitle >
                     <div className="flex justify-between items-center">
                         {withControls ? "Edit Route" : "Route Schedule"}
-                        {withControls && <Trash className="text-red-300 cursor-pointer transition-all duration-100 hover:text-red-500"/>}
+                        {withControls && <Trash onClick={() => handleDelete()} className="text-red-300 cursor-pointer transition-all duration-100 hover:text-red-500"/>}
                     </div>
                 </DialogTitle>
                 <form onSubmit={handleSave}>
