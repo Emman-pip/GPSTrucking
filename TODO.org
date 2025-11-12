@@ -13,9 +13,9 @@
 - [ ] residents list
 
 - [X] should have a form for passing credentials
-- [-] be able to set
-  - [ ] routes,
-  - [ ] schedule per route
+- [X] be able to set
+  - [X] routes,
+  - [X] schedule per route
   - [X] drop sites on their sites
 - [ ] should have a way to contact trucks
 - [X] settings
