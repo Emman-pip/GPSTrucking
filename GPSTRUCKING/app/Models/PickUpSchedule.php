@@ -15,4 +15,8 @@ class PickUpSchedule extends Model
     public function barangay() {
         return $this->belongsTo(Barangay::class);
     }
+
+    public function route() {
+        return $this->belongsTo(Route::class);
+    }
 }

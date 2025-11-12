@@ -50,4 +50,6 @@ Route::middleware(['auth', 'verified',])->group(function () {
     Route::put('/barangay/update-valid-id', [BarangayOfficialInformationController::class, 'updateValidID'])->name('barangay.valid-id.update');
     // for routes
     Route::post('/barangay/create-route', [RouteController::class, 'create'])->name('barangay.create.route');
+    // get routes information
+    Route::get('/barangay/get-routes', [RouteController::class, 'get'])->name('barangay.get.routes');
 });

@@ -34,4 +34,9 @@ class RouteController extends Controller
             DB::rollBack();
         }
     }
+
+    public function get(){
+        $barangay_id = Auth::user()->barangayOfficialInfo->barangay_id;
+        return response()->json(Route::where('barangay_id', $barangay_id)->with('schedule')->get());
+    }
 }

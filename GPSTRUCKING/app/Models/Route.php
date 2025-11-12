@@ -17,6 +17,6 @@ class Route extends Model
     }
 
     public function schedule() {
-        return $this->hasOne(PickUpSchedule::class);
+        return $this->hasOne(PickUpSchedule::class, "id");
     }
 }
