@@ -276,7 +276,9 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
             <MapPinPlus className="h-10 w-10 bg-red-500 rounded-4xl text-white p-3" />
         </Marker>
         }
-        <FullscreenControl />
+        <FullscreenControl/>
+        <NavigationControl/>
+        <GeolocateControl/>
     </Map>
         {withControls && (
             <section className="flex flex-wrap items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-md shadow-sm">
