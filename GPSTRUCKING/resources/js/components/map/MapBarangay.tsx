@@ -14,7 +14,7 @@ import {
     DrawerTrigger,
 } from "@/components/ui/drawer"
 import { Button } from "../ui/button";
-import { MapPin, MapPinPlus } from "lucide-react";
+import { MapPin, MapPinPlus, Pickaxe, Route } from "lucide-react";
 import { router, useForm, usePage } from "@inertiajs/react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -36,6 +36,31 @@ import { error } from "console";
 import { EditDropSite } from "./EditDropSite";
 import { disable } from "@/routes/two-factor";
 import { CreateRoute } from "./CreateRoute";
+import { LineRenderer } from "./LineRenderer";
+
+export interface PickUpSite {
+    id?: number;
+    coordinates?: [number, number];
+    image?: string;
+    description?: string;
+    barangay_id?: number;
+    barangay?: string;
+}
+
+export interface PickUpSched {
+    id?:number;
+    day_of_the_week?:string;
+    time?:string;
+    barangay_id?: number;
+}
+
+export interface Route {
+    id?: number;
+    barangay_id?: number;
+    coordinates?: [number, number][];
+    pickup_id?: number;
+    schedule: PickUpSched;
+};
 
 export interface PickUpSite {
     id?: number;
@@ -59,11 +84,21 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
     const user = usePage().props.auth.user;
 
     const [dropSites, setDropSites] = useState<PickUpSite[]>();
+    const [routes, setRoutes] = useState<Route[]>();
 
     function refresh() {
         fetch(`${window.location.origin}${barangay.get.dropsites().url}?barangay_id=${user.barangay_official_info.barangay_id}`)
             .then(res => res.json())
             .then(res => setDropSites(res))
+
+        fetch(`${window.location.origin}${barangay.get.routes().url}`)
+            .then(res => res.json())
+            .then(res => {
+                res.map(datum => datum.coordinates = JSON.parse(datum.coordinates));
+                console.log('res', res);
+                setRoutes(res);
+            })
+
         setIsMarking(false);
         setIsSettingRoute(false);
         setOpenEdit(false);
@@ -137,12 +172,13 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
         }]
     }; //: null;
 
+
     const handleRouteCreate = (e: MapMouseEvent) => {
         if (!isSettingRoute) return;
         const { lng, lat } = e.lngLat;
         setPoints(prev => [...prev, [lng, lat]]);
     }
-
+    console.log(routes)
     return <><Map
         ref={mapRef}
         mapStyle={MAP_STYLE}
@@ -185,6 +221,8 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
                 }}
             ></Layer>
         </Source>
+        /* {routes && routes.map((route, index) => <LineRenderer route={route} index={index}/>)} */
+        { routes && <LineRenderer route={routes[0]}/> }
     {dropSites && dropSites.map(dropsite => {
         try {
             dropsite.coordinates = JSON.parse(dropsite.coordinates);
