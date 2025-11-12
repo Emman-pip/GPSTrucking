@@ -44,7 +44,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { error } from "console";
-import MapBarangay, { PickUpSite } from "./MapBarangay";
+import MapBarangay, { PickUpSite, Route } from "./MapBarangay";
 import { MapRetLocation } from "./MapRetLocation";
 import { Select } from "../ui/select";
 "use client"
@@ -64,6 +64,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { Combobox } from "./CreateRoute";
 
 
 const days = [
@@ -97,99 +98,45 @@ const days = [
     label: "Sunday",
   },
 ]
-export function Combobox({ setValue, value}: {
-    setValue: SetDataAction<{
-        day_of_the_week?: null;
-        time?: null;
-        coordinates?: [number, number][];
-    }>;
-    value: {
-        day_of_the_week?: null;
-        time?: null;
-        coordinates?: [number, number][];
-    };
-}) {
-  const [open, setOpen] = React.useState(false)
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-full justify-between"
-        >
-          {value.day_of_the_week
-            ? days.find((day) => day.value === value.day_of_the_week)?.label
-            : "Select day..."}
-          <ChevronsUpDown className="opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandList>
-            <CommandGroup>
-              {days.map((day) => (
-                <CommandItem
-                  key={day.value}
-                  value={day.value}
-                  onSelect={(currentValue) => {
-                    setValue((prev) => ({...prev, day_of_the_week: currentValue === value ? "" : currentValue }));
-                    setOpen(false)
-                  }}
-                >
-                  {day.label}
-                  <Check
-                    className={cn(
-                      "ml-auto",
-                      value.day_of_the_week === day.value ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  )
-}
-
-export function CreateRoute({setOpen, open, refreshData, coordinatesArray, setCoordinates} : {
-    setOpen: Dispatch<SetStateAction<boolean>>;
-    setCoordinates: Dispatch<SetStateAction<[number, number][]>>;
-    open: boolean;
-    refreshData:void;
-    coordinatesArray: [number, number][]
-}) {
+export function EditRoute({
+    setOpen,
+    open,
+    refreshData,
+    route,
+    withControls,
+    } : {
+        setOpen: Dispatch<SetStateAction<boolean>>;
+        open: boolean;
+        refreshData:()=>void;
+        route: Route|null;
+        withControls: boolean;
+    }) {
     const {data, setData, post, processing, errors} = useForm({
-        'day_of_the_week': null,
-        'time': null,
-        'coordinates': coordinatesArray,
+        'day_of_the_week': route?.schedule.day_of_the_week,
+        'time': route?.schedule.time,
+        'coordinates': route?.coordinates,
     });
-    useEffect(()=>{
-        setData(prev => ({ ...prev, coordinates: coordinatesArray }));
-    }, [coordinatesArray]);
-    const handleSave = (e:FormEvent) => {
-        if (!e.target.checkValidity()){
-            return;
-        }
 
+    useEffect(()=>{
+        setData(prev => ({...prev, coordinates: route?.coordinates }))
+        setData(prev => ({...prev, time: route?.schedule.time }))
+        setData(prev => ({...prev, day_of_the_week: route?.schedule.day_of_the_week }))
+    }, [open])
+
+    const handleSave = (e:FormEvent) => {
         e.preventDefault();
-        post(barangay.create.route().url, {
-            onSuccess: () => {
-                refreshData();
-            },
-            onError: e => console.log(e)
-        });
+        () => setData(prev => ({...prev, coordinates: route?.coordinates }))
+        console.log(data, route);
     }
 
-    return <Dialog onOpenChange={setOpen} open={open}>
+    return <Dialog onOpenChange={setOpen}
+                   open={open}>
         <DialogContent>
             <DialogHeader>
                 <DialogTitle >
                     <div className="flex justify-between items-center">
-                        New Route
+                        {withControls ? "Edit Route" : "Route Schedule"}
+                        <Trash className="text-red-300 cursor-pointer transition-all duration-100 hover:text-red-500"/>
                     </div>
                 </DialogTitle>
                 <form onSubmit={handleSave}>
@@ -199,7 +146,7 @@ export function CreateRoute({setOpen, open, refreshData, coordinatesArray, setCo
                         </div>
                         <div className="space-y-2">
                             <Label>Time</Label>
-                            <Input onChange={(e) => setData(prev => ({...prev, time: e.target.value }))} type="time" required />
+                            <Input onChange={(e) => setData(prev => ({...prev, time: e.target.value }))} value={data.time} type="time" required />
                         </div>
                 </DialogDescription>
                     <DialogFooter className="pt-2">

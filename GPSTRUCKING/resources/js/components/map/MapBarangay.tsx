@@ -37,6 +37,7 @@ import { EditDropSite } from "./EditDropSite";
 import { disable } from "@/routes/two-factor";
 import { CreateRoute } from "./CreateRoute";
 import { LineRenderer } from "./LineRenderer";
+import { EditRoute } from "./EditRoute";
 
 export interface PickUpSite {
     id?: number;
@@ -179,6 +180,16 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
         setPoints(prev => [...prev, [lng, lat]]);
     }
     console.log(routes)
+
+    // states for edit route
+    const [ openEditRoute, setOpenEditRoute ] = useState<boolean>(false);
+    const [routeToEdit, setRouteToEdit ]  = useState<Route|null>(null);
+
+    const sample = (r: Route) => {
+        setRouteToEdit(r);
+        setOpenEditRoute(true);
+    }
+
     return <><Map
         ref={mapRef}
         mapStyle={MAP_STYLE}
@@ -217,13 +228,13 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
                 paint={{
                     'line-color': 'blue',
                     'line-width': 6,
-                    'line-opacity': 0.5
+                    'line-opacity': 0.9
                 }}
             ></Layer>
         </Source>
-        /* {routes && routes.map((route, index) => <LineRenderer route={route} index={index}/>)} */
-        { routes && <LineRenderer route={routes[0]}/> }
-    {dropSites && dropSites.map(dropsite => {
+        {routes && routes.map((route, index) => <LineRenderer route={route} index={index} map={mapRef.current?.getMap()} onClick={sample} />)}
+        /* {routes && <LineRenderer route={routes[0]} map={mapRef.current?.getMap()} />} */
+        {dropSites && dropSites.map(dropsite => {
         try {
             dropsite.coordinates = JSON.parse(dropsite.coordinates);
         } catch {}
@@ -319,5 +330,6 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
         </Drawer>
         <EditDropSite open={openEdit} setOpen={setOpenEdit} pickUpSite={dropSiteToEdit} refreshData={refresh} />
         <CreateRoute open={openNewRoute} setOpen={setOpenNewRoute} pickUpSite={dropSiteToEdit} coordinatesArray={points} setCoordinates={setPoints} refreshData={refresh} />
+        <EditRoute open={openEditRoute} setOpen={setOpenEditRoute} route={routeToEdit}  refreshData={refresh} withControls={withControls} />
     </>
 }
