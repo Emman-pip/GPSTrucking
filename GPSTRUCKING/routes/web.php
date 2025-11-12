@@ -9,11 +9,15 @@ Route::get('/', function () {
     if (Features::enabled(Features::registration())){
         return redirect()->route('evaluate-user');
     }
-    return redirect()->route('login');
+    return Inertia::render('hero-page');//redirect()->route('login');
     /* return Inertia::render('welcome', [ */
     /*     'canRegister' => Features::enabled(Features::registration()), */
     /* ]); */
 })->name('home');
+
+Route::get('/hero', function() {
+    return Inertia::render('hero-page');//redirect()->route('login');
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/evaluate-user', function () {

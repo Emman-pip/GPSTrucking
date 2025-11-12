@@ -117,23 +117,23 @@ export function EditRoute({
                         {withControls && <Trash onClick={() => handleDelete()} className="text-red-300 cursor-pointer transition-all duration-100 hover:text-red-500"/>}
                     </div>
                 </DialogTitle>
-                <form onSubmit={handleSave}>
                 <DialogDescription>
+                    <form onSubmit={handleSave}>
                         <div className="space-y-2">
-                            {withControls ? <Combobox setValue={setData} value={data}/>: <Input type="text" value={data.day_of_the_week} disabled/>}
+                            {withControls ? <Combobox setValue={setData} value={data} /> : <Input type="text" value={data.day_of_the_week} disabled />}
                         </div>
                         <div className="space-y-2">
                             <Label>Time</Label>
-                            <Input disabled={!withControls} onChange={(e) => setData(prev => ({...prev, time: e.target.value }))} value={data.time} type="time" required />
+                            <Input disabled={!withControls} onChange={(e) => setData(prev => ({ ...prev, time: e.target.value }))} value={data.time} type="time" required />
                         </div>
+                        {withControls && <Button className="mt-2 w-full" type="submit">Save</Button>}
+                    </form>
                 </DialogDescription>
                     <DialogFooter className="pt-2">
-                        {withControls && <Button type="submit">Save</Button>}
-                    <DialogClose>
-                        <Button variant="outline" className="">{withControls ? 'Cancel' : "Close"}</Button>
-                    </DialogClose>
+                        <DialogClose>
+                            <Button variant="outline" className="">{withControls ? 'Cancel' : "Close"}</Button>
+                        </DialogClose>
                 </DialogFooter>
-                </form>
             </DialogHeader>
         </DialogContent>
     </Dialog>

@@ -32,7 +32,7 @@ export function LineRenderer({
             type: 'Feature',
             geometry: {
                 type: 'LineString',
-                coordinates: route.coordinates
+                coordinates: route?.coordinates
             }
         }]
     }; //: null;

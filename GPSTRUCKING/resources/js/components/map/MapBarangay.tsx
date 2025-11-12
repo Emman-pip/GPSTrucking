@@ -267,38 +267,76 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
                             </DrawerClose>
                         </div>
                     </DrawerFooter>
-                </DrawerContent>
-            </Drawer>
-        </Marker>
-    })}
+                    </DrawerContent>
+                </Drawer>
+            </Marker>
+        })}
 
         {newPickUpSite?.coordinates && <Marker onClick={() => setDrawerOpen(true)} longitude={newPickUpSite.coordinates[0]} latitude={newPickUpSite.coordinates[1]} anchor="center">
             <MapPinPlus className="h-10 w-10 bg-red-500 rounded-4xl text-white p-3" />
         </Marker>
-    }
+        }
         <FullscreenControl />
     </Map>
-        { withControls && <section className="flex">
-            <Button disabled={isSettingRoute} onClick={handleCreateMarker}>Add a Pickup Site</Button>
-            <div className={isSettingRoute ? "w-full flex gap-2 justify-end items-center" : ""}>
-                {!isSettingRoute && <Button onClick={() => {setIsSettingRoute(true); setPoints([])}}>Add a Route</Button>}
-                {isSettingRoute && <div className="flex gap-2">
-                    <Button onClick={() => {setOpenNewRoute(true)}}>Save</Button>
-                    <Button onClick={() => {
-                        const tmp = [...points];
-                        tmp.pop();
-                        setPoints(tmp);
-                    }}
-                        variant={"outline"}>
-                        Undo
-                    </Button>
-                    <Button variant={"destructive"} onClick={() => {setPoints([]);setIsSettingRoute(false)}}>Cancel</Button>
-                </div>
-                }
-            </div>
+        {withControls && (
+            <section className="flex flex-wrap items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-md shadow-sm">
+                <Button
+                    disabled={isSettingRoute|isMarking}
+                    onClick={handleCreateMarker}
+                    variant="default"
+                >
+                    Add Pickup Site
+                </Button>
+                { isMarking && <Button onClick={() => setIsMarking(false)} variant="destructive">
+                    Cancel
+                </Button>
+                    }
 
-        </section>
-        }
+                {!isSettingRoute && !isMarking && (
+                    <Button
+                        onClick={() => {
+                            setIsSettingRoute(true);
+                            setPoints([]);
+                        }}
+                        variant="secondary"
+                    >
+                        Add Route
+                    </Button>
+                )}
+
+                {isSettingRoute && (
+                    <div className="flex gap-2 ml-auto">
+                        <Button
+                            onClick={() => setOpenNewRoute(true)}
+                            variant="default"
+                        >
+                            Save
+                        </Button>
+
+                        <Button
+                            onClick={() => {
+                                const tmp = [...points];
+                                tmp.pop();
+                                setPoints(tmp);
+                            }}
+                            variant="outline"
+                        >
+                            Undo
+                        </Button>
+
+                        <Button
+                            onClick={() => {
+                                setPoints([]);
+                                setIsSettingRoute(false);
+                            }}
+                            variant="destructive"
+                        >
+                            Cancel
+                        </Button>
+                    </div>
+                )}
+            </section>
+        )}
 
         <Drawer onOpenChange={setDrawerOpen} open={drawerOpen} direction="right">
             <DrawerContent>
