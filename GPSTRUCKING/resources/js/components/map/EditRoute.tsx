@@ -136,23 +136,23 @@ export function EditRoute({
                 <DialogTitle >
                     <div className="flex justify-between items-center">
                         {withControls ? "Edit Route" : "Route Schedule"}
-                        <Trash className="text-red-300 cursor-pointer transition-all duration-100 hover:text-red-500"/>
+                        {withControls && <Trash className="text-red-300 cursor-pointer transition-all duration-100 hover:text-red-500"/>}
                     </div>
                 </DialogTitle>
                 <form onSubmit={handleSave}>
                 <DialogDescription>
                         <div className="space-y-2">
-                            <Combobox setValue={setData} value={data} />
+                            {withControls ? <Combobox setValue={setData} value={data}/>: <Input type="text" value={data.day_of_the_week} disabled/>}
                         </div>
                         <div className="space-y-2">
                             <Label>Time</Label>
-                            <Input onChange={(e) => setData(prev => ({...prev, time: e.target.value }))} value={data.time} type="time" required />
+                            <Input disabled={!withControls} onChange={(e) => setData(prev => ({...prev, time: e.target.value }))} value={data.time} type="time" required />
                         </div>
                 </DialogDescription>
                     <DialogFooter className="pt-2">
-                        <Button type="submit">Save</Button>
+                        {withControls && <Button type="submit">Save</Button>}
                     <DialogClose>
-                        <Button variant="outline" className="">Cancel</Button>
+                        <Button variant="outline" className="">{withControls ? 'Cancel' : "Close"}</Button>
                     </DialogClose>
                 </DialogFooter>
                 </form>
