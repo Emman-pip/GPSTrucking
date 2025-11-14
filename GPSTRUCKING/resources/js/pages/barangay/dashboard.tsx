@@ -1,4 +1,16 @@
 import MapBarangay from '@/components/map/MapBarangay';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 import MapView from '@/components/map/MapView';
 import AppLayout from '@/layouts/barangay/app-layout'
 import barangay from '@/routes/barangay';
@@ -8,6 +20,7 @@ import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Barangay } from './profileForm';
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card';
 import { Calendar, CirclePlus, CloudAlert, LucideChartArea, PersonStanding, MessageCircle, MessageSquare, LucideUsers2} from 'lucide-react';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -29,7 +42,27 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function Dashboard({ barangay: barangayData }: {
     barangay: Barangay
 }) {
-    return (
+    const isVerified = usePage().props.auth.user.isVerified;
+    const [alertOpen, setAlertOpen] = useState(isVerified == false);
+    return (<>
+        <AlertDialog onOpenChange={setAlertOpen} open={alertOpen}>
+      <AlertDialogTrigger asChild>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Wait! You need to get verified first.</AlertDialogTitle>
+          <AlertDialogDescription>
+              <strong>Please wait for our admins to verify your account</strong> as a barangay personnel. Until then, you can only browse the <strong>dashboard, profile, and settings</strong> of your account!
+              <br/>
+              <br/>
+              <small>*Note: updating documents or barangay assignment may result in your account getting unverified. You will have to wait for your account to be verified again.</small>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogAction>Continue</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Barangay Personel Dashboard" />
             <main className="p-4 flex flex-col gap-2">
@@ -74,5 +107,5 @@ export default function Dashboard({ barangay: barangayData }: {
                 <MapBarangay barangayCoordinates={barangayData.coordinates} />
             </main>
         </AppLayout>
-    );
+    </>);
 }
