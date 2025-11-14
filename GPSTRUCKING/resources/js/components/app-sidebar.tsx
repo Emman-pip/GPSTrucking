@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/sidebar';
 import { SharedData, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Map, User } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Map, MessageSquare, User } from 'lucide-react';
 import AppLogo from './app-logo';
 import barangay from '@/routes/barangay';
 import { BarangayMenuContent } from './barangay/user-menu-content';
@@ -54,7 +54,7 @@ const BarangayMainNavItems: NavItem[] = [
     {
         title: 'Chats',
         href: barangay.chats.url(),
-        icon: LayoutGrid,
+        icon: MessageSquare,
     },
 ];
 
