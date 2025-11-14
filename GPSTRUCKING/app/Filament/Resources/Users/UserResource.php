@@ -17,6 +17,8 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class UserResource extends Resource
 {
@@ -55,66 +57,69 @@ class UserResource extends Resource
 
     public static function infolist(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                Section::make('Account Information')
-                    ->schema([
+        $record = $schema->getRecord();
+        $role = $record->role->name;
+        if ($role === 'barangay') {
+            return $schema
+                ->components([
+                    Section::make('Account Information')
+                        ->schema([
 
-                        TextEntry::make('name')
-                            ->inlineLabel(),
+                            TextEntry::make('name')
+                                ->inlineLabel(),
 
-                        TextEntry::make('email')
-                            ->inlineLabel(),
-                    ])
-                    ->columnSpanFull(),
-                Section::make('Details')
-                    ->schema([
+                            TextEntry::make('email')
+                                ->inlineLabel(),
+                        ])
+                        ->columnSpanFull(),
+                    Section::make('Details')
+                        ->schema([
+                            TextEntry::make('role.name')
+                                ->label('Role')
+                                ->inlineLabel(),
+                            TextEntry::make('barangayOfficialInfo.proof_of_identity')
+                                ->label('Proof of Identity')
+                                ->icon(Heroicon::OutlinedEye)
+                                ->formatStateUsing(fn($record) => 'View Valid ID')
+                                ->url(fn($record) => '/storage/' . $record->barangayOfficialInfo->proof_of_identity)
+                                ->openUrlInNewTab()
+                                ->inlineLabel(),
+                            TextEntry::make('barangayOfficialInfo.barangay_official_id')
+                                ->label('Barangay ID')
+                                ->icon(Heroicon::OutlinedEye)
+                                ->formatStateUsing(fn($record) => 'View barangay ID')
+                                ->url(fn($record) => '/storage/' . $record->barangayOfficialInfo->proof_of_identity)
+                                ->openUrlInNewTab()
+                                ->inlineLabel(),
+                            TextEntry::make('barangayOfficialInfo.contact_number')
+                                ->label('Contact number')
+                                ->icon(Heroicon::DevicePhoneMobile)
+                                ->inlineLabel(),
+                        ])
+                        ->visible(fn($record) => ! is_null($record->barangayOfficialInfo))
+                        ->headerActions(
+                            [
+                                Action::make('toggleVerified')
+                                    ->label(fn($record) => $record->isVerified ? 'Unverify' : 'Verify')
+                                    ->icon(
+                                        fn($record) => $record->isVerified
+                                            ? 'heroicon-o-x-circle'
+                                            : 'heroicon-o-check-circle'
+                                    )
+                                    ->color(fn($record) => $record->isVerified ? 'danger' : 'success')
+                                    ->action(function ($record) {
+                                        $record->isVerified = ! $record->isVerified;
+                                        $record->save();
+                                    })
+                            ]
 
-                        TextEntry::make('name')
-                            ->inlineLabel(),
+                        )
+                        ->columnSpanFull(),
+                ]);
+        }
+        return $schema->components([
+            TextEntry::make('name'),
+        ]);
 
-                        TextEntry::make('email')
-                            ->inlineLabel(),
-                        TextEntry::make('role.name')
-                            ->label('Role')
-                            ->inlineLabel(),
-                        TextEntry::make('barangayOfficialInfo.proof_of_identity')
-                            ->label('Proof of Identity')
-                            ->icon(Heroicon::OutlinedEye)
-                            ->formatStateUsing(fn($record) => 'View Valid ID')
-                            ->url(fn($record) => '/storage/' . $record->barangayOfficialInfo->proof_of_identity)
-                            ->openUrlInNewTab()
-                            ->inlineLabel(),
-                        TextEntry::make('barangayOfficialInfo.barangay_official_id')
-                            ->label('Barangay ID')
-                            ->icon(Heroicon::OutlinedEye)
-                            ->formatStateUsing(fn($record) => 'View barangay ID')
-                            ->url(fn($record) => '/storage/' . $record->barangayOfficialInfo->proof_of_identity)
-                            ->openUrlInNewTab()
-                            ->inlineLabel(),
-                        TextEntry::make('barangayOfficialInfo.contact_number')
-                            ->label('Contact number')
-                            ->icon(Heroicon::DevicePhoneMobile)
-                            ->inlineLabel(),
-                    ])
-                ->headerActions(
-                    [
-                        Action::make('toggleVerified')
-                            ->label(fn($record) => $record->isVerified ? 'Unverify' : 'Verify')
-                            ->icon(
-                                fn($record) => $record->isVerified
-                                    ? 'heroicon-o-x-circle'
-                                    : 'heroicon-o-check-circle'
-                            )
-                            ->color(fn($record) => $record->isVerified ? 'danger' : 'success')
-                            ->action(function ($record) {
-                                $record->isVerified = ! $record->isVerified;
-                                $record->save();
-                            })
-                    ]
-
-                )
-                    ->columnSpanFull(),
-            ]);
     }
 }
