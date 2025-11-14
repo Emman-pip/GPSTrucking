@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\EnsureRole;
 use App\Http\Middleware\EnsureVerified;
 use App\Http\Middleware\isVerified;
 use Illuminate\Support\Facades\Route;
@@ -24,5 +25,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Route::aliasMiddleware('ensure_has_profile', EnsureVerified::class);
         Route::aliasMiddleware('ensure_verified', isVerified::class);
+        Route::aliasMiddleware('ensure_role', EnsureRole::class);
     }
 }

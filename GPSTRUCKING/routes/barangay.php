@@ -18,7 +18,7 @@ use Inertia\Inertia;
  * - RESIDENT LIST
  *
  */
-Route::middleware(['auth', 'verified',])->group(function () {
+Route::middleware(['auth', 'ensure_role:barangay', 'verified',])->group(function () {
     // must be verified first
     Route::middleware(['ensure_has_profile'])->group(function() {
         // for barangay dashboard

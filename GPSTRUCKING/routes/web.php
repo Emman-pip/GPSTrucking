@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\DropSiteController;
+use App\Http\Controllers\RouteController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,6 +32,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return redirect('/admin');
     })->name('evaluate-user');
 });
+
+// public routes for getting data
+Route::get('/get-routes', [RouteController::class, 'get'])->name('get.routes');
+Route::get('/get-pickup-sites', [DropSiteController::class, 'dropSites'])->name('get.dropsites');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/resident.php';
