@@ -87,7 +87,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
 
     const [dropSites, setDropSites] = useState<PickUpSite[]>();
     const [routes, setRoutes] = useState<Route[]>();
-    console.log(user);
+
     function refresh() {
         setIsMarking(false);
         setIsSettingRoute(false);
@@ -100,11 +100,11 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
             .then(res => res.json())
             .then(res => setDropSites(res))
 
+        console.log(`${window.location.origin}${get.routes().url}`);
         fetch(`${window.location.origin}${get.routes().url}`)
             .then(res => res.json())
             .then(res => {
                 res.map(datum => datum.coordinates = JSON.parse(datum.coordinates));
-                console.log('res', res);
                 setRoutes(res);
             })
     }
@@ -181,7 +181,6 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
         const { lng, lat } = e.lngLat;
         setPoints(prev => [...prev, [lng, lat]]);
     }
-    console.log(routes)
 
     // states for edit route
     const [ openEditRoute, setOpenEditRoute ] = useState<boolean>(false);
@@ -206,8 +205,9 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
             [121.20, 14.10]
         ]}
         onMouseMove={() => {
-            if (!withControls) return;
             const map = mapRef.current?.getMap();
+            map.getCanvas().style.cursor = "grab";
+            if (!withControls) return;
             if (!isMarking && !isSettingRoute) {
                 map.getCanvas().style.cursor = "";
                 return;

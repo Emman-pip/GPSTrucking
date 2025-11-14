@@ -33,7 +33,8 @@ class RouteController extends Controller
     }
 
     public function get(){
-        $barangay_id = Auth::user()->barangayOfficialInfo->barangay_id;
+        $user = Auth::user();
+        $barangay_id = $user->barangayOfficialInfo ? $user->barangayOfficialInfo->barangay_id : $user->residency->barangay_id;
         return response()->json(Route::where('barangay_id', $barangay_id)->with('schedule')->get());
     }
 
