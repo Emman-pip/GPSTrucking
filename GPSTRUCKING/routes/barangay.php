@@ -29,16 +29,22 @@ Route::middleware(['auth', 'verified',])->group(function () {
         // for barangay to resident chat
 
         // TODO lagay dito na dapat verified din yung user as barangay!!!
-        Route::get('/barangay/chats', [BarangayController::class, 'chat'])->name('barangay.chats');
+        Route::middleware(['ensure_verified'])->group(function() {
+            Route::get('/barangay/chats', [BarangayController::class, 'chat'])->name('barangay.chats');
 
-        // for pickup sites
-        Route::get('/barangay/map', [MapController::class, 'map'])->name('barangay.map');
-        Route::post('barangay/create-pickup-site', [DropSiteController::class, 'post'])->name('barangay.new.dropsite');
-        Route::get('barangay/get-pickup-sites', [DropSiteController::class, 'dropSites'])->name('barangay.get.dropsites');
-        Route::put('barangay/update-pickup-description', [DropSiteController::class, 'updateDescription'])->name('barangay.update.dropsites.description');
-        Route::put('barangay/update-pickup-image', [DropSiteController::class, 'updateImage'])->name('barangay.update.dropsites.image');
-        Route::put('barangay/update-pickup-coordinates', [DropSiteController::class, 'updateCoordinates'])->name('barangay.update.dropsites.coordinates');
-        Route::delete('barangay/delete-pickupsite-{id}', [DropSiteController::class, 'delete'])->name('barangay.delete.dropsites');
+            // for pickup sites
+            Route::get('/barangay/map', [MapController::class, 'map'])->name('barangay.map');
+            Route::post('barangay/create-pickup-site', [DropSiteController::class, 'post'])->name('barangay.new.dropsite');
+            Route::put('barangay/update-pickup-description', [DropSiteController::class, 'updateDescription'])->name('barangay.update.dropsites.description');
+            Route::put('barangay/update-pickup-image', [DropSiteController::class, 'updateImage'])->name('barangay.update.dropsites.image');
+            Route::put('barangay/update-pickup-coordinates', [DropSiteController::class, 'updateCoordinates'])->name('barangay.update.dropsites.coordinates');
+            Route::delete('barangay/delete-pickupsite-{id}', [DropSiteController::class, 'delete'])->name('barangay.delete.dropsites');
+            // for routes
+            Route::post('/barangay/create-route', [RouteController::class, 'create'])->name('barangay.create.route');
+            // updating routes
+            Route::put('/barangay/update-route', [RouteController::class, 'update'])->name('barangay.update.route');
+            Route::delete('/barangay/delete-route-{id}', [RouteController::class, 'delete'])->name('barangay.delete.route');
+        });
     });
     // for form
     Route::get('/barangay/create-profile', [BarangayOfficialInformationController::class, 'displayProfileForm'])->name('barangay.barangay-profile-form');
@@ -48,11 +54,7 @@ Route::middleware(['auth', 'verified',])->group(function () {
     Route::put('/barangay/update-assignment', [BarangayOfficialInformationController::class, 'updateAssignment'])->name('barangay.assignment.update');
     Route::put('/barangay/update-barangay-official-id', [BarangayOfficialInformationController::class, 'updateOfficialId'])->name('barangay.official-id.update');
     Route::put('/barangay/update-valid-id', [BarangayOfficialInformationController::class, 'updateValidID'])->name('barangay.valid-id.update');
-    // for routes
-    Route::post('/barangay/create-route', [RouteController::class, 'create'])->name('barangay.create.route');
     // get routes information
     Route::get('/barangay/get-routes', [RouteController::class, 'get'])->name('barangay.get.routes');
-    // updating routes
-    Route::put('/barangay/update-route', [RouteController::class, 'update'])->name('barangay.update.route');
-    Route::delete('/barangay/delete-route-{id}', [RouteController::class, 'delete'])->name('barangay.delete.route');
+    Route::get('barangay/get-pickup-sites', [DropSiteController::class, 'dropSites'])->name('barangay.get.dropsites');
 });
