@@ -15,7 +15,7 @@ class Residency extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function barangayID(){
-        return $this->hasOne(Barangay::class);
+    public function barangay(){
+        return $this->belongsTo(Barangay::class);
     }
 }

@@ -38,6 +38,7 @@ import { disable } from "@/routes/two-factor";
 import { CreateRoute } from "./CreateRoute";
 import { LineRenderer } from "./LineRenderer";
 import { EditRoute } from "./EditRoute";
+import get from "@/routes/get";
 
 export interface PickUpSite {
     id?: number;
@@ -86,7 +87,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
 
     const [dropSites, setDropSites] = useState<PickUpSite[]>();
     const [routes, setRoutes] = useState<Route[]>();
-
+    console.log(user);
     function refresh() {
         setIsMarking(false);
         setIsSettingRoute(false);
@@ -95,11 +96,11 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
         setPoints([]);
         setOpenEditRoute(false);
 
-        fetch(`${window.location.origin}${barangay.get.dropsites().url}?barangay_id=${user.barangay_official_info.barangay_id}`)
+        fetch(`${window.location.origin}${get.dropsites().url}?barangay_id=${user.barangay_official_info?.barangay_id ? user.barangay_official_info.barangay_id : user.residency.barangay_id}`)
             .then(res => res.json())
             .then(res => setDropSites(res))
 
-        fetch(`${window.location.origin}${barangay.get.routes().url}`)
+        fetch(`${window.location.origin}${get.routes().url}`)
             .then(res => res.json())
             .then(res => {
                 res.map(datum => datum.coordinates = JSON.parse(datum.coordinates));
