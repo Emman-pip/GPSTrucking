@@ -70,13 +70,13 @@ class UserResource extends Resource
 
                             TextEntry::make('email')
                                 ->inlineLabel(),
+                            TextEntry::make('role.name')
+                                ->label('Role')
+                                ->inlineLabel(),
                         ])
                         ->columnSpanFull(),
                     Section::make('Details')
                         ->schema([
-                            TextEntry::make('role.name')
-                                ->label('Role')
-                                ->inlineLabel(),
                             TextEntry::make('barangayOfficialInfo.proof_of_identity')
                                 ->label('Proof of Identity')
                                 ->icon(Heroicon::OutlinedEye)
@@ -118,8 +118,26 @@ class UserResource extends Resource
                 ]);
         }
         return $schema->components([
-            TextEntry::make('name'),
-        ]);
+            Section::make("Account Information")
+                ->schema([
+                    TextEntry::make('name')
+                        ->inlineLabel(),
 
+                    TextEntry::make('email')
+                        ->inlineLabel(),
+                    TextEntry::make('role.name')
+                        ->label('Role')
+                        ->inlineLabel(),
+                ])
+                ->columnSpanFull(),
+            Section::make("Residency Information")
+                ->schema([
+                    TextEntry::make('residency.barangayID.name')
+                        ->label('Barangay')
+                        ->inlineLabel(),
+                ])
+                ->visible(fn($record) => ! is_null($record->residency))
+                ->columnSpanFull()
+        ]);
     }
 }
