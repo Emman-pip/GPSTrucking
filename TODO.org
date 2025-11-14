@@ -1,4 +1,5 @@
 * Order of Things
+- [ ] add cascade delete
 
 * Barangay
 - [X] fix the app-header
