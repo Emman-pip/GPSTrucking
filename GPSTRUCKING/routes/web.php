@@ -27,7 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         else if ($role === 'barangay')
             return redirect()->route('barangay.dashboard');
         else if ($role === 'admin')
-            return response('Hi admin');
+            return redirect('/admin');
     })->name('evaluate-user');
 });
 
