@@ -16,11 +16,12 @@ import { BookOpen, Folder, LayoutGrid, Map, MessageSquare, User } from 'lucide-r
 import AppLogo from './app-logo';
 import barangay from '@/routes/barangay';
 import { BarangayMenuContent } from './barangay/user-menu-content';
+import resident from '@/routes/resident';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Resident Dashboard',
-        href: '#',
+        href: resident.dashboard().url,
         icon: LayoutGrid,
     },
 ];

@@ -1,5 +1,4 @@
-import MapView, { getLocation } from '@/components/map/MapView';
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
+import MapView  from '@/components/map/MapView';
 import AppLayout from '@/layouts/resident/app-layout';
 import resident from '@/routes/resident';
 import { type BreadcrumbItem } from '@/types';
