@@ -21,6 +21,9 @@ class EnsureVerified
             return redirect()->route('barangay.barangay-profile-form');
         }
 
+        if (($user->role->name === 'resident') && (!$user->residency)) {
+            return redirect()->route('resident.profile-form');
+        }
 
         return $next($request);
     }

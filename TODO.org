@@ -35,6 +35,7 @@
     - [ ] information about the dropsite
     - [ ] picture about the dropsite
 - [ ] contact the barangay for garbage collection-related problem
+- [ ] profile form
 - [ ] file complaints
 - [ ] AI chatbot
 - [ ] receive broadcast notifications
