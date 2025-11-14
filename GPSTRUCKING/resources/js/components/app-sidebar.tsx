@@ -15,14 +15,18 @@ import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Map, MessageSquare, User } from 'lucide-react';
 import AppLogo from './app-logo';
 import barangay from '@/routes/barangay';
-import { BarangayMenuContent } from './barangay/user-menu-content';
 import resident from '@/routes/resident';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Resident Dashboard',
+        title: 'Dashboard',
         href: resident.dashboard().url,
         icon: LayoutGrid,
+    },
+    {
+        title: 'Messages',
+        href: '#',
+        icon: MessageSquare,
     },
 ];
 
@@ -61,16 +65,16 @@ const BarangayMainNavItems: NavItem[] = [
 
 
 const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
+    // {
+    //     title: 'Repository',
+    //     href: 'https://github.com/laravel/react-starter-kit',
+    //     icon: Folder,
+    // },
+    // {
+    //     title: 'Documentation',
+    //     href: 'https://laravel.com/docs/starter-kits#react',
+    //     icon: BookOpen,
+    // },
 ];
 
 export function AppSidebar() {

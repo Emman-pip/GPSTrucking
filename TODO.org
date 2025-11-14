@@ -28,14 +28,14 @@
 
 
 * Resident
-- [ ] should be able to see:
-  - [ ] Map of their area only
-  - [ ] routes in their barangay
-  - [ ] dropsites in their barangay
-    - [ ] information about the dropsite
-    - [ ] picture about the dropsite
+- [X] should be able to see:
+  - [X] Map of their area only
+  - [X] routes in their barangay
+  - [X] dropsites in their barangay
+    - [X] information about the dropsite
+    - [X] picture about the dropsite
 - [ ] contact the barangay for garbage collection-related problem
-- [ ] profile form
+- [X] profile form
 - [ ] file complaints
 - [ ] AI chatbot
 - [ ] receive broadcast notifications
@@ -45,7 +45,7 @@
   - [ ] barangay
   - [ ] resident
 - [ ] creation of barangay users
-- [ ] approval of barangay official accounts
-- [ ] analytics
-  - [ ] how many users
-  - [ ] user growth
+- [X] approval of barangay official accounts
+- [X] analytics
+  - [X] how many users
+  - [X] user growth
