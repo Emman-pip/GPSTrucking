@@ -76,7 +76,7 @@ export function LineRenderer({
             id={`line-${index}`}
             type="line"
             paint={{
-                'line-color': color,
+                'line-color': 'blue',
                 'line-width': 8,
                 'line-opacity': 0.7
             }}
