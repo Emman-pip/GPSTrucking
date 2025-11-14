@@ -10,6 +10,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class UsersTable
@@ -27,7 +28,7 @@ class UsersTable
                 //     ->dateTime()
                 //     ->sortable(),
                 ToggleColumn::make('isVerified')
-                    ->label('Verified')
+                    ->label('Status')
                     ->inline(false),
                 TextColumn::make('role.name')
                     ->label('Role')
@@ -45,7 +46,19 @@ class UsersTable
                 //     ->sortable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('role_id')
+                    ->label('Role')
+                    ->options([
+                        3 => 'barangay',
+                        2 => 'resident',
+                    ])
+                    ,
+                SelectFilter::make('isVerified')
+                    ->label('Status')
+                    ->options([
+                        true => 'Verified',
+                        false => 'Not verified',
+                    ])
             ])
             ->recordActions([
                 EditAction::make(),
