@@ -24,4 +24,12 @@ class ResidencyController extends Controller
         Residency::create($validated);
         return redirect()->route('resident.dashboard');
     }
+
+    public function update(Request $request) {
+        $validated = $request->validate([
+            'barangay_id' => ['required']
+        ]);
+        Auth::user()->residency->update($validated);
+        return redirect()->route('resident.dashboard');
+    }
 }

@@ -5,6 +5,7 @@ import resident from '@/routes/resident';
 import { type BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import { Barangay } from '../barangay/profileForm';
+import { UpdateBarangay } from './updateProfile';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -13,15 +14,19 @@ const breadcrumbs: BreadcrumbItem[] = [
     }
 ];
 
-export default function Dashboard({ barangayData }:{
+export default function Dashboard({ barangayData, barangays }:{
     barangayData: Barangay;
+    barangays: Barangay[];
 }) {
     const { user } = usePage().props.auth;
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             <div className="p-4">
-                <MapBarangay barangayCoordinates={barangayData.coordinates}/>
+                <MapBarangay barangayCoordinates={barangayData.coordinates} />
+                <div className="w-full flex justify-end py-2">
+                    <UpdateBarangay barangays={barangays} barangayData={barangayData}/>
+                </div>
             </div>
         </AppLayout>
     );

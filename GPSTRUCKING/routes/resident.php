@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ResidencyController;
+use App\Models\Barangay;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -17,9 +18,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
             $data = Auth::user()->residency->barangay;
             $data['coordinates']=  json_decode($data['coordinates']);
             return Inertia::render('resident/dashboard', [
-                'barangayData' => $data
+                'barangayData' => $data,
+                'barangays' => Barangay::all()->select(['id', 'name']),
             ]);
         })->name('resident.dashboard');
 
+    Route::put('/resident/update-profile-form', [ResidencyController::class, 'update'])->name('resident.profile-form.update');
     });
 });
