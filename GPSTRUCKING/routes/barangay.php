@@ -4,6 +4,7 @@ use App\Http\Controllers\BarangayController;
 use App\Http\Controllers\BarangayOfficialInformationController;
 use App\Http\Controllers\DropSiteController;
 use App\Http\Controllers\MapController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RouteController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -30,7 +31,6 @@ Route::middleware(['auth', 'ensure_role:barangay', 'verified',])->group(function
 
         // TODO lagay dito na dapat verified din yung user as barangay!!!
         Route::middleware(['ensure_verified'])->group(function() {
-            Route::get('/barangay/chats', [BarangayController::class, 'chat'])->name('barangay.chats');
 
             // for pickup sites
             Route::get('/barangay/map', [MapController::class, 'map'])->name('barangay.map');
@@ -44,6 +44,9 @@ Route::middleware(['auth', 'ensure_role:barangay', 'verified',])->group(function
             // updating routes
             Route::put('/barangay/update-route', [RouteController::class, 'update'])->name('barangay.update.route');
             Route::delete('/barangay/delete-route-{id}', [RouteController::class, 'delete'])->name('barangay.delete.route');
+
+            // for chats
+            Route::get('/barangay/chats', [MessageController::class, 'view'])->name('barangay.chats');
         });
     });
     // for form

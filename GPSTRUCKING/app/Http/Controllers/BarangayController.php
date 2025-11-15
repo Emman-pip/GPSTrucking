@@ -16,8 +16,4 @@ class BarangayController extends Controller
         $barangay['coordinates'] = json_decode($barangay['coordinates']);
         return Inertia::render('barangay/dashboard', [ 'barangay' => $barangay]);
     }
-
-    public function chat() {
-        return response('chats');
-    }
 }
