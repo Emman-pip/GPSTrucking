@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class MessageController extends Controller
 {
     public function view() {
-        return  response('hi chats');
+        return Inertia::render('barangay/chat');
     }
 }
