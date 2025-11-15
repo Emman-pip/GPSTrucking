@@ -6,10 +6,35 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
 import { configureEcho } from '@laravel/echo-react';
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
 
 configureEcho({
     broadcaster: 'reverb',
+    key: import.meta.env.VITE_REVERB_APP_KEY, // your Reverb key
+    wsHost: import.meta.env.VITE_REVERB_HOST || '127.0.0.1',
+    wsPort: import.meta.env.VITE_REVERB_PORT || 8080,
+    cluster: '',
+    forceTLS: false,       // IMPORTANT
+    encrypted: false,      // IMPORTANT
+    wsProtocol: 'ws',      // force plain websocket
+    disableStats: true,
 });
+
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_REVERB_APP_KEY, // your Reverb key
+    wsHost: import.meta.env.VITE_REVERB_HOST || '127.0.0.1',
+    wsPort: import.meta.env.VITE_REVERB_PORT || 8080,
+    cluster: '',
+    forceTLS: false,       // IMPORTANT
+    encrypted: false,      // IMPORTANT
+    wsProtocol: 'ws',      // force plain websocket
+    disableStats: true,
+});
+
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

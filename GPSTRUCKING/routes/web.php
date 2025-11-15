@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DropSiteController;
 use App\Http\Controllers\RouteController;
+use App\Notifications\SampleNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -40,3 +41,8 @@ Route::get('/get-pickup-sites', [DropSiteController::class, 'dropSites'])->name(
 require __DIR__.'/settings.php';
 require __DIR__.'/resident.php';
 require __DIR__.'/barangay.php';
+
+Route::get('/sample', function () {
+    // Auth::user()->notify(new SampleNotification());
+    dd(Auth::user()->notifications->all());
+});

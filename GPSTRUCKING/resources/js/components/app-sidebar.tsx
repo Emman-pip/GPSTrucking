@@ -11,11 +11,12 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { SharedData, type NavItem } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Map, MessageSquare, User } from 'lucide-react';
 import AppLogo from './app-logo';
 import barangay from '@/routes/barangay';
 import resident from '@/routes/resident';
+import { useEffect } from 'react';
 
 const mainNavItems: NavItem[] = [
     {
@@ -79,6 +80,24 @@ const footerNavItems: NavItem[] = [
 
 export function AppSidebar() {
     const { auth } = usePage<SharedData>().props;
+
+    const userId = auth.user.id;
+    useEffect(() => {
+        if (!userId) return;
+
+        const channel = window.Echo.private(`App.Models.User.${userId}`);
+
+        channel.notification((notification) => {
+            console.log(notification);
+            router.reload();
+            // You can update local state or show a toast here
+        });
+
+        return () => {
+            window.Echo.leave(`App.Models.User.${userId}`);
+        };
+    }, [userId]);
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
