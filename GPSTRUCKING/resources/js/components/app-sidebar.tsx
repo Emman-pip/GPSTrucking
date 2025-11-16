@@ -89,7 +89,7 @@ export function AppSidebar() {
 
         channel.notification((notification) => {
             console.log(notification);
-            router.reload();
+            // router.reload();
             // You can update local state or show a toast here
         });
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -59,5 +60,9 @@ class MessageController extends Controller
             'chatMate' => $chatMate,
             'messages' => [...$messages]
         ]);
+    }
+
+    public function send(Request $request) {
+        User::find($request->id)->notify(new Message($request->message));
     }
 }

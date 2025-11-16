@@ -48,6 +48,7 @@ Route::middleware(['auth', 'ensure_role:barangay', 'verified',])->group(function
             // for chats
             Route::get('/barangay/chats', [MessageController::class, 'view'])->name('barangay.chats');
             Route::get('/barangay/chats-{id}', [MessageController::class, 'viewSingle'])->name('barangay.chats.individual');
+            Route::post('/barangay/send-chat', [MessageController::class, 'send'])->name('barangay.chats.individual.send');
         });
     });
     // for form

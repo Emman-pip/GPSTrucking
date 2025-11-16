@@ -47,6 +47,7 @@ export interface BarangayOfficialInformation {
 
 export interface User {
     email: string;
+    id: number;
     name: string;
     barangay_official_info: BarangayOfficialInformation;
 }
