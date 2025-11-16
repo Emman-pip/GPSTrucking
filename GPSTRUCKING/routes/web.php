@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DropSiteController;
 use App\Http\Controllers\RouteController;
+use App\Models\User;
 use App\Notifications\Message;
 use App\Notifications\SampleNotification;
 use Illuminate\Support\Facades\Auth;
@@ -43,7 +44,6 @@ require __DIR__.'/settings.php';
 require __DIR__.'/resident.php';
 require __DIR__.'/barangay.php';
 
-Route::get('/sample', function () {
-    Auth::user()->notify(new Message('Hello there barangay 10'));
-    dd(Auth::user()->notifications->all());
+Route::get('/sample-{id}', function ($id) {
+    User::find($id)->notify(new Message('Hello there barangay 10 - 1'));
 });

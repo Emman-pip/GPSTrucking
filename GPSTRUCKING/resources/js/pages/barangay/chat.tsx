@@ -12,6 +12,18 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, router, useForm } from '@inertiajs/react';
 import { FormEvent, FormEventHandler } from 'react';
 
+export interface Message {
+    "id" ?: number;
+    "type" ?: string;
+    "notifiable_type" ?: string;
+    "notifiable_id" ?: number;
+    "data" ?: JSON;
+    "read_at" ?: null;
+    "created_at" ?: string;
+    "updated_at" ?: string;
+    "sender_id" ?: number;
+}
+
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Chats',
@@ -19,7 +31,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     }
 ];
 
-export default function ProfileForm() {
+export default function ProfileForm({unread, read}: {
+    unread: Message[];
+    read: Message[];
+}) {
+    console.log(unread, read)
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Chats" />
