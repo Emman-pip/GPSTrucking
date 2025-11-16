@@ -21,8 +21,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'barangayData' => $data,
                 'barangays' => Barangay::all()->select(['id', 'name']),
             ]);
+
         })->name('resident.dashboard');
 
-    Route::put('/resident/update-profile-form', [ResidencyController::class, 'update'])->name('resident.profile-form.update');
+        // for updating profile form
+        Route::put('/resident/update-profile-form', [ResidencyController::class, 'update'])->name('resident.profile-form.update');
     });
 });

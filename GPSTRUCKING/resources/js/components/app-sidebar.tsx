@@ -17,6 +17,7 @@ import AppLogo from './app-logo';
 import barangay from '@/routes/barangay';
 import resident from '@/routes/resident';
 import { useEffect } from 'react';
+import { chat } from '@/routes';
 
 const mainNavItems: NavItem[] = [
     {
@@ -25,8 +26,8 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Messages',
-        href: '#',
+        title: 'Chats',
+        href: chat().url,
         icon: MessageSquare,
     },
 ];
@@ -59,7 +60,7 @@ const BarangayMainNavItems: NavItem[] = [
     },
     {
         title: 'Chats',
-        href: barangay.chats.url(),
+        href: chat().url,
         icon: MessageSquare,
     },
 ];
@@ -89,7 +90,7 @@ export function AppSidebar() {
 
         channel.notification((notification) => {
             console.log(notification);
-            // router.reload();
+            router.reload();
             // You can update local state or show a toast here
         });
 

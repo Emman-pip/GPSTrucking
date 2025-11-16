@@ -12,6 +12,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { FormEvent, FormEventHandler } from 'react';
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
+import { individualChat } from '@/routes';
 
 export interface MessageData {
     'message': string;
@@ -34,7 +35,7 @@ export interface Message {
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Chats',
-        href: barangay.chats().url
+        href: '#'
     }
 ];
 
@@ -51,7 +52,7 @@ export default function Chat({unread, read}: {
                 <section>
                     <div className="flex flex-col gap-1">
                     {unread?.length > 0 &&
-                            unread.map(message => <Link href={barangay.chats.individual(message.data?.sender_id)} className=""><Card className="transition-all duration-200 hover:bg-gray-300/30 px-2">
+                            unread.map(message => <Link href={individualChat(message.data?.sender_id)} className=""><Card className="transition-all duration-200 hover:bg-gray-300/30 px-2">
                             <CardTitle className="capitalize flex justify-between items-center">
                                 <div className="flex flex-col gap-3">
                                 {message.data?.sender_name}
@@ -66,7 +67,7 @@ export default function Chat({unread, read}: {
                                 !unread.map(unreadmess => unreadmess.data?.sender_id)
                                     .includes(message.data?.sender_id))
                                 .map(message =>
-                                    <Link href={barangay.chats.individual(message.data?.sender_id)} className=""><Card className="transition-all duration-200 hover:bg-gray-300/30 px-2">
+                                    <Link href={individualChat(message.data?.sender_id)} className=""><Card className="transition-all duration-200 hover:bg-gray-300/30 px-2">
                                         <CardTitle className="capitalize flex justify-between items-center">
                                             <div className="flex flex-col gap-3">
                                                 {message.data?.sender_name}

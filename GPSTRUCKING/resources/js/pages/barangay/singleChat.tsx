@@ -15,6 +15,7 @@ import { FormEvent, FormEventHandler } from 'react';
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 import { Message } from './chat';
 import { User } from './editProfile';
+import { chat, sendChat } from '@/routes';
 
 export const ChatBubbleMaker = ({message, user}: {message: Message, user: User}) => {
 
@@ -24,7 +25,7 @@ export const ChatBubbleMaker = ({message, user}: {message: Message, user: User})
         bubbleStyle = "justify-end";
         boxStyle = "bg-gray-400/30 rounded-br-none";
     }
-    if (!message) return;
+    if (!message.data?.message) return;
     return <div className={cn(bubbleStyle, "w-full flex")}>
         <div className={cn("rounded-lg p-2 shadow-lg", boxStyle)}>
             {message.data?.message}
@@ -39,21 +40,20 @@ export default function SingleChat({ chatMate, messages }: {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Chats',
-            href: barangay.chats().url
+            href: chat().url
         },
         {
             title: chatMate.name,
-            href: barangay.chats().url
+            href: '#'
         }
     ]
     const user = usePage().props.auth.user;
 
     const [message, setMessage] = useState('');
-
     const send = async (e : FormEvent) =>  {
         e.preventDefault();
         if (!message) return;
-        await router.post(barangay.chats.individual.send().url, {
+        await router.post(sendChat().url, {
             message: message,
             id: chatMate.id
         }, {
@@ -63,11 +63,30 @@ export default function SingleChat({ chatMate, messages }: {
         })
     }
 
+
+    const userId = user.id;
     const goDown = useRef<Ref<HTMLElement>|null>(null);
     useEffect(() => {
         /* const goDown = useRef<Ref<HTMLElement>|null>(null); */
         goDown.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+    }, [messages, userId]);
+
+
+    const [extraMessages, setExtraMessages] = useState([]);
+    useEffect(() => {
+        if (!userId) return;
+
+        const channel = window.Echo.private(`App.Models.User.${userId}`);
+
+        channel.notification((notification) => {
+            setExtraMessages(prev => [...prev, notification])
+            // You can update local state or show a toast here
+        });
+
+        return () => {
+            window.Echo.leave(`App.Models.User.${userId}`);
+        };
+    }, [userId]);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Chats" />
@@ -77,6 +96,7 @@ export default function SingleChat({ chatMate, messages }: {
                 </Card>
                 <section className="flex flex-col p-2 h-full gap-1 max-h-[70vh] overflow-y-scroll">
                     {messages && messages.map((message) => <ChatBubbleMaker message={message} user={user} />)}
+                    {extraMessages && extraMessages.map((message) => <ChatBubbleMaker message={message} user={user} />)}
                     {!messages && <div>No messages yet.</div>}
                     <div ref={goDown}></div>
                 </section>

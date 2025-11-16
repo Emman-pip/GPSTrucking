@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DropSiteController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RouteController;
 use App\Models\User;
 use App\Notifications\Message;
@@ -34,6 +35,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         else if ($role === 'admin')
             return redirect('/admin');
     })->name('evaluate-user');
+    // for chats
+    Route::get('/chats', [MessageController::class, 'view'])->name('chat');
+    Route::get('/chats-{id}', [MessageController::class, 'viewSingle'])->name('individualChat');
+    Route::post('/send-chat', [MessageController::class, 'send'])->name('sendChat');
 });
 
 // public routes for getting data
