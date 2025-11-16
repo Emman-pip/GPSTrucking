@@ -38,7 +38,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     }
 ];
 
-export default function ProfileForm({unread, read}: {
+export default function Chat({unread, read}: {
     unread: Message[];
     read: Message[];
 }) {
@@ -50,8 +50,8 @@ export default function ProfileForm({unread, read}: {
                 <h1 className="text-2xl font-bold">Chats</h1>
                 <section>
                     <div className="flex flex-col gap-1">
-                    {unread?.length > 0 ?
-                            unread.map(message => <Link href={'#linktochat'} className=""><Card className="transition-all duration-200 hover:bg-gray-300/30 px-2">
+                    {unread?.length > 0 &&
+                            unread.map(message => <Link href={barangay.chats.individual(message.data?.sender_id)} className=""><Card className="transition-all duration-200 hover:bg-gray-300/30 px-2">
                             <CardTitle className="capitalize flex justify-between items-center">
                                 <div className="flex flex-col gap-3">
                                 {message.data?.sender_name}
@@ -60,25 +60,22 @@ export default function ProfileForm({unread, read}: {
                                 <Dot size={50} className="text-blue-500"/>
                             </CardTitle>
                         </Card></Link>)
-                    : <Card className='p-4'>
-                        <CardTitle className="font-thin">No unread messages yet. Yay!</CardTitle>
-                    </Card> }
+                     }
                         {read?.length > 0 ?
                             read.filter(message =>
                                 !unread.map(unreadmess => unreadmess.data?.sender_id)
                                     .includes(message.data?.sender_id))
                                 .map(message =>
-                                    <Link href={'#linktochat'} className=""><Card className="transition-all duration-200 hover:bg-gray-300/30 px-2">
+                                    <Link href={barangay.chats.individual(message.data?.sender_id)} className=""><Card className="transition-all duration-200 hover:bg-gray-300/30 px-2">
                                         <CardTitle className="capitalize flex justify-between items-center">
                                             <div className="flex flex-col gap-3">
                                                 {message.data?.sender_name}
                                                 <small>{message.data?.message}</small>
                                             </div>
-                                            <Dot size={50} className="text-blue-500" />
                                         </CardTitle>
                                     </Card></Link>)
                             : <Card className='p-4'>
-                                <CardTitle className="font-thin">No more messages. Yay!</CardTitle>
+                                <CardTitle className="font-thin">No messages. Yay!</CardTitle>
                             </Card>}
                     </div>
                 </section>
