@@ -28,6 +28,6 @@ class MessageController extends Controller
         })
             ->map(fn($group) => $group->first())
             ->toArray();
-        return Inertia::render('barangay/chat', ['unread' => $unreadNotifications, 'read' =>$readNotifications]);
+        return Inertia::render('barangay/chat', ['unread' => [...$unreadNotifications], 'read' => [...$readNotifications]]);
     }
 }
