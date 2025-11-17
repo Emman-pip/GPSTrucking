@@ -94,7 +94,7 @@ export default function SingleChat({ chatMate, messages }: {
                 <Card className="shadow-lg">
                     <CardTitle className="capitalize px-2">{chatMate.name}</CardTitle>
                 </Card>
-                <section className="flex flex-col p-2 h-full gap-1 max-h-[70vh] overflow-y-scroll">
+                <section className="flex flex-col p-2 h-full gap-1 max-h-[70vh] overflow-y-scroll" style={{ scrollbarWidth:"none" }}>
                     {messages && messages.map((message) => <ChatBubbleMaker message={message} user={user} />)}
                     {extraMessages && extraMessages.map((message) => <ChatBubbleMaker message={message} user={user} />)}
                     {!messages && <div>No messages yet.</div>}

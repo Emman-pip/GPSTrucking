@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/barangay/app-layout'
 import barangay, { barangayProfileForm, submitBarangayProfileForm } from '@/routes/barangay';
 import resident from '@/routes/resident';
-import { type BreadcrumbItem } from '@/types';
+import { User, type BreadcrumbItem } from '@/types';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { FormEvent, FormEventHandler } from 'react';
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
@@ -39,15 +39,32 @@ const breadcrumbs: BreadcrumbItem[] = [
     }
 ];
 
-export default function Chat({unread, read}: {
+export default function Chat({unread, read, chatToAdmin}: {
     unread: Message[];
     read: Message[];
+    chatToAdmin?: User[];
 }) {
     console.log(unread, read)
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Chats" />
             <main className="p-2">
+                {chatToAdmin && chatToAdmin?.length > 0 &&
+                    <>
+                        <h1 className="text-2xl font-bold">Admins</h1>
+                        <section className=" border p-2 rounded-xl grid md:grid-cols-3 gap-2 m-2 ">
+                            {chatToAdmin.map(admin => {
+                                return <Link href={individualChat(admin.id)}>
+                                <Card className="transition-all duration-200 hover:bg-gray-300/30">
+                                    <CardTitle className="p-2">
+                                        {admin.name}
+                                    </CardTitle>
+                                </Card>
+                                </Link>
+                            })}
+                        </section>
+                    </>
+                }
                 <h1 className="text-2xl font-bold">Chats</h1>
                 <section>
                     <div className="flex flex-col gap-1">
@@ -67,14 +84,19 @@ export default function Chat({unread, read}: {
                                 !unread.map(unreadmess => unreadmess.data?.sender_id)
                                     .includes(message.data?.sender_id))
                                 .map(message =>
-                                    <Link href={individualChat(message.data?.sender_id)} className=""><Card className="transition-all duration-200 hover:bg-gray-300/30 px-2">
+                                    {
+                                        try {
+                                            message = JSON.parse(message);
+                                        } catch (e) {}
+                                        return <Link href={individualChat(message.data?.sender_id)} className=""><Card className="transition-all duration-200 hover:bg-gray-300/30 px-2">
                                         <CardTitle className="capitalize flex justify-between items-center">
-                                            <div className="flex flex-col gap-3">
-                                                {message.data?.sender_name}
-                                                <small>{message.data?.message}</small>
+                                            <div className="flex flex-col gap-3 font-thin">
+                                                <div className="">{message.data?.sender_name}</div>
+                                                <small>{message.data?.real_sender_name ? message.data?.real_sender_name : message.data?.sender_name }: {message.data?.message}</small>
                                             </div>
                                         </CardTitle>
-                                    </Card></Link>)
+                                    </Card></Link>
+                                    })
                             : <Card className='p-4'>
                                 <CardTitle className="font-thin">No messages. Yay!</CardTitle>
                             </Card>}

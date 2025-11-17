@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Filament\Resources\Users\Tables\UsersTable;
 use App\Notifications\Message;
 use App\Models\User;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 use function PHPSTORM_META\map;
@@ -25,16 +28,63 @@ class MessageController extends Controller
             ->map(fn($group) => $group->first())
             ->toArray();
 
-        $readNotifications = $user->readNotifications()
+        $readNotifications = $user->notifications()
             ->where('type', 'App\Notifications\Message')
+            // ->whereJsonContains('data->sender_id', (int) $user->id)
             ->orderBy('created_at', 'desc')
             ->get()
-            ->groupBy(function($notification){
-            return $notification->data['sender_id'];
-        })
+            ->groupBy(function ($notification) {
+                return $notification->data['sender_id'];
+            })
+            ->map(fn($group) => $group->first());
+
+        $notifications = DB::table('notifications')
+            ->where('type', 'App\Notifications\Message')
+            ->whereJsonContains('data->sender_id', (int) $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->groupBy(function ($notification) {
+                $data = json_decode($notification->data);
+                return $data->sender_id;
+            })
             ->map(fn($group) => $group->first())
+            ->map(function ($group) use ($user) {
+                $group->data = json_decode($group->data);
+                return $group;
+            })
             ->toArray();
-        return Inertia::render('barangay/chat', ['unread' => [...$unreadNotifications], 'read' => [...$readNotifications]]);
+
+        $chatToAdmin = [];
+        if ($user->role->name === 'resident') {
+            $chatToAdmin = User::all()
+                ->where('role_id', 3)
+                ->where('isVerified', true)
+                ->where('barangayOfficialInfo.barangay_id', $user->barangayOfficialInfo ? $user->barangayOfficialInfo->barangay_id : $user->residency->barangay_id);
+        }
+
+        // dd($readNotifications[5]);
+        foreach ($notifications as $notif){
+            $notif->created_at = new DateTime($notif->created_at);
+            foreach ($readNotifications as $key => $read) {
+                $read = json_decode($read->toJson());
+                $readNotifications[$key] = $read;
+                $read->created_at = new DateTime($read->created_at);
+                // dd($read->data->sender_id);
+                if ($read->created_at < $notif->created_at && $notif->data->sender_id === $read->notifiable_id) {
+                    $notif->data->real_sender_name = $notif->data->sender_name;
+                    $notif->data->sender_name = $read->data->sender_name;
+                    $notif->data->sender_id = $read->data->sender_id;
+                    // dd($notif);
+                    $readNotifications[$key] = $notif;
+                }
+            }
+        }
+        $notifications = [...$notifications];
+        $readNotifications = [...$readNotifications];
+        usort($readNotifications, function ($a, $b) {
+            return strtotime($b->created_at->format('Y-m-d H:i:s')) - strtotime($a->created_at->format('Y-m-d H:i:s'));
+        });
+        return Inertia::render('barangay/chat', ['unread' => [...$unreadNotifications], 'read' => [...$readNotifications], 'chatToAdmin' => [...$chatToAdmin]]);
     }
 
     public function viewSingle($id){
@@ -55,6 +105,7 @@ class MessageController extends Controller
             })
             ->get()
             ->reverse();
+
         $chatMate = User::find($id);
         return  Inertia::render('barangay/singleChat',[
             'chatMate' => $chatMate,
