@@ -44,7 +44,7 @@ export default function Chat({unread, read, chatToAdmin}: {
     read: Message[];
     chatToAdmin?: User[];
 }) {
-    console.log(unread, read)
+    console.log("UNREAD", unread, "READ", read)
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Chats" />
@@ -68,27 +68,35 @@ export default function Chat({unread, read, chatToAdmin}: {
                 <h1 className="text-2xl font-bold">Chats</h1>
                 <section>
                     <div className="flex flex-col gap-1">
-                    {unread?.length > 0 &&
-                            unread.map(message => <Link href={individualChat(message.data?.sender_id)} className=""><Card className="transition-all duration-200 hover:bg-gray-300/30 px-2">
-                            <CardTitle className="capitalize flex justify-between items-center">
-                                <div className="flex flex-col gap-3">
-                                {message.data?.sender_name}
-                                <small>{message.data?.message}</small>
-                                </div>
-                                <Dot size={50} className="text-blue-500"/>
-                            </CardTitle>
-                        </Card></Link>)
+            {unread?.length > 0 &&
+                unread.map(message => {
+                    if (message.data?.sender_id === 0 ) {
+                        return
+                    }
+                    return <Link href={message.data?.sender_id !== 0 ? individualChat(message.data?.sender_id) : '#'} className=""><Card className="transition-all duration-200 hover:bg-gray-300/30 px-2">
+                        <CardTitle className="capitalize flex justify-between items-center">
+                        <div className="flex flex-col gap-3">
+                        {message.data?.sender_name}
+                        <small>{message.data?.message}</small>
+                        </div>
+                        <Dot size={50} className="text-blue-500"/>
+                        </CardTitle>
+                        </Card></Link>})
                      }
-                        {read?.length > 0 ?
+                        { read?.length > 0 ?
                             read.filter(message =>
-                                !unread.map(unreadmess => unreadmess.data?.sender_id)
-                                    .includes(message.data?.sender_id))
-                                .map(message =>
+                                !unread?.map(unreadmess => unreadmess.data?.sender_id)
+                                    ?.includes(message.data?.sender_id))
+                                ?.map(message =>
                                     {
+                                        console.log("here", message)
+                                        if (message.data?.sender_id === 0) {
+                                            return;
+                                        }
                                         try {
                                             message = JSON.parse(message);
                                         } catch (e) {}
-                                        return <Link href={individualChat(message.data?.sender_id)} className=""><Card className="transition-all duration-200 hover:bg-gray-300/30 px-2">
+                                        return <Link href={message.data?.sender_id !== 0 ? individualChat(message.data?.sender_id) : '#'} className=""><Card className="transition-all duration-200 hover:bg-gray-300/30 px-2">
                                         <CardTitle className="capitalize flex justify-between items-center">
                                             <div className="flex flex-col gap-3 font-thin">
                                                 <div className="">{message.data?.sender_name}</div>
@@ -99,7 +107,7 @@ export default function Chat({unread, read, chatToAdmin}: {
                                     })
                             : <Card className='p-4'>
                                 <CardTitle className="font-thin">No messages. Yay!</CardTitle>
-                            </Card>}
+                            </Card> }
                     </div>
                 </section>
             </main>
