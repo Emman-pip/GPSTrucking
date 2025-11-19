@@ -3,6 +3,7 @@
 use App\Http\Controllers\DropSiteController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RouteController;
+use App\Models\Barangay;
 use App\Models\User;
 use App\Notifications\Message;
 use App\Notifications\SampleNotification;

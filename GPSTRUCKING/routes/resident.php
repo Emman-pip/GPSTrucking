@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AlertController;
 use App\Http\Controllers\ResidencyController;
 use App\Models\Barangay;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +24,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ]);
 
         })->name('resident.dashboard');
+
+        Route::get('/alerts', [AlertController::class, 'view'])
+            ->name('resident.alerts');
 
         // for updating profile form
         Route::put('/resident/update-profile-form', [ResidencyController::class, 'update'])->name('resident.profile-form.update');

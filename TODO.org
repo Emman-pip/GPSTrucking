@@ -6,9 +6,9 @@
   - [X] Home
     - [X] will contain the map
     - [X] dashboard
-- [ ] Chats
+- [-] Chats
   - [ ] send announcements
-  - [ ] private messages
+  - [X] private messages
 - [X] settings -> for barangay only
 - [X] profile
 - [ ] residents list
@@ -34,17 +34,17 @@
   - [X] dropsites in their barangay
     - [X] information about the dropsite
     - [X] picture about the dropsite
-- [ ] contact the barangay for garbage collection-related problem
+- [X] contact the barangay for garbage collection-related problem
 - [X] profile form
 - [ ] file complaints
 - [ ] AI chatbot
 - [ ] receive broadcast notifications
 
 * Admin
-- [ ] see the all users
-  - [ ] barangay
-  - [ ] resident
-- [ ] creation of barangay users
+- [X] see the all users
+  - [X] barangay
+  - [X] resident
+- [X] creation of barangay users
 - [X] approval of barangay official accounts
 - [X] analytics
   - [X] how many users

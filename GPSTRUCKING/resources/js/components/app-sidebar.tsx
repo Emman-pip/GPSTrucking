@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/sidebar';
 import { SharedData, type NavItem } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Map, MessageSquare, User } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Map, MessageSquare, Siren, User } from 'lucide-react';
 import AppLogo from './app-logo';
 import barangay from '@/routes/barangay';
 import resident from '@/routes/resident';
@@ -30,6 +30,11 @@ const mainNavItems: NavItem[] = [
         href: chat().url,
         icon: MessageSquare,
     },
+    {
+        title: 'Alerts',
+        href: resident.alerts().url,
+        icon: Siren,
+    }
 ];
 
 
@@ -63,6 +68,11 @@ const BarangayMainNavItems: NavItem[] = [
         href: chat().url,
         icon: MessageSquare,
     },
+    {
+        title: 'Alerts',
+        href: '#',
+        icon: Siren,
+    }
 ];
 
 
