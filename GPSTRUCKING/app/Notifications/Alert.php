@@ -4,23 +4,25 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Notifications\Messages\DatabaseMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Auth;
 
-class Message extends Notification
+class Alert extends Notification
 {
     use Queueable;
 
+    protected string $title;
+    protected string $message;
+    protected array $tags;
     /**
      * Create a new notification instance.
      */
-
-    protected $message;
-    public function __construct($message)
+    public function __construct($title, $message, $tags)
     {
+        $this->title = $title;
         $this->message = $message;
+        $this->tags = $tags;
     }
 
     /**
@@ -30,7 +32,7 @@ class Message extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'broadcast'];
+        return ['broadcast', 'database']; // add mail here
     }
 
     /**
@@ -51,29 +53,24 @@ class Message extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        $user = Auth::user();
         return [
-            'message' => $this->message,
-            'sender_id' => $user->id ?? 0,
-            'sender_name' => $user->name ??  'User Not Found',
+            //
         ];
     }
 
-    public function toDatabase(object $notifiable): array {
-        $user = Auth::user();
+    public function toDatabase(object $notifiable) {
         return [
+            'title' => $this->title,
             'message' => $this->message,
-            'sender_id' => Auth::user()->id ?? 0,
-            'sender_name' => $user->name ?? 'User Not Found',
+            'tags' => $this->tags,
         ];
     }
 
-    public function toBroadcast(object $notifiable): BroadcastMessage {
-        $user = Auth::user();
-        return new BroadcastMessage([
+    public function toBroadcast(object $notifiable) {
+        return [
+            'title' => $this->title,
             'message' => $this->message,
-            'sender_id' => Auth::user()->id ?? 0,
-            'sender_name' => $user->name ??  'User Not Found',
-        ]);
+            'tags' => $this->tags,
+        ];
     }
 }
