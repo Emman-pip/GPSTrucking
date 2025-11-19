@@ -77,23 +77,20 @@ class MessageController extends Controller
         foreach ($notifications as $notifKey => $notif){
             $notif->created_at = new DateTime($notif->created_at);
             foreach ($readNotifications as $key => $read) {
-                // $read = json_decode(json_encode($read));
                 $readNotifications[$key] = $read;
-                // $read->created_at = new DateTime($read->created_at);
-                // dd($read->data->sender_id);
-                // join the notifications on the same channel
-                // same channel means that
-                // notifiable_id of one === sender_id of one
-                // if ($read->created_at < $notif->created_at
-                //     && ($notif->data->sender_id === $read->notifiable_id)
-                if ($read->created_at < $notif->created_at
-                    && ($notif->data->sender_id === $read->data['sender_id'])
+                if ( ($notif->data->sender_id === $read->data['sender_id']
+                        || $notif->data->sender_id === $read->data['sender_id']
+                        || $notif->data->sender_name === $read->data['sender_name']
+                    )
                 ) {
                     // $notif->data->real_sender_name = $notif->data->sender_name;
                     $notif->data->sender_name = $read->data['sender_name'];
                     $notif->data->sender_id = $read->data['sender_id'];
                     // dd($notif);
-                    $readNotifications[$key] = $notif;
+                    //
+                    if ($read->created_at < $notif->created_at) {
+                        $readNotifications[$key] = $notif;
+                    }
                     unset($notifications[$notifKey]);
                 }
             }
