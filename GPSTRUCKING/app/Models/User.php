@@ -71,7 +71,7 @@ class User extends Authenticatable implements FilamentUser
     }
 
     public function residency(){
-        return $this->hasOne(Residency::class);
+        return $this->hasOne(Residency::class, 'user_id');
     }
 
     // filament

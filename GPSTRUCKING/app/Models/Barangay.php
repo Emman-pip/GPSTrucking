@@ -11,7 +11,7 @@ class Barangay extends Model
         'coordinates'
     ];
 
-    public function residency(){
+    public function residents(){
         return $this->hasMany(Residency::class, 'barangay_id');
     }
 
