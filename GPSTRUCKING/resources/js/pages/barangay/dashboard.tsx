@@ -76,7 +76,7 @@ export default function Dashboard({ barangay: barangayData }: {
                             Add pickup sites, routes, and more
                         </CardDescription>
                     </Card>
-                        <Card onClick={() => router.get("#")} className="cursor-pointer border-gray-100 dark:border-gray-950 bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6  transition-colors duration-300">
+        <Card onClick={() => router.get(barangay.map().url)} className="cursor-pointer border-gray-100 dark:border-gray-950 bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6  transition-colors duration-300">
                             <CardTitle className="flex gap-2 items-center">
                                 <Calendar />
                                 Set Pickup Schedules
