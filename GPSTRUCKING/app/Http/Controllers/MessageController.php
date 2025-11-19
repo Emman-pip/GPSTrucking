@@ -44,8 +44,7 @@ class MessageController extends Controller
             ->orderBy('created_at', 'desc')
             ->get()
             ->groupBy(function ($notification) {
-                $data = json_decode($notification->data);
-                return $data->sender_id;
+                return $notification->notifiable_id;
             })
             ->map(fn($group) => $group->first())
             ->map(function ($group) use ($user) {
@@ -62,25 +61,46 @@ class MessageController extends Controller
                 ->where('barangayOfficialInfo.barangay_id', $user->barangayOfficialInfo ? $user->barangayOfficialInfo->barangay_id : $user->residency->barangay_id);
         }
 
+        // dd($notifications);
+
+
+        foreach ($notifications as $notifKey =>  $notif) {
+            $to = User::find($notif->notifiable_id);
+            $notif->data->sender_id = $to->id;
+            $notif->data->sender_name = $to->name;
+            $notif->data->real_sender_name = Auth::user()->name;
+            $notifications[$notifKey] = $notif;
+        }
+
+
         // dd($readNotifications[5]);
-        foreach ($notifications as $notif){
+        foreach ($notifications as $notifKey => $notif){
             $notif->created_at = new DateTime($notif->created_at);
             foreach ($readNotifications as $key => $read) {
-                $read = json_decode($read->toJson());
+                // $read = json_decode(json_encode($read));
                 $readNotifications[$key] = $read;
-                $read->created_at = new DateTime($read->created_at);
+                // $read->created_at = new DateTime($read->created_at);
                 // dd($read->data->sender_id);
-                if ($read->created_at < $notif->created_at && $notif->data->sender_id === $read->notifiable_id) {
-                    $notif->data->real_sender_name = $notif->data->sender_name;
-                    $notif->data->sender_name = $read->data->sender_name;
-                    $notif->data->sender_id = $read->data->sender_id;
+                // join the notifications on the same channel
+                // same channel means that
+                // notifiable_id of one === sender_id of one
+                // if ($read->created_at < $notif->created_at
+                //     && ($notif->data->sender_id === $read->notifiable_id)
+                if ($read->created_at < $notif->created_at
+                    && ($notif->data->sender_id === $read->data['sender_id'])
+                ) {
+                    // $notif->data->real_sender_name = $notif->data->sender_name;
+                    $notif->data->sender_name = $read->data['sender_name'];
+                    $notif->data->sender_id = $read->data['sender_id'];
                     // dd($notif);
                     $readNotifications[$key] = $notif;
+                    unset($notifications[$notifKey]);
                 }
             }
         }
         $notifications = [...$notifications];
-        $readNotifications = [...$readNotifications];
+
+        $readNotifications = [...$readNotifications, ...$notifications ];
         usort($readNotifications, function ($a, $b) {
             return strtotime($b->created_at->format('Y-m-d H:i:s')) - strtotime($a->created_at->format('Y-m-d H:i:s'));
         });
