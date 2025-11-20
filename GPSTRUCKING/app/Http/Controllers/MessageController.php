@@ -6,6 +6,7 @@ use App\Filament\Resources\Users\Tables\UsersTable;
 use App\Notifications\Message;
 use App\Models\User;
 use DateTime;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +28,7 @@ class MessageController extends Controller
                 ->where('barangayOfficialInfo.barangay_id', $user->barangayOfficialInfo ? $user->barangayOfficialInfo->barangay_id : $user->residency->barangay_id);
             foreach ($chatToAdmin as $admin) {
                 $id = $admin->id;
+                try {
                 $tmp = $user
                         ->notifications()
                         ->where('type', 'App\Notifications\Message')
@@ -36,7 +38,7 @@ class MessageController extends Controller
                                 ->where('data->sender_id', Auth::user()->id);
                         })
                         ->get()
-                        ->first()->toArray();
+                        ->firstOrFail()->toArray();
 
                 if ($tmp['data']['sender_name'] === $user->name) {
                     $tmp['data']['real_sender_name'] = $tmp['data']['sender_name'];
@@ -45,14 +47,16 @@ class MessageController extends Controller
                     $tmp['data']['sender_name'] = $sender->name;
                 }
                 array_push($notifications, $tmp);
+                } catch (Exception $e) {continue;}
             }
         } else {
             $residents = User::all()
-                ->where('role_id', 3)
-                ->where('isVerified', true)
-                ->where('barangayOfficialInfo.barangay_id', $user->barangayOfficialInfo ? $user->barangayOfficialInfo->barangay_id : $user->residency->barangay_id);
-            foreach ($residents as $admin) {
-                $id = $admin->id;
+                ->where('role_id', 2)
+                ->where('residency.barangay_id', $user->barangayOfficialInfo->barangay_id);
+
+            foreach ($residents as $resident) {
+                $id = $resident->id;
+                try {
                 $tmp = $user
                     ->notifications()
                     ->where('type', 'App\Notifications\Message')
@@ -62,8 +66,8 @@ class MessageController extends Controller
                             ->where('data->sender_id', Auth::user()->id);
                     })
                     ->get()
-                    ->first()->toArray();
-
+                    ->firstOrFail()->toArray();
+                ($tmp);
                 if ($tmp['data']['sender_name'] === $user->name) {
                     $tmp['data']['real_sender_name'] = $tmp['data']['sender_name'];
                     $tmp['data']['sender_id'] = $tmp['notifiable_id'];
@@ -71,15 +75,13 @@ class MessageController extends Controller
                     $tmp['data']['sender_name'] = $sender->name;
                 }
                 array_push($notifications, $tmp);
+                } catch (Exception $e) {continue;}
             }
         }
 
         usort($notifications, function ($a, $b) {
             return strtotime($b['created_at']) - strtotime($a['created_at']);
         });
-
-
-
         return Inertia::render('barangay/chat', ['unread' => [], 'read' => [...$notifications], 'chatToAdmin' => [...$chatToAdmin]]);
     }
 
