@@ -1,4 +1,4 @@
-* Order of Things
+* TODO URGENT Order of Things
 - [ ] add cascade delete
 
 * Barangay
@@ -12,19 +12,32 @@
 - [X] settings -> for barangay only
 - [X] profile
 - [ ] residents list
-
 - [X] should have a form for passing credentials
 - [X] be able to set
   - [X] routes,
   - [X] schedule per route
   - [X] drop sites on their sites
-- [ ] should have a way to contact trucks
 - [X] settings
 - [X] app-header
 - [X] dashboard
 - [X] profile
 - [ ] residents using the application
 - [ ] send broadcast messages
+- [ ] additional
+  - [ ] should have a way to contact trucks
+    - [ ] link to truck to:
+    - [ ] share location
+    - [ ] update dropsite status
+      - [ ] collected
+      - [ ] to be collected
+      - [ ] missed/uncollected
+    - [ ] trash volume
+    - [ ] efficiency score
+  - [ ] Barangay rating (their team)
+    - [ ] comments about the barangay
+  - [ ]
+  - [ ]
+  
 
 
 * Resident
@@ -36,9 +49,13 @@
     - [X] picture about the dropsite
 - [X] contact the barangay for garbage collection-related problem
 - [X] profile form
-- [ ] file complaints
-- [ ] AI chatbot
+- [ ] file complaints/ratings
+  - [ ]  through chat
+- [ ] receive broadcast messages
 - [ ] receive broadcast notifications
+- [ ] additional
+  - [ ] Barangay rating (their team)
+    - [ ] comments about the barangay
 
 * Admin
 - [X] see the all users
