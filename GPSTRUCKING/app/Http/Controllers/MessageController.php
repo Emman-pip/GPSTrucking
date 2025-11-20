@@ -6,6 +6,7 @@ use App\Filament\Resources\Users\Tables\UsersTable;
 use App\Notifications\Message;
 use App\Models\User;
 use DateTime;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,103 +19,83 @@ class MessageController extends Controller
     public function view() {
         $user = Auth::user();
 
-        $unreadNotifications = $user->unreadNotifications()
-            ->where('type', 'App\Notifications\Message')
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->groupBy(function($notification){
-            return $notification->data['sender_id'];
-        })
-            ->map(fn($group) => $group->first())
-            ->toArray();
-
-        $readNotifications = $user->notifications()
-            ->where('type', 'App\Notifications\Message')
-            // ->whereJsonContains('data->sender_id', (int) $user->id)
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->groupBy(function ($notification) {
-                return $notification->data['sender_id'];
-            })
-            ->map(fn($group) => $group->first());
-
-        $notifications = DB::table('notifications')
-            ->where('type', 'App\Notifications\Message')
-            ->whereJsonContains('data->sender_id', (int) $user->id)
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->groupBy(function ($notification) {
-                return $notification->notifiable_id;
-            })
-            ->map(fn($group) => $group->first())
-            ->map(function ($group) use ($user) {
-                $group->data = json_decode($group->data);
-                return $group;
-            })
-            ->toArray();
-
         $chatToAdmin = [];
+        $notifications = [];
         if ($user->role->name === 'resident') {
             $chatToAdmin = User::all()
                 ->where('role_id', 3)
                 ->where('isVerified', true)
                 ->where('barangayOfficialInfo.barangay_id', $user->barangayOfficialInfo ? $user->barangayOfficialInfo->barangay_id : $user->residency->barangay_id);
-        }
+            foreach ($chatToAdmin as $admin) {
+                $id = $admin->id;
+                try {
+                $tmp = $user
+                        ->notifications()
+                        ->where('type', 'App\Notifications\Message')
+                        ->whereJsonContains('data->sender_id', (int) $id)
+                        ->orWhere(function ($q) use ($id) {
+                            $q->where('notifiable_id', $id)
+                                ->where('data->sender_id', Auth::user()->id);
+                        })
+                        ->get()
+                        ->firstOrFail()->toArray();
 
-        // dd($notifications);
-
-
-        foreach ($notifications as $notifKey =>  $notif) {
-            $to = User::find($notif->notifiable_id);
-            $notif->data->sender_id = $to->id;
-            $notif->data->sender_name = $to->name;
-            $notif->data->real_sender_name = Auth::user()->name;
-            $notifications[$notifKey] = $notif;
-        }
-
-
-        // dd($readNotifications[5]);
-        foreach ($notifications as $notifKey => $notif){
-            $notif->created_at = new DateTime($notif->created_at);
-            foreach ($readNotifications as $key => $read) {
-                // $read = json_decode(json_encode($read));
-                $readNotifications[$key] = $read;
-                // $read->created_at = new DateTime($read->created_at);
-                // dd($read->data->sender_id);
-                // join the notifications on the same channel
-                // same channel means that
-                // notifiable_id of one === sender_id of one
-                // if ($read->created_at < $notif->created_at
-                //     && ($notif->data->sender_id === $read->notifiable_id)
-                if ($read->created_at < $notif->created_at
-                    && ($notif->data->sender_id === $read->data['sender_id'])
-                ) {
-                    // $notif->data->real_sender_name = $notif->data->sender_name;
-                    $notif->data->sender_name = $read->data['sender_name'];
-                    $notif->data->sender_id = $read->data['sender_id'];
-                    // dd($notif);
-                    $readNotifications[$key] = $notif;
-                    unset($notifications[$notifKey]);
+                if ($tmp['data']['sender_name'] === $user->name) {
+                    $tmp['data']['real_sender_name'] = $tmp['data']['sender_name'];
+                    $tmp['data']['sender_id'] = $tmp['notifiable_id'];
+                    $sender = User::find($tmp['notifiable_id']);
+                    $tmp['data']['sender_name'] = $sender->name;
                 }
+                array_push($notifications, $tmp);
+                } catch (Exception $e) {continue;}
+            }
+        } else {
+            $residents = User::all()
+                ->where('role_id', 2)
+                ->where('residency.barangay_id', $user->barangayOfficialInfo->barangay_id);
+
+            foreach ($residents as $resident) {
+                $id = $resident->id;
+                try {
+                $tmp = $user
+                    ->notifications()
+                    ->where('type', 'App\Notifications\Message')
+                    ->whereJsonContains('data->sender_id', (int) $id)
+                    ->orWhere(function ($q) use ($id) {
+                        $q->where('notifiable_id', $id)
+                            ->where('data->sender_id', Auth::user()->id);
+                    })
+                    ->get()
+                    ->firstOrFail()->toArray();
+                ($tmp);
+                if ($tmp['data']['sender_name'] === $user->name) {
+                    $tmp['data']['real_sender_name'] = $tmp['data']['sender_name'];
+                    $tmp['data']['sender_id'] = $tmp['notifiable_id'];
+                    $sender = User::find($tmp['notifiable_id']);
+                    $tmp['data']['sender_name'] = $sender->name;
+                }
+                array_push($notifications, $tmp);
+                } catch (Exception $e) {continue;}
             }
         }
-        $notifications = [...$notifications];
 
-        $readNotifications = [...$readNotifications, ...$notifications ];
-        usort($readNotifications, function ($a, $b) {
-            return strtotime($b->created_at->format('Y-m-d H:i:s')) - strtotime($a->created_at->format('Y-m-d H:i:s'));
+        usort($notifications, function ($a, $b) {
+            return strtotime($b['created_at']) - strtotime($a['created_at']);
         });
-        return Inertia::render('barangay/chat', ['unread' => [...$unreadNotifications], 'read' => [...$readNotifications], 'chatToAdmin' => [...$chatToAdmin]]);
+        return Inertia::render('barangay/chat', ['unread' => [], 'read' => [...$notifications], 'chatToAdmin' => [...$chatToAdmin]]);
     }
 
     public function viewSingle($id){
         $user = Auth::user();
 
         $user->unreadNotifications()
+            ->where('type', 'App\Notifications\Message')
             ->whereJsonContains('data->sender_id', (int) $id)
             ->where('notifiable_id', $user->id)
             ->update(['read_at' => now()]);
 
+        // dd($user->unreadNotifications()
+        //     ->get());
         $messages = $user
             ->notifications()
             ->where('type', 'App\Notifications\Message')
