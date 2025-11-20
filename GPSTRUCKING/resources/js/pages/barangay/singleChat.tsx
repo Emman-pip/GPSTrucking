@@ -16,6 +16,7 @@ import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 import { Message } from './chat';
 import { User } from './editProfile';
 import { chat, sendChat } from '@/routes';
+import { UserInfo } from '@/components/user-info';
 
 export const ChatBubbleMaker = ({message, user}: {message: Message, user: User}) => {
 
@@ -27,7 +28,7 @@ export const ChatBubbleMaker = ({message, user}: {message: Message, user: User})
     }
     if (!message.data?.message) return;
     return <div className={cn(bubbleStyle, "w-full flex")}>
-        <div className={cn("rounded-lg p-2 shadow-lg", boxStyle)}>
+        <div className={cn("rounded-lg break-all p-2 shadow-lg", boxStyle)}>
             {message.data?.message}
         </div>
     </div>
@@ -91,10 +92,14 @@ export default function SingleChat({ chatMate, messages }: {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Chats" />
             <main className="p-2">
-                <Card className="shadow-lg">
-                    <CardTitle className="capitalize px-2">{chatMate.name}</CardTitle>
+                <Card className="shadow-lg flex justify-between">
+
+                    <CardTitle className="capitalize px-2 flex items-center gap-2">
+                        <UserInfo showName={false} user={chatMate} />
+                        {chatMate.name}
+                    </CardTitle>
                 </Card>
-                <section className="flex flex-col p-2 h-full gap-1 max-h-[70vh] overflow-y-scroll" style={{ scrollbarWidth:"none" }}>
+                <section className="flex flex-col p-2 pb-16 h-full gap-1 max-h-[70vh] overflow-y-scroll" style={{ scrollbarWidth:"none" }}>
                     {messages && messages.map((message) => <ChatBubbleMaker message={message} user={user} />)}
                     {extraMessages && extraMessages.map((message) => <ChatBubbleMaker message={message} user={user} />)}
                     {!messages && <div>No messages yet.</div>}
@@ -102,7 +107,7 @@ export default function SingleChat({ chatMate, messages }: {
                 </section>
                 <section className="absolute bottom-0 left-0 right-0 p-2">
                     <form className="flex gap-1" onSubmit={send}>
-                        <Input type="text" placeholder="Type your message here" onChange={(e) => setMessage(e.target.value)} value={message} />
+                        <Input className="focus:ring backdrop-blur-sm " type="text" placeholder="Type your message here" onChange={(e) => setMessage(e.target.value)} value={message} />
                         <Button type="submit"><Send /></Button>
                     </form>
                 </section>
