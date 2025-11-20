@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { useState } from "react";
+import { cn } from '@/lib/utils';
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Command, CommandGroup, CommandItem, CommandInput } from "@/components/ui/command";
 import { ChevronsUpDown, Dot } from "lucide-react";
@@ -9,7 +10,7 @@ import AppLayout from '@/layouts/barangay/app-layout'
 import barangay, { barangayProfileForm, submitBarangayProfileForm } from '@/routes/barangay';
 import resident from '@/routes/resident';
 import { User, type BreadcrumbItem } from '@/types';
-import { Head, Link, router, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { FormEvent, FormEventHandler } from 'react';
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 import { individualChat } from '@/routes';
@@ -45,6 +46,7 @@ export default function Chat({unread, read, chatToAdmin}: {
     chatToAdmin?: User[];
 }) {
     console.log("UNREAD", unread, "READ", read)
+    const { user } = usePage().props.auth;
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Chats" />
@@ -68,7 +70,7 @@ export default function Chat({unread, read, chatToAdmin}: {
                 <h1 className="text-2xl font-bold">Chats</h1>
                 <section>
                     <div className="flex flex-col gap-1">
-            {unread?.length > 0 &&
+            {/*unread?.length > 0 &&
                 unread.map(message => {
                     if (message.data?.sender_id === 0 ) {
                         return
@@ -82,7 +84,7 @@ export default function Chat({unread, read, chatToAdmin}: {
                         <Dot size={50} className="text-blue-500"/>
                         </CardTitle>
                         </Card></Link>})
-                     }
+                     */}
                         { read?.length > 0 ?
                             read.filter(message =>
                                 !unread?.map(unreadmess => unreadmess.data?.sender_id)
@@ -98,7 +100,7 @@ export default function Chat({unread, read, chatToAdmin}: {
                                         } catch (e) {}
                                         return <Link href={message.data?.sender_id !== 0 ? individualChat(message.data?.sender_id) : '#'} className=""><Card className="transition-all duration-200 hover:bg-gray-300/30 px-2">
                                         <CardTitle className="capitalize flex justify-between items-center">
-                                            <div className="flex flex-col gap-3 font-thin">
+                                            <div className={cn("flex flex-col gap-3", message?.read_at || user.name === message.data.real_sender_name ?  "font-thin" : "")}>
                                                 <div className="">{message.data?.sender_name}</div>
                                                 <small>{message.data?.real_sender_name ? message.data?.real_sender_name : message.data?.sender_name }: {message.data?.message}</small>
                                             </div>
