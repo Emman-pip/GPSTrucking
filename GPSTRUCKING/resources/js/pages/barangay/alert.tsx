@@ -1,31 +1,29 @@
 import MapBarangay from '@/components/map/MapBarangay';
 import { Button } from "@/components/ui/button"
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
 } from "@/components/ui/accordion"
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { cn } from '@/lib/utils';
-import MapView  from '@/components/map/MapView';
+import MapView from '@/components/map/MapView';
 import AppLayout from '@/layouts/barangay/app-layout';
 import resident from '@/routes/resident';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, useForm, usePage } from '@inertiajs/react';
-import { Barangay } from '../barangay/profileForm';
-import { UpdateBarangay } from './updateProfile';
 import { Bell, Clock, Dot, Siren } from 'lucide-react';
 import { useEffect } from 'react';
 import barangay from '@/routes/barangay';
@@ -71,54 +69,54 @@ function MakeAlertForm() {
 
     return (
         <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="default">Create An Alert</Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-        <form onSubmit={handleSubmit}>
+            <DialogTrigger asChild>
+                <Button variant="default">Create An Alert</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+                <form onSubmit={handleSubmit}>
 
-          <DialogHeader>
-            <DialogTitle>Issue an alert or notification</DialogTitle>
-            <DialogDescription>
-                Alerts are sent to all the residents of your barangay the moment it is issued.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4">
-            <div className="grid gap-3">
-              <Label htmlFor="title">Title</Label>
-              <Input id="title" name="title" defaultValue={data.title} placeholder="A descriptive title..." onChange={(e)=>setData('title', e.target.value)} required />
-            </div>
-            <div className="grid gap-3">
-              <Label htmlFor="message">Alert content</Label>
-              <Textarea id="message" name="message" defaultValue={data.message} placeholder="A description of the alert..." onChange={(e) => setData('message', e.target.value)} required />
-            </div>
-            <div className="grid gap-2">
-                <Label>Tags</Label>
-                {availableTags.map((tag) => (
-                    <label key={tag} className="flex items-center space-x-2">
-                        <input
+                    <DialogHeader>
+                        <DialogTitle>Issue an alert or notification</DialogTitle>
+                        <DialogDescription>
+                            Alerts are sent to all the residents of your barangay the moment it is issued.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4">
+                        <div className="grid gap-3">
+                            <Label htmlFor="title">Title</Label>
+                            <Input id="title" name="title" defaultValue={data.title} placeholder="A descriptive title..." onChange={(e) => setData('title', e.target.value)} required />
+                        </div>
+                        <div className="grid gap-3">
+                            <Label htmlFor="message">Alert content</Label>
+                            <Textarea id="message" name="message" defaultValue={data.message} placeholder="A description of the alert..." onChange={(e) => setData('message', e.target.value)} required />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label>Tags</Label>
+                            {availableTags.map((tag) => (
+                                <label key={tag} className="flex items-center space-x-2">
+                                    <input
                                         type="checkbox"
-                            value={tag}
-                            checked={data.tags.includes(tag)}
-                            onChange={() => handleCheckboxChange(tag)}
-                        />
-                        <span>{tag}</span>
-                    </label>
-                ))}
-            </div>
-          </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <DialogClose asChild>
-              <Button type="submit">Save changes</Button>
-            </DialogClose>
-          </DialogFooter>
-      </form>
-        </DialogContent>
-    </Dialog>
-  )
+                                        value={tag}
+                                        checked={data.tags.includes(tag)}
+                                        onChange={() => handleCheckboxChange(tag)}
+                                    />
+                                    <span>{tag}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <Button variant="outline">Cancel</Button>
+                        </DialogClose>
+                        <DialogClose asChild>
+                            <Button type="submit">Save changes</Button>
+                        </DialogClose>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    )
 }
 
 
@@ -142,7 +140,7 @@ export default function Alerts({ alerts, sentAlerts, allBarangayAlerts }: {
             <main className="p-2 pb-4">
                 <div className="flex justify-between items-center w-full py-2">
                     <div className="text-xl font-bold">Notifications & Feedback</div>
-                    <MakeAlertForm/>
+                    <MakeAlertForm />
                 </div>
                 <div className="p-2 border border-current/30  flex flex-col gap-2 rounded-xl">
                     <Accordion
@@ -173,21 +171,21 @@ export default function Alerts({ alerts, sentAlerts, allBarangayAlerts }: {
                             </AccordionContent>
                         </AccordionItem>
                         <AccordionItem value="item-2">
-                    <AccordionTrigger className="font-semibold text-lg">Sent Notifications</AccordionTrigger>
-                    <AccordionContent className="flex flex-col gap-2 max-h-[100vh] overflow-y-auto">
+                            <AccordionTrigger className="font-semibold text-lg">Sent Notifications</AccordionTrigger>
+                            <AccordionContent className="flex flex-col gap-2 max-h-[100vh] overflow-y-auto">
 
-                        {
-                            sentAlerts?.length > 0 ? sentAlerts.map((alert, index) => {
-                                return <div className={ cn( "rounded-sm flex items-center gap-2 border border-current/30 p-2"  )}>
-                                    <div className="bg-blue-500/40 p-2 rounded-lg">
-                                        <Bell className="text-blue-700"/>
-                                    </div>
-                                    <div>
-                                        <div className="font-semibold flex gap-1 items-center break-words">{alert.data?.title}</div>
-                                        <div className="text-sm font-thin opacity-60 break-words">{alert.data?.message}</div>
-                                    </div>
-                                </div>
-                            }) : <div>
+                                {
+                                    sentAlerts?.length > 0 ? sentAlerts.map((alert, index) => {
+                                        return <div className={cn("rounded-sm flex items-center gap-2 border border-current/30 p-2")}>
+                                            <div className="bg-blue-500/40 p-2 rounded-lg">
+                                                <Bell className="text-blue-700" />
+                                            </div>
+                                            <div>
+                                                <div className="font-semibold flex gap-1 items-center break-words">{alert.data?.title}</div>
+                                                <div className="text-sm font-thin opacity-60 break-words">{alert.data?.message}</div>
+                                            </div>
+                                        </div>
+                                    }) : <div>
                                         You have not issued any alerts yet!
                                     </div>
 
@@ -215,7 +213,7 @@ export default function Alerts({ alerts, sentAlerts, allBarangayAlerts }: {
                                 }
                             </AccordionContent>
                         </AccordionItem>
- </Accordion>
+                    </Accordion>
                 </div>
             </main>
         </AppLayout>

@@ -69,7 +69,7 @@ const BarangayMainNavItems: NavItem[] = [
         icon: MessageSquare,
     },
     {
-        title: 'Alerts',
+        title: 'Notifications & Feedbacks',
         href: barangay.alerts().url,
         icon: Siren,
     }

@@ -1,13 +1,16 @@
 * TODO URGENT Order of Things
-- [ ] add cascade delete
+- [X] add cascade delete
+- [ ] get the notifications to the sidebar
+- [ ] add ratings
+
 
 * Barangay
 - [X] fix the app-header
   - [X] Home
     - [X] will contain the map
     - [X] dashboard
-- [-] Chats
-  - [ ] send announcements
+- [X] Chats
+  - [X] send announcements
   - [X] private messages
 - [X] settings -> for barangay only
 - [X] profile
@@ -22,7 +25,7 @@
 - [X] dashboard
 - [X] profile
 - [ ] residents using the application
-- [ ] send broadcast messages
+- [X] send broadcast messages
 - [ ] additional
   - [ ] should have a way to contact trucks
     - [ ] link to truck to:
@@ -51,8 +54,8 @@
 - [X] profile form
 - [ ] file complaints/ratings
   - [ ]  through chat
-- [ ] receive broadcast messages
-- [ ] receive broadcast notifications
+- [X] receive broadcast messages
+- [X] receive broadcast notifications
 - [ ] additional
   - [ ] Barangay rating (their team)
     - [ ] comments about the barangay
