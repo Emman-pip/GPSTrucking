@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DriverController;
 use App\Http\Controllers\DropSiteController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RouteController;
@@ -52,4 +53,10 @@ require __DIR__.'/barangay.php';
 
 Route::get('/sample-{id}', function ($id) {
     User::find($id)->notify(new Message('Hello there barangay 10 - 1'));
+});
+
+
+Route::middleware(['ensure_valid_link'])->group(function () {
+    Route::get('/driver', [DriverController::class, 'index'])
+        ->name('driver');
 });

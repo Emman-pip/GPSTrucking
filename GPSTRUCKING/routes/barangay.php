@@ -3,6 +3,7 @@
 use App\Http\Controllers\AlertController;
 use App\Http\Controllers\BarangayController;
 use App\Http\Controllers\BarangayOfficialInformationController;
+use App\Http\Controllers\DriverController;
 use App\Http\Controllers\DropSiteController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\MessageController;
@@ -49,6 +50,9 @@ Route::middleware(['auth', 'ensure_role:barangay', 'verified',])->group(function
             // alerts
             Route::get('/barangay/alerts', [AlertController::class, 'makeAlerts'])->name('barangay.alerts');
             Route::post('/barangay/alerts', [AlertController::class, 'postAlerts'])->name('barangay.alerts.post');
+
+            // link generation
+            Route::get('/generate-driver-link', [DriverController::class, 'generate'])->name('barangay.generate.driver');
         });
     });
     // for form
