@@ -52,7 +52,9 @@ Route::middleware(['auth', 'ensure_role:barangay', 'verified',])->group(function
             Route::post('/barangay/alerts', [AlertController::class, 'postAlerts'])->name('barangay.alerts.post');
 
             // link generation
+            Route::get('/barangay/drivers', [DriverController::class, 'barangayView'])->name('barangay.drivers');
             Route::get('/generate-driver-link', [DriverController::class, 'generate'])->name('barangay.generate.driver');
+
         });
     });
     // for form
