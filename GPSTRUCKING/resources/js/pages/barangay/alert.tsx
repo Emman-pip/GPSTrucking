@@ -149,7 +149,7 @@ export default function Alerts({ alerts, sentAlerts, allBarangayAlerts }: {
                         className="w-full"
                         defaultValue="item-1"
                     >
-                        <AccordionItem value="item-1">
+                        <AccordionItem className="border-b-current/30" value="item-1">
                             <AccordionTrigger className="border-top-none font-semibold text-lg">Notification feed</AccordionTrigger>
                             <AccordionContent className="flex flex-col gap-2 max-h-[100vh] overflow-y-auto">
                                 {
@@ -170,7 +170,7 @@ export default function Alerts({ alerts, sentAlerts, allBarangayAlerts }: {
                                 }
                             </AccordionContent>
                         </AccordionItem>
-                        <AccordionItem value="item-2">
+                        <AccordionItem className="border-b-current/30" value="item-2">
                             <AccordionTrigger className="font-semibold text-lg">Sent Notifications</AccordionTrigger>
                             <AccordionContent className="flex flex-col gap-2 max-h-[100vh] overflow-y-auto">
 

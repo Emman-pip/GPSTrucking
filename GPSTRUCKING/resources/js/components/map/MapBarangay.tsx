@@ -282,7 +282,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
         <GeolocateControl/>
     </Map>
         {withControls && (
-            <section className="flex flex-wrap items-center gap-3 p-3 border border-gray-200/80 rounded-md shadow-sm">
+            <section className="flex flex-wrap items-center gap-3 p-3 border border-current/30 rounded-md shadow-sm">
                 <Button
                     disabled={isSettingRoute|isMarking}
                     onClick={handleCreateMarker}
