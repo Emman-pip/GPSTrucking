@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AlertController;
 use App\Http\Controllers\BarangayController;
 use App\Http\Controllers\BarangayOfficialInformationController;
 use App\Http\Controllers\DropSiteController;
@@ -45,10 +46,9 @@ Route::middleware(['auth', 'ensure_role:barangay', 'verified',])->group(function
             Route::put('/barangay/update-route', [RouteController::class, 'update'])->name('barangay.update.route');
             Route::delete('/barangay/delete-route-{id}', [RouteController::class, 'delete'])->name('barangay.delete.route');
 
-            // for chats
-            Route::get('/barangay/chats', [MessageController::class, 'view'])->name('barangay.chats');
-            Route::get('/barangay/chats-{id}', [MessageController::class, 'viewSingle'])->name('barangay.chats.individual');
-            Route::post('/barangay/send-chat', [MessageController::class, 'send'])->name('barangay.chats.individual.send');
+            // alerts
+            Route::get('/barangay/alerts', [AlertController::class, 'makeAlerts'])->name('barangay.alerts');
+            Route::post('/barangay/alerts', [AlertController::class, 'postAlerts'])->name('barangay.alerts.post');
         });
     });
     // for form

@@ -70,7 +70,7 @@ const BarangayMainNavItems: NavItem[] = [
     },
     {
         title: 'Alerts',
-        href: '#',
+        href: barangay.alerts().url,
         icon: Siren,
     }
 ];
