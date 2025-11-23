@@ -1,6 +1,12 @@
 import MapBarangay from '@/components/map/MapBarangay';
 import { Button } from "@/components/ui/button"
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+import {
   Dialog,
   DialogClose,
   DialogContent,
@@ -25,6 +31,7 @@ import { useEffect } from 'react';
 import barangay from '@/routes/barangay';
 import { isMap } from 'util/types';
 import { Textarea } from '@/components/ui/textarea';
+import { Alert } from '../resident/alerts';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -115,17 +122,20 @@ function MakeAlertForm() {
 }
 
 
-export default function Alerts({ alerts }: {
+export default function Alerts({ alerts, sentAlerts, allBarangayAlerts }: {
     alerts: Alert[];
+    sentAlerts: Alert[];
+    allBarangayAlerts: Alert[];
 }) {
     const { user } = usePage().props.auth;
-    console.log(alerts);
+    console.log(sentAlerts, allBarangayAlerts);
     useEffect(() => {
         console.log("not marking yet! ")
         return () => {
             return router.put(resident.alerts.makeRead().url);
         }
     }, [])
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -135,25 +145,77 @@ export default function Alerts({ alerts }: {
                     <MakeAlertForm/>
                 </div>
                 <div className="p-2 border border-current/30  flex flex-col gap-2 rounded-xl">
-                    <div className="font-semibold text-lg">Notification feed</div>
-                    <div className="flex flex-col gap-2 max-h-[100vh] overflow-y-auto">
+                    <Accordion
+                        type="single"
+                        collapsible
+                        className="w-full"
+                        defaultValue="item-1"
+                    >
+                        <AccordionItem value="item-1">
+                            <AccordionTrigger className="border-top-none font-semibold text-lg">Notification feed</AccordionTrigger>
+                            <AccordionContent className="flex flex-col gap-2 max-h-[100vh] overflow-y-auto">
+                                {
+                                    alerts?.length > 0 ? alerts.map((alert, index) => {
+                                        return <div className={cn("rounded-sm flex items-center gap-2  border border-current/50 p-2", alert.read_at ? "border-current/30" : "")}>
+                                            <div className="bg-blue-500/40 p-2 rounded-lg">
+                                                <Bell className="text-blue-700" />
+                                            </div>
+                                            <div>
+                                                <div className="font-semibold flex gap-1 items-center break-words">{!alert.read_at ? <Dot size={30} className="text-red-500" /> : ""}{alert.data?.title}</div>
+                                                <div className="text-sm font-thin opacity-60 break-words">{alert.data?.message}</div>
+                                            </div>
+                                        </div>
+                                    }) : <div>
+                                        No alerts yet!
+                                    </div>
+
+                                }
+                            </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="item-2">
+                    <AccordionTrigger className="font-semibold text-lg">Sent Notifications</AccordionTrigger>
+                    <AccordionContent className="flex flex-col gap-2 max-h-[100vh] overflow-y-auto">
+
                         {
-                            alerts?.length > 0 ? alerts.map((alert, index) => {
-                                return <div className={ cn( "rounded-sm flex items-center gap-2  border border-current/50 p-2", alert.read_at ? "border-current/30" : "" )}>
+                            sentAlerts?.length > 0 ? sentAlerts.map((alert, index) => {
+                                return <div className={ cn( "rounded-sm flex items-center gap-2 border border-current/30 p-2"  )}>
                                     <div className="bg-blue-500/40 p-2 rounded-lg">
                                         <Bell className="text-blue-700"/>
                                     </div>
                                     <div>
-                                        <div className="font-semibold flex gap-1 items-center break-words">{ !alert.read_at ? <Dot size={30} className="text-red-500"/> : ""}{alert.data?.title}</div>
+                                        <div className="font-semibold flex gap-1 items-center break-words">{alert.data?.title}</div>
                                         <div className="text-sm font-thin opacity-60 break-words">{alert.data?.message}</div>
                                     </div>
                                 </div>
                             }) : <div>
-                                No alerts yet!
-                            </div>
+                                        You have not issued any alerts yet!
+                                    </div>
 
-                        }
-                    </div>
+                                }
+                            </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="item-3" className="">
+                            <AccordionTrigger className="font-semibold text-lg">Notifications from All Barangay Admins</AccordionTrigger>
+                            <AccordionContent className="flex flex-col gap-2 max-h-[100vh] overflow-y-auto">
+                                {
+                                    allBarangayAlerts && allBarangayAlerts?.length > 0 ? allBarangayAlerts.map((alert, index) => {
+                                        return <div className={cn("rounded-sm flex items-center gap-2 border border-current/30 p-2")}>
+                                            <div className="bg-blue-500/40 p-2 rounded-lg">
+                                                <Bell className="text-blue-700" />
+                                            </div>
+                                            <div>
+                                                <div className="font-semibold flex gap-1 items-center break-words">{alert.data?.title}</div>
+                                                <div className="text-sm font-thin opacity-60 break-words">{alert.data?.message}</div>
+                                            </div>
+                                        </div>
+                                    }) : <div>
+                                        No alerts issued for your barangay yet!!
+                                    </div>
+
+                                }
+                            </AccordionContent>
+                        </AccordionItem>
+ </Accordion>
                 </div>
             </main>
         </AppLayout>

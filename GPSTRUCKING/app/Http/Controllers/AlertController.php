@@ -9,6 +9,7 @@ use App\Notifications\Alert;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class AlertController extends Controller
@@ -31,7 +32,34 @@ class AlertController extends Controller
         $alerts = Auth::user()->notifications()
             ->where('type', 'App\Notifications\Alert')
             ->get();
-        return Inertia::render('barangay/alert', ['alerts' => $alerts]);
+
+        $sentAlerts = DB::table('notifications')
+            ->where('type', 'App\Notifications\Alert')
+            ->where('data->sender_id', Auth::user()->id)
+            ->groupBy('data')
+            ->distinct()
+            ->get()
+            ->map(function($group) {
+                $group->data = json_decode($group->data);
+                return $group;
+            });
+
+        $allBarangayAlerts =  DB::table('notifications')
+            ->where('type', 'App\Notifications\Alert')
+            ->where('data->barangay_id', Auth::user()->barangayOfficialInfo->barangay_id)
+            ->groupBy('data')
+            ->get()
+            ->map(function($group) {
+                $group->data = json_decode($group->data);
+                return $group;
+            });
+
+
+        return Inertia::render('barangay/alert', [
+            'alerts' => $alerts,
+            'sentAlerts' => $sentAlerts,
+            'allBarangayAlerts' => $allBarangayAlerts
+        ]);
     }
 
     public function postAlerts(Request $request) {

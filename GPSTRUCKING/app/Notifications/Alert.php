@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\DatabaseMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Auth;
 
 class Alert extends Notification
 {
@@ -63,6 +64,8 @@ class Alert extends Notification
             'title' => $this->title,
             'message' => $this->message,
             'tags' => $this->tags,
+            'sender_id' => Auth::user()->id ?? null,
+            'barangay_id' => Auth::user()->barangayOfficialInfo->barangay_id ?? null,
         ];
     }
 
