@@ -4,10 +4,11 @@ import MapView  from '@/components/map/MapView';
 import AppLayout from '@/layouts/resident/app-layout';
 import resident from '@/routes/resident';
 import { type BreadcrumbItem } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 import { Barangay } from '../barangay/profileForm';
 import { UpdateBarangay } from './updateProfile';
 import { Bell, Clock, Dot, Siren } from 'lucide-react';
+import { useEffect } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -37,6 +38,12 @@ export default function Alerts({ alerts }: {
 }) {
     const { user } = usePage().props.auth;
     console.log(alerts);
+    useEffect(() => {
+        console.log("not marking yet! ")
+        return () => {
+            return router.put(resident.alerts.makeRead().url);
+        }
+    }, [])
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />

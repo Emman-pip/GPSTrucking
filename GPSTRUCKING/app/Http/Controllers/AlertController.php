@@ -14,4 +14,11 @@ class AlertController extends Controller
            ->get();
         return Inertia::render('resident/alerts', ['alerts' => $alerts]);
     }
+
+    public function markRead() {
+        $user = Auth::user();
+        $user->unreadNotifications()
+            ->where('type', 'App\Notifications\Alert')
+            ->update(['read_at' => now()]);
+    }
 }

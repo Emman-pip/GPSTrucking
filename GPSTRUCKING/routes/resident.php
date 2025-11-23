@@ -27,6 +27,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/alerts', [AlertController::class, 'view'])
             ->name('resident.alerts');
+        Route::put('/alerts', [AlertController::class, 'markRead'])
+            ->name('resident.alerts.makeRead');
 
         // for updating profile form
         Route::put('/resident/update-profile-form', [ResidencyController::class, 'update'])->name('resident.profile-form.update');
