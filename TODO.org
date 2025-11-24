@@ -86,8 +86,8 @@
 
 * TODO TO CREATE THIS:
 i need to give the link the following:
-1. barangay_id
-2. barangay official that gave the permission
+1. [X] barangay_id
+2. [X] barangay official that gave the permission
 3. ability to share the current marker
    - can be disabled by the admin
    - will automatically be activated
