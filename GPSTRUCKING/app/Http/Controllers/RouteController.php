@@ -38,6 +38,10 @@ class RouteController extends Controller
         return response()->json(Route::where('barangay_id', $barangay_id)->with('schedule')->get());
     }
 
+    public function getForDriver($id){
+        return response()->json(Route::where('barangay_id', $id)->with('schedule')->get());
+    }
+
     public function update(Request $request) {
         $validated = $request->validate([
             'sched_id' => ['required', 'exists:pick_up_schedules,id'],

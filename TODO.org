@@ -2,6 +2,7 @@
 - [X] add cascade delete
 - [ ] get the notifications to the sidebar
 - [ ] add ratings
+- [ ] add toast as real time notifications
 
 
 * Barangay
@@ -74,13 +75,13 @@
 - [ ] additional
   - [ ] should have a way to contact trucks
     - [ ] link to truck to:
-    - [ ] share location
-    - [ ] update dropsite status
-      - [ ] collected
-      - [ ] to be collected
-      - [ ] missed/uncollected
-    - [ ] trash volume
-    - [ ] efficiency score
+      - [ ] share location
+      - [ ] update dropsite status
+        - [ ] collected
+        - [ ] to be collected
+        - [ ] missed/uncollected
+      - [ ] trash volume
+      - [ ] efficiency score
 
 
 * TODO TO CREATE THIS:

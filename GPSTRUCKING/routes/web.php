@@ -45,6 +45,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // public routes for getting data
 Route::get('/get-routes', [RouteController::class, 'get'])->name('get.routes');
+Route::get('/get-routes-{id}', [RouteController::class, 'getForDriver'])->name('get.routes.driver');
 Route::get('/get-pickup-sites', [DropSiteController::class, 'dropSites'])->name('get.dropsites');
 
 require __DIR__.'/settings.php';

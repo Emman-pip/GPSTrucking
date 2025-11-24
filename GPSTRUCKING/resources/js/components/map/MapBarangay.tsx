@@ -39,6 +39,7 @@ import { CreateRoute } from "./CreateRoute";
 import { LineRenderer } from "./LineRenderer";
 import { EditRoute } from "./EditRoute";
 import get from "@/routes/get";
+import { User } from "@/types";
 
 export interface PickUpSite {
     id?: number;
@@ -76,14 +77,15 @@ export interface PickUpSite {
 // TODO ROUTES!!!!
 // manually add routes by hand
 
-export default function MapBarangay({ barangayCoordinates, withControls = false }: {
+export default function MapBarangay({ barangayCoordinates, withControls = false, userData = null }: {
     barangayCoordinates: [number, number],
-    withControls?: boolean
+    withControls?: boolean,
+    userData: null|User
 }) {
 
     const mapRef = useRef<MapRef | null>(null);
     const map = mapRef.current?.getMap();
-    const user = usePage().props.auth.user;
+    const user:User = userData !== null ? userData : usePage().props.auth.user;
 
     const [dropSites, setDropSites] = useState<PickUpSite[]>();
     const [routes, setRoutes] = useState<Route[]>();
@@ -101,7 +103,13 @@ export default function MapBarangay({ barangayCoordinates, withControls = false 
             .then(res => setDropSites(res))
 
         console.log(`${window.location.origin}${get.routes().url}`);
-        fetch(`${window.location.origin}${get.routes().url}`)
+        // fetch(`${window.location.origin}${get.routes().url}`)
+        //     .then(res => res.json())
+        //     .then(res => {
+        //         res.map(datum => datum.coordinates = JSON.parse(datum.coordinates));
+        //         setRoutes(res);
+        //     })
+        fetch(`${window.location.origin}${get.routes.driver(user.barangay_official_info?.barangay_id ? user.barangay_official_info.barangay_id : user.residency.barangay_id).url}`)
             .then(res => res.json())
             .then(res => {
                 res.map(datum => datum.coordinates = JSON.parse(datum.coordinates));

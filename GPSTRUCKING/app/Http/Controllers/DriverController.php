@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Barangay;
 use App\Models\TruckAndDriver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +26,10 @@ class DriverController extends Controller
     }
 
     public function index(Request $request){
-        return response($request->message);
+        $barangay = Barangay::find($request->barangay_id);
+        $barangay->coordinates = json_decode($barangay->coordinates);
+        $user = ['name' => $request->name, 'truckID' => $request->truckID, 'residency' => ['barangay_id' => $barangay->id], 'barangay_official_info' => []];
+        return Inertia::render('driver/driversAndTrucks', ['barangay' => $barangay, 'user' => $user]);
     }
 
     public function barangayView() {
