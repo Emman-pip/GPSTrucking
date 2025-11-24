@@ -53,6 +53,7 @@ Route::middleware(['auth', 'ensure_role:barangay', 'verified',])->group(function
 
             // link generation
             Route::get('/barangay/drivers', [DriverController::class, 'barangayView'])->name('barangay.drivers');
+            Route::post('/barangay/drivers', [DriverController::class, 'create'])->name('barangay.drivers.post');
             Route::get('/generate-driver-link', [DriverController::class, 'generate'])->name('barangay.generate.driver');
 
         });
