@@ -42,4 +42,17 @@ class DriverController extends Controller
         $validated['barangay_id'] = Auth::user()->barangayOfficialInfo->barangay_id;
         TruckAndDriver::create($validated);
     }
+
+    public function update(Request $request) {
+        $validated = $request->validate([
+            'name' => ['string'],
+            'truckID' => ['required'],
+            'id' => ['required']
+        ]);
+
+        $truck = TruckAndDriver::find($validated['id']);
+        unset($validated['id']);
+
+        $truck->update($validated);
+    }
 }

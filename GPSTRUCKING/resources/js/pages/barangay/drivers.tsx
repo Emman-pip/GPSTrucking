@@ -92,6 +92,65 @@ function CreateNewTruckForm() {
     )
 }
 
+
+function EditNewTruckForm({ name, truckID, id } : { name:string, truckID:string, id:number }) {
+    const { data, setData, put, errors, processing } = useForm({
+        'name': name,
+        'truckID': truckID,
+        'id': id,
+    });
+
+    const [ open, setOpen ] = useState<boolean>(false);
+
+
+    const handleSubmit = (e) => {
+        if (!e.target.checkValidity()) {
+            return;
+        }
+        e.preventDefault();
+        put(barangay.drivers.put().url, {
+            onSuccess: () => setOpen(false),
+        }); // your route here
+    };
+
+    return (
+        <Dialog onOpenChange={setOpen} open={open}>
+            <DialogTrigger asChild>
+                <Button variant={"outline"} className="w-full"><Edit></Edit>Edit</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+                <form onSubmit={handleSubmit}>
+
+                    <DialogHeader>
+                        <DialogTitle>Edit New Truck/Driver</DialogTitle>
+                        <DialogDescription>
+                            This is a form to edit trucks with assigned drivers
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4">
+                        <div className="grid gap-3">
+                            <Label htmlFor="name">Name</Label>
+                            <Input id="name" name="name" placeholder="driver name..." defaultValue={data.name} onChange={(e) => setData('name', e.target.value)} />
+                            {errors.name && <span className='text-red-500'>{errors.name}</span> }
+                        </div>
+                        <div className="grid gap-3">
+                            <Label htmlFor="truckID">Truck ID</Label>
+                            <Input id="truckID" name="truckID" placeholder="plate number, identification code, etc" defaultValue={data.truckID} onChange={(e) => setData('truckID', e.target.value)} required />
+                            { errors.truckID && <span className='text-red-500'>{errors.truckID}</span> }
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <Button variant="outline">Cancel</Button>
+                        </DialogClose>
+                        <Button type="submit">Save changes</Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 function generateLink(name: string, truckID: string, hours: number) {
     fetch(barangay.generate.driver().url + '?name=' + name + '&truckID=' + truckID + '&hours=' + hours)
         .then((e) => e.text())
@@ -147,6 +206,7 @@ export interface  TruckAndDriver {
     barangayID: number,
     name: string,
     truckID: string
+    id: number,
 }
 
 export default function Drivers({ truckData } : {
@@ -171,7 +231,8 @@ export default function Drivers({ truckData } : {
                      truckData.map((truck, index) => {
                          const [ data, setData ] = useState({
                              truckID: truck.truckID,
-                             name: truck.name
+                             name: truck.name,
+                             id: truck.id,
                          });
                          return <Card className="p-2 border-current/30 gap-2" key={'truck-' + index}>
                              <CardTitle className="flex gap-2 items-center">
@@ -183,7 +244,7 @@ export default function Drivers({ truckData } : {
                             <CardDescription>
                                 <div className=" border-b border-current/30 flex gap-2 items-center p-2"><User size={13}/>{truck.name}</div>
                                 <div className="p-3 flex gap-1 flex-wrap ">
-                                    <Button variant={"outline"} className="w-full"><Edit></Edit>Edit</Button>
+                                    <EditNewTruckForm  name={data.name} truckID={data.truckID} id={data.id} />
                                      <GenerateLinkForm name={data.name} truckID={data.truckID} />
                                 </div>
                             </CardDescription>
