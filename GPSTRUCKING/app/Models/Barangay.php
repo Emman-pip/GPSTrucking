@@ -19,6 +19,10 @@ class Barangay extends Model
         return $this->hasMany(BarangayOfficialInformation::class, 'barangay_id');
     }
 
+    public function TrucksAndDrivers() {
+        return $this->hasMany(TruckAndDriver::class, 'barangay_id');
+    }
+
     public function dropSites(){
         return $this->hasMany(DropSite::class);
     }
