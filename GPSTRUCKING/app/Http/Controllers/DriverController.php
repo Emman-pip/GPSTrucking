@@ -55,4 +55,8 @@ class DriverController extends Controller
 
         $truck->update($validated);
     }
+
+    public function delete(Request $request, $id) {
+        TruckAndDriver::destroy($id);
+    }
 }

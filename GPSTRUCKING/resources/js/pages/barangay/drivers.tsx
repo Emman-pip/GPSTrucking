@@ -14,7 +14,7 @@ import { useState } from "react";
 import { cn } from '@/lib/utils';
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Command, CommandGroup, CommandItem, CommandInput } from "@/components/ui/command";
-import { ChevronsUpDown, Dot, Edit, Link2, Plus, Truck, User, User2 } from "lucide-react";
+import { ChevronsUpDown, Dot, Edit, Link2, Plus, Trash, Truck, User, User2 } from "lucide-react";
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/barangay/app-layout'
@@ -50,7 +50,10 @@ function CreateNewTruckForm() {
         }
         e.preventDefault();
         post(barangay.drivers.post().url, {
-            onSuccess: () => setOpen(false),
+            onSuccess: () => {
+                router.get('#');
+                setOpen(false);
+            },
         }); // your route here
     };
 
@@ -113,6 +116,15 @@ function EditNewTruckForm({ name, truckID, id } : { name:string, truckID:string,
         }); // your route here
     };
 
+    const handleDelete = (id:number) => {
+        router.delete(barangay.drivers.delete(id).url, {
+            onSuccess: ()=>{
+                router.get('#')
+            }
+
+        });
+    }
+
     return (
         <Dialog onOpenChange={setOpen} open={open}>
             <DialogTrigger asChild>
@@ -133,17 +145,18 @@ function EditNewTruckForm({ name, truckID, id } : { name:string, truckID:string,
                             <Input id="name" name="name" placeholder="driver name..." defaultValue={data.name} onChange={(e) => setData('name', e.target.value)} />
                             {errors.name && <span className='text-red-500'>{errors.name}</span> }
                         </div>
-                        <div className="grid gap-3">
+                        <div className="grid gap-3 mb-2">
                             <Label htmlFor="truckID">Truck ID</Label>
                             <Input id="truckID" name="truckID" placeholder="plate number, identification code, etc" defaultValue={data.truckID} onChange={(e) => setData('truckID', e.target.value)} required />
                             { errors.truckID && <span className='text-red-500'>{errors.truckID}</span> }
                         </div>
                     </div>
-                    <DialogFooter>
+                    <DialogFooter className="flex items-center">
+                        <Trash className="text-red-500/30 hover:text-red-500/80" onClick={() => handleDelete(data.id)}/>
                         <DialogClose asChild>
                             <Button variant="outline">Cancel</Button>
                         </DialogClose>
-                        <Button type="submit">Save changes</Button>
+                        <Button>Save changes</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
@@ -226,14 +239,9 @@ export default function Drivers({ truckData } : {
                     </div>
                     <CreateNewTruckForm />
                 </section>
-                <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                <section className={ cn("grid grid-cols-1 ", truckData?.length > 0 ? "sm:grid-cols-2 lg:grid-cols-3 gap-2" : "" ) }>
                     {truckData && truckData?.length ?
                      truckData.map((truck, index) => {
-                         const [ data, setData ] = useState({
-                             truckID: truck.truckID,
-                             name: truck.name,
-                             id: truck.id,
-                         });
                          return <Card className="p-2 border-current/30 gap-2" key={'truck-' + index}>
                              <CardTitle className="flex gap-2 items-center">
                                  <div className="bg-gray-500/30 p-2 rounded-2xl">
@@ -244,8 +252,8 @@ export default function Drivers({ truckData } : {
                             <CardDescription>
                                 <div className=" border-b border-current/30 flex gap-2 items-center p-2"><User size={13}/>{truck.name}</div>
                                 <div className="p-3 flex gap-1 flex-wrap ">
-                                    <EditNewTruckForm  name={data.name} truckID={data.truckID} id={data.id} />
-                                     <GenerateLinkForm name={data.name} truckID={data.truckID} />
+                                    <EditNewTruckForm  name={truck.name} truckID={truck.truckID} id={truck.id} />
+                                     <GenerateLinkForm name={truck.name} truckID={truck.truckID} />
                                 </div>
                             </CardDescription>
                         </Card>
