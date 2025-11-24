@@ -11,7 +11,10 @@ import MapBarangay from '@/components/map/MapBarangay';
 // 5. button to end the garbage collection - will notify
 
 // currently
-// creating the UI
+// creating the location sharing function
+// share location by broadcasting it.
+// use navigator.chuchu.watchPostition to track the position
+// every time it changes. Send a broadcast
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Drivers and Trucks',
@@ -28,10 +31,13 @@ export default function DriversAndTrucks({
 }) {
     console.log(user, barangay);
     return (<AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Drivers and Trucks" />
-        <div>Hi world</div>
-        <MapBarangay barangayCoordinates={barangay.coordinates} userData={user} />
-        </AppLayout>
+        <Head title="Drivers and Trucks" />
+        <main className="p-2">
+            <section className="h-120">
+                <MapBarangay barangayCoordinates={barangay.coordinates} userData={user} zoom={17} isDriver={true}/>
+            </section>
+        </main>
+    </AppLayout>
     )
 
 }

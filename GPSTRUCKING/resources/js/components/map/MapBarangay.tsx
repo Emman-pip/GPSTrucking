@@ -14,7 +14,7 @@ import {
     DrawerTrigger,
 } from "@/components/ui/drawer"
 import { Button } from "../ui/button";
-import { MapPin, MapPinPlus, Pickaxe, Route } from "lucide-react";
+import { MapPin, MapPinPlus, Pickaxe, Route, Trash2Icon, Truck } from "lucide-react";
 import { router, useForm, usePage } from "@inertiajs/react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -77,10 +77,12 @@ export interface PickUpSite {
 // TODO ROUTES!!!!
 // manually add routes by hand
 
-export default function MapBarangay({ barangayCoordinates, withControls = false, userData = null }: {
+export default function MapBarangay({ barangayCoordinates, withControls = false, userData = null, zoom = 14, isDriver = false }: {
     barangayCoordinates: [number, number],
     withControls?: boolean,
-    userData: null|User
+    userData?: null|User,
+    zoom?: number,
+    isDriver?: boolean
 }) {
 
     const mapRef = useRef<MapRef | null>(null);
@@ -199,19 +201,59 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         setOpenEditRoute(true);
     }
 
+    const [driverMarker, setDriverMarker] = useState([0,0]);
+    const [isCollectingGarbage, setIsCollectingGarbage] = useState(false);
+
+    useEffect(()=>{
+        if (isCollectingGarbage) {
+            recenter();
+            console.log("HEREE", window.location.href);
+        }
+    },[isCollectingGarbage, driverMarker]);
+
+    const [watchID, setWatchID] = useState<number|null>(null);
+
+    function recenter(){
+        const map = mapRef.current?.getMap();
+        map?.flyTo({ center: [ driverMarker[0], driverMarker[1]], zoom: 17, speed: 1})
+        const watchId = navigator.geolocation.watchPosition(
+            (position) => {
+                map?.flyTo({ center: [ position.coords.longitude,  position.coords.latitude], zoom: 17, speed: 1})
+                setDriverMarker([ position.coords.longitude,  position.coords.latitude]);
+                console.log("Updated Latitude:", position.coords.latitude);
+                console.log("Updated Longitude:", position.coords.longitude);
+            },
+            (error) => {
+                console.error("Error watching position:", error);
+            },
+            {
+                enableHighAccuracy: true,
+                maximumAge: 0,
+                timeout: 5000
+            }
+        );
+        setWatchID(watchId);
+    }
+
+    function untrackMe() {
+        navigator.geolocation.clearWatch(watchID);
+        setWatchID(null);
+    }
+
     return <><Map
         ref={mapRef}
         mapStyle={MAP_STYLE}
-        style={{ borderRadius: 19, height: 500 }}
+        style={{ borderRadius: 19, height: "100%" }}
         initialViewState={{
             longitude: barangayCoordinates[0], // Malvar default
             latitude: barangayCoordinates[1],
-            zoom: 14,
+            zoom: zoom,
         }}
         maxBounds={[
             [121.08, 13.93],
             [121.20, 14.10]
         ]}
+
         onMouseMove={() => {
             const map = mapRef.current?.getMap();
             map.getCanvas().style.cursor = "grab";
@@ -222,11 +264,11 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
             }
             map.getCanvas().style.cursor = "url('/resources/MapPinAdd.svg') 8 8, pointer"
         }}
-        onClick={(e:MapMouseEvent) => {
+        onClick={(e: MapMouseEvent) => {
             handleRouteCreate(e);
             if (isMarking && withControls) {
                 setIsMarking(false);
-                setNewPickUpSite({ coordinates: [e.lngLat.lng, e.lngLat.lat ] })
+                setNewPickUpSite({ coordinates: [e.lngLat.lng, e.lngLat.lat] })
                 setDrawerOpen(true)
             }
         }}
@@ -245,63 +287,69 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         {routes && routes.map((route, index) => <LineRenderer route={route} index={index} map={mapRef.current?.getMap()} onClick={sample} />)}
         /* {routes && <LineRenderer route={routes[0]} map={mapRef.current?.getMap()} />} */
         {dropSites && dropSites.map(dropsite => {
-        try {
-            dropsite.coordinates = JSON.parse(dropsite.coordinates);
-        } catch {}
-        return <Marker key={dropsite.id} longitude={dropsite?.coordinates[0]} latitude={dropsite?.coordinates[1]} anchor="center">
-            <Drawer direction="bottom">
-                <DrawerTrigger>
-                    <MapPin
-                        size={30}
-                        className="cursor-pointer p-2 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-green-500 to-green-600 text-white rounded-full ring-2 ring-green-200 dark:ring-green-800"
-                    />
-                </DrawerTrigger>
-                <DrawerContent>
-                    <DrawerHeader>
-                        <DrawerTitle>Pick Up Site Information</DrawerTitle>
-                        <DrawerDescription className="flex flex-col items-center gap-2 justify-center">
-                            <div className="break-all md:w-[50vw] w-full text-justify">{dropsite.description}</div>
-                            <img className="w-[50vh]" src={window.location.origin + '/storage/' + dropsite.image} />
-                        </DrawerDescription>
+            try {
+                dropsite.coordinates = JSON.parse(dropsite.coordinates);
+            } catch {}
+            return <Marker key={dropsite.id} longitude={dropsite?.coordinates[0]} latitude={dropsite?.coordinates[1]} anchor="center">
+                <Drawer direction="bottom">
+                    <DrawerTrigger>
+                        <MapPin
+                            size={30}
+                            className="cursor-pointer p-2 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-green-500 to-green-600 text-white rounded-full ring-2 ring-green-200 dark:ring-green-800"
+                        />
+                    </DrawerTrigger>
+                    <DrawerContent>
+                        <DrawerHeader>
+                            <DrawerTitle>Pick Up Site Information</DrawerTitle>
+                            <DrawerDescription className="flex flex-col items-center gap-2 justify-center">
+                                <div className="break-all md:w-[50vw] w-full text-justify">{dropsite.description}</div>
+                                <img className="w-[50vh]" src={window.location.origin + '/storage/' + dropsite.image} />
+                            </DrawerDescription>
 
-                    </DrawerHeader>
-                    <DrawerFooter>
-                        <div className="flex justify-center gap-2">
-                            {withControls && <Button className="w-fit" onClick={() => {
-                                setDropSiteToEdit(dropsite);
-                                setOpenEdit(true);
-                            }}>Edit</Button>}
-                            <DrawerClose>
-                                <Button variant="outline">Close</Button>
-                            </DrawerClose>
-                        </div>
-                    </DrawerFooter>
+                        </DrawerHeader>
+                        <DrawerFooter>
+                            <div className="flex justify-center gap-2">
+                                {withControls && <Button className="w-fit" onClick={() => {
+                                    setDropSiteToEdit(dropsite);
+                                    setOpenEdit(true);
+                                }}>Edit</Button>}
+                                <DrawerClose>
+                                    <Button variant="outline">Close</Button>
+                                </DrawerClose>
+                            </div>
+                        </DrawerFooter>
                     </DrawerContent>
                 </Drawer>
             </Marker>
         })}
 
+        {isDriver && <Marker longitude={driverMarker[0]} latitude={driverMarker[1]} anchor="center">
+            <div className="cursor-pointer p-2 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-green-500 to-green-600 text-white rounded-full ring-2 ring-green-200 dark:ring-green-800">
+                <Truck className="" />
+            </div>
+        </Marker>
+        }
         {newPickUpSite?.coordinates && <Marker onClick={() => setDrawerOpen(true)} longitude={newPickUpSite.coordinates[0]} latitude={newPickUpSite.coordinates[1]} anchor="center">
             <MapPinPlus className="h-10 w-10 bg-red-500 rounded-4xl text-white p-3" />
         </Marker>
         }
-        <FullscreenControl/>
-        <NavigationControl/>
-        <GeolocateControl/>
+        <FullscreenControl />
+        <NavigationControl />
+        <GeolocateControl />
     </Map>
         {withControls && (
             <section className="flex flex-wrap items-center gap-3 p-3 border border-current/30 rounded-md shadow-sm">
                 <Button
-                    disabled={isSettingRoute|isMarking}
+                    disabled={isSettingRoute | isMarking}
                     onClick={handleCreateMarker}
                     variant="default"
                 >
                     Add Pickup Site
                 </Button>
-                { isMarking && <Button onClick={() => setIsMarking(false)} variant="destructive">
+                {isMarking && <Button onClick={() => setIsMarking(false)} variant="destructive">
                     Cancel
                 </Button>
-                    }
+                }
 
                 {!isSettingRoute && !isMarking && (
                     <Button
@@ -348,6 +396,22 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                 )}
             </section>
         )}
+
+        {
+        isDriver == true && <section className="p-2">
+            {
+                isCollectingGarbage == false ?
+                        <Button onClick={() => setIsCollectingGarbage(true)}><Trash2Icon/>Start Garbage Collection</Button>
+                :
+                <Button  onClick={() => {
+                    setIsCollectingGarbage(false);
+                    untrackMe();
+                    setDriverMarker([0,0]);
+                }} variant="destructive"><Trash2Icon/>End Garbage Collection</Button>
+            }
+            <Button variant="outline" onClick={()=>recenter()}>Recenter</Button>
+        </section>
+    }
 
         <Drawer onOpenChange={setDrawerOpen} open={drawerOpen} direction="right">
             <DrawerContent>
