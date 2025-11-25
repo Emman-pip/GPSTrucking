@@ -49,6 +49,7 @@ import { MapRetLocation } from "./MapRetLocation";
 export function EditDropSite({setOpen, open, pickUpSite, refreshData} : { setOpen: Dispatch<SetStateAction<boolean>>; open: boolean; pickUpSite: PickUpSite, refreshData:void }) {
     const {data, setData, put, processing, errors} = useForm({
         id: pickUpSite?.id,
+        bin_name: pickUpSite?.bin_name,
         coordinates: pickUpSite?.coordinates,
         image: pickUpSite?.image,
         description: pickUpSite?.description,
@@ -57,6 +58,7 @@ export function EditDropSite({setOpen, open, pickUpSite, refreshData} : { setOpe
     useEffect(()=>{
         setData({
             id: pickUpSite?.id,
+            bin_name: pickUpSite?.bin_name,
             coordinates: pickUpSite?.coordinates,
             image: pickUpSite?.image,
             description: pickUpSite?.description
@@ -163,6 +165,14 @@ export function EditDropSite({setOpen, open, pickUpSite, refreshData} : { setOpe
                         </div>
                     </form>
                     <form onSubmit={handleUpdateDescription}>
+                        <div className="flex flex-col gap-2 pt-2">
+                            <Label htmlFor="bin_name">Bin Name</Label>
+                            <Input type="text" onChange={(e) => {
+                                setData(prev => ({ ...prev, bin_name: e.target.value }))
+                                setData(prev => ({ ...prev, id: pickUpSite.id }))
+                            }} value={data?.bin_name} required/>
+                            {errors?.description && <div className="text-red-500">{errors?.description}</div>}
+                        </div>
                         <div className="flex flex-col gap-2">
                             <Label htmlFor="description">Description</Label>
                             <Textarea onChange={(e) => {
@@ -170,7 +180,7 @@ export function EditDropSite({setOpen, open, pickUpSite, refreshData} : { setOpe
                                 setData(prev => ({ ...prev, id: pickUpSite.id }))
                             }} value={data?.description} required/>
                             {errors?.description && <div className="text-red-500">{errors?.description}</div>}
-                            <Button>Save Description</Button>
+                            <Button>Save</Button>
                         </div>
                     </form>
                     <Dialog onOpenChange={setOpenRelocate} open={openRelocate}>

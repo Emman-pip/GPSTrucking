@@ -50,6 +50,7 @@ import truck from "@/routes/truck";
 
 export interface PickUpSite {
     id?: number;
+    bin_name?: string;
     coordinates?: [number, number];
     image?: string;
     description?: string;

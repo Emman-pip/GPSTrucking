@@ -36,10 +36,11 @@ class DropSiteController extends Controller
     public function updateDescription(Request $request) {
         $validated = $request->validate([
             'description' => ['required' ],
+            'bin_name' => ['required' ],
             'id' => ['required', 'exists:drop_sites,id']
         ]);
 
-        DropSite::find($validated['id'])->update([ 'description' => $validated['description'] ]);
+        DropSite::find($validated['id'])->update([ 'description' => $validated['description'], 'bin_name' => $validated['bin_name'] ]);
     }
 
 
