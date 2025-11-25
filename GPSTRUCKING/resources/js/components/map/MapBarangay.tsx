@@ -161,6 +161,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
     }, [])
 
     const {data:newPickUpSite, setData:setNewPickUpSite, post, processing} = useForm({
+        bin_name: null,
         coordinates: null,
         image: null,
         description: null
@@ -176,6 +177,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                 setDrawerOpen(false);
                 setIsMarking(false);
                 setNewPickUpSite({
+                    bin_name: null,
                     coordinates: null,
                     image: null,
                     description: null
@@ -511,6 +513,10 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                         <DrawerTitle>New Pick Up Site</DrawerTitle>
                         <DrawerDescription>This action will be visible to all stakeholders. Are you absolutely sure this is accurate?</DrawerDescription>
 
+                        <div>
+                            <Label htmlFor="bin_name">Site Name <small>*</small></Label>
+                            <Input type="text" onChange={(e) => setNewPickUpSite(prev =>({...prev, "bin_name": e.target.value }))} id="bin_name" name="bin_name" required/>
+                        </div>
                         <div>
                             <Label htmlFor="image">Image of the Site <small>optional</small></Label>
                             <Input id="image" name="image" type="file" onChange={e => setNewPickUpSite(prev => ({...prev, "image": e.target.files[0] }))} required/>

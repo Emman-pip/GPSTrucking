@@ -18,6 +18,7 @@ class DropSiteController extends Controller
             'coordinates' => ['required', 'array'],
             'image' => ['file', 'mimes:jpg,png'],
             'description' => ['required'],
+            'bin_name' => ['required'],
         ]);
         $barangay_id = Auth::user()->barangayOfficialInfo->barangay_id;
         $validated[ 'barangay_id' ] = $barangay_id;
