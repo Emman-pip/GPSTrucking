@@ -24,7 +24,7 @@ export default function Dashboard({ barangayData, barangays }:{
             <Head title="Dashboard" />
             <div className="p-4">
                 <MapBarangay barangayCoordinates={barangayData.coordinates} />
-                <div className="w-full flex justify-end py-2">
+                <div className="w-full flex h-120 justify-end py-2">
                     <UpdateBarangay barangays={barangays} barangayData={barangayData}/>
                 </div>
             </div>

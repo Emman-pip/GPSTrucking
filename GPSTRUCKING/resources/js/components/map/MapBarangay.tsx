@@ -402,7 +402,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         )}
 
         {isDriver && <Marker longitude={driverMarker[0]} latitude={driverMarker[1]} anchor="center">
-            <div className="cursor-pointer p-2 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-green-500 to-green-600 text-white rounded-full ring-5 ring-green-200 dark:ring-green-800">
+            <div className="cursor-pointer p-2 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-red-500 to-yellow-600 text-white rounded-full ring-2 ring-green-200 dark:ring-green-800">
                 <Truck className="" />
             </div>
         </Marker>
@@ -416,7 +416,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         <GeolocateControl />
     </Map>
         {withControls && (
-            <section className="flex flex-wrap items-center gap-3 p-3 border border-current/30 rounded-md shadow-sm">
+            <section className="flex flex-wrap mt-2 items-center gap-3 p-3 border border-current/30 rounded-md shadow-sm">
                 <Button
                     disabled={isSettingRoute | isMarking}
                     onClick={handleCreateMarker}
