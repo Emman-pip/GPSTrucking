@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Barangay;
+use App\Models\DropSite;
 use App\Models\PickUpSchedule;
 use App\Models\User;
 use App\Notifications\Alert;
@@ -100,3 +101,17 @@ Schedule::call(function () {
 // })
 //     ->timezone('Asia/Manila')
 //     ->everyMinute();
+
+// create bin statuses per week
+Schedule::call(function () {
+    // get all bins
+    $dropsites = DropSite::all();
+    // create a status per dropsite
+    foreach ($dropsites as $dropsite) {
+        DropSite::create([
+            'bin_id' => $dropsite->id,
+        ]);
+    }
+})
+    ->timezone('Asia/Manila')
+    ->weekly();
