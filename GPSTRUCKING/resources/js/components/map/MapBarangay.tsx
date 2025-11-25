@@ -19,7 +19,7 @@ import {
     DrawerTrigger,
 } from "@/components/ui/drawer"
 import { Button } from "../ui/button";
-import { MapPin, MapPinPlus, Pickaxe, Route, Trash2Icon, Truck } from "lucide-react";
+import { CircleCheck, MapPin, MapPinPlus, Pickaxe, Route, SkipForward, Trash2Icon, TriangleAlert, Truck } from "lucide-react";
 import { router, useForm, usePage } from "@inertiajs/react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -382,32 +382,38 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                         <DrawerHeader className="overflow-y-scroll" style={{ scrollbarWidth: 'none' }}>
                             <DrawerTitle className="capitalize">{dropsite.bin_name}</DrawerTitle>
                             <DrawerDescription className="flex  flex-col items-center gap-2 justify-center">
-                                <Card>
-                                    <CardContent className="max-w-300">
+                                <Card className="border-current/30">
+                                    <CardContent className="max-w-100">
                                         <div className="text-left font-bold">Bin Information</div>
                                         <div className="grid grid-cols-2">
                                             <div className="w-full text-left">BIN ID</div>
                                             <div className="w-full text-left">BIN-{dropsite.id}</div>
                                         </div>
-                                            <div className="w-full font-bold text-left">Notes</div>
+                                            <div className="w-full pt-3 font-bold text-left">Notes</div>
                                             <div className="break-all md:w-[50vw] w-full text-justify">{dropsite.description}</div>
-                                            <div className="flex flex-col items-center">
-                                                <img className="w-100" src={window.location.origin + '/storage/' + dropsite.image} />
-                                            </div>
                                     </CardContent>
                                 </Card>
+                                            <div className="flex  flex-col items-center">
+                                                <img className="border border-current/30 rounded-xl w-100" src={window.location.origin + '/storage/' + dropsite.image} />
+                                            </div>
                             </DrawerDescription>
 
                         </DrawerHeader>
                         <DrawerFooter>
                             <div className="flex justify-center gap-2">
+                                {isDriver && <section className="grid grid-cols-2 gap-2">
+                                    <Button variant="default" className="col-span-2"><CircleCheck/>Mark As Collected</Button>
+                                    <Button variant="outline"><SkipForward/>Skip</Button>
+                                    <Button variant="outline"><TriangleAlert/>Report</Button>
+                                </section>}
                                 {withControls && <Button className="w-fit" onClick={() => {
                                     setDropSiteToEdit(dropsite);
                                     setOpenEdit(true);
                                 }}>Edit</Button>}
-                                <DrawerClose>
+                                {!isDriver && <DrawerClose>
                                     <Button variant="outline">Close</Button>
                                 </DrawerClose>
+                                }
                             </div>
                         </DrawerFooter>
                     </DrawerContent>
