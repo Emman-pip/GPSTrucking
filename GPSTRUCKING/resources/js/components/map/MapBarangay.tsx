@@ -276,21 +276,36 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
 
     const { auth } = usePage().props;
 
+    const [ trucks, setTrucks ] = useState([]);
+
     const userId = auth?.user?.id;
     // watch notifications from truck updates
     useEffect(() => {
         if (isDriver) return;
         if (!userId) return;
-        /* const channel = window.Echo.channel(`barangay.${user.barangay_official_info?.barangay_id ? user.barangay_official_info.barangay_id : user.residency.barangay_id}`); */
-        const channel = window.Echo.channel(`barangay.15`);
+        const channel = window.Echo.channel(`barangay.${user.barangay_official_info?.barangay_id ? user.barangay_official_info.barangay_id : user.residency.barangay_id}`);
 
-        console.log("HERE INSIDE")
         channel.listen(".gps.updated", (data) => {
-            console.log("HERE INSIDE 2")
-            console.log("GPS update:", data);
+            let flag = false;
+            let index = 0;
+            for (let i = 0; i < trucks.length; i++) {
+                const truck = trucks[i];
+                if (truck.truckID == data.truckID) {
+                    flag = true;
+                    index = i
+                    break;
+                }
+            }
+            const tmp = [...trucks];
+            if (flag) {
+                tmp[index] = data;
+                setTrucks(tmp);
+            } else {
+                tmp.push(data)
+                setTrucks(tmp);
+            }
         });
 
-        console.log("HERE INSIDE 3")
         return () => {
             window.Echo.leave(`barangay-${user.barangay_official_info?.barangay_id ? user.barangay_official_info.barangay_id : user.residency.barangay_id}`);
         };

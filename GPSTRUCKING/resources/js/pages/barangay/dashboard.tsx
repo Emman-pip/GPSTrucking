@@ -104,7 +104,9 @@ export default function Dashboard({ barangay: barangayData }: {
                             </CardDescription>
                         </Card>
                 </section>
-                <MapBarangay barangayCoordinates={barangayData.coordinates} />
+                <section className="h-150">
+                        <MapBarangay barangayCoordinates={barangayData.coordinates} />
+                </section>
             </main>
         </AppLayout>
     </>);
