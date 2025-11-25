@@ -47,6 +47,7 @@ import get from "@/routes/get";
 import { User } from "@/types";
 import { driver } from "@/routes";
 import truck from "@/routes/truck";
+import { Card, CardContent, CardDescription } from "../ui/card";
 
 export interface PickUpSite {
     id?: number;
@@ -378,11 +379,23 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                         />
                     </DrawerTrigger>
                     <DrawerContent>
-                        <DrawerHeader>
-                            <DrawerTitle>Pick Up Site Information</DrawerTitle>
-                            <DrawerDescription className="flex flex-col items-center gap-2 justify-center">
-                                <div className="break-all md:w-[50vw] w-full text-justify">{dropsite.description}</div>
-                                <img className="w-[50vh]" src={window.location.origin + '/storage/' + dropsite.image} />
+                        <DrawerHeader className="overflow-y-scroll" style={{ scrollbarWidth: 'none' }}>
+                            <DrawerTitle className="capitalize">{dropsite.bin_name}</DrawerTitle>
+                            <DrawerDescription className="flex  flex-col items-center gap-2 justify-center">
+                                <Card>
+                                    <CardContent className="max-w-300">
+                                        <div className="text-left font-bold">Bin Information</div>
+                                        <div className="grid grid-cols-2">
+                                            <div className="w-full text-left">BIN ID</div>
+                                            <div className="w-full text-left">BIN-{dropsite.id}</div>
+                                        </div>
+                                            <div className="w-full font-bold text-left">Notes</div>
+                                            <div className="break-all md:w-[50vw] w-full text-justify">{dropsite.description}</div>
+                                            <div className="flex flex-col items-center">
+                                                <img className="w-100" src={window.location.origin + '/storage/' + dropsite.image} />
+                                            </div>
+                                    </CardContent>
+                                </Card>
                             </DrawerDescription>
 
                         </DrawerHeader>
