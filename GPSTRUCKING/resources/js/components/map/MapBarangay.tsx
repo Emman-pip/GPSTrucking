@@ -40,6 +40,8 @@ import { LineRenderer } from "./LineRenderer";
 import { EditRoute } from "./EditRoute";
 import get from "@/routes/get";
 import { User } from "@/types";
+import { driver } from "@/routes";
+import truck from "@/routes/truck";
 
 export interface PickUpSite {
     id?: number;
@@ -224,9 +226,22 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
     const [isCollectingGarbage, setIsCollectingGarbage] = useState(false);
 
     useEffect(()=>{
-        if (isCollectingGarbage) {
+        if (isCollectingGarbage && isDriver) {
             recenter();
-            console.log("HEREE", window.location.href);
+            const link =  truck.updateGPS().url;
+            router.post(link,
+                {
+                    truckID: user.truckID,
+                    name: user.name,
+                    barangay_id: user.residency.barangay_id,
+                    lng: driverMarker[0],
+                    lat: driverMarker[1],
+                },
+                        {
+                            onSuccess: () => console.log("position updated"),
+                            onError: (e) => console.log("error updating location: e")
+                        }
+            )
         }
     },[isCollectingGarbage, driverMarker]);
 
@@ -258,6 +273,28 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         navigator.geolocation.clearWatch(watchID);
         setWatchID(null);
     }
+
+    const { auth } = usePage().props;
+
+    const userId = auth?.user?.id;
+    // watch notifications from truck updates
+    useEffect(() => {
+        if (isDriver) return;
+        if (!userId) return;
+        /* const channel = window.Echo.channel(`barangay.${user.barangay_official_info?.barangay_id ? user.barangay_official_info.barangay_id : user.residency.barangay_id}`); */
+        const channel = window.Echo.channel(`barangay.15`);
+
+        console.log("HERE INSIDE")
+        channel.listen(".gps.updated", (data) => {
+            console.log("HERE INSIDE 2")
+            console.log("GPS update:", data);
+        });
+
+        console.log("HERE INSIDE 3")
+        return () => {
+            window.Echo.leave(`barangay-${user.barangay_official_info?.barangay_id ? user.barangay_official_info.barangay_id : user.residency.barangay_id}`);
+        };
+    }, []);
 
     return <><Map
         ref={mapRef}

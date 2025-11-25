@@ -61,3 +61,5 @@ Route::middleware(['ensure_valid_link'])->group(function () {
     Route::get('/driver', [DriverController::class, 'index'])
         ->name('driver');
 });
+Route::post('/update-location', [DriverController::class, 'postGPS'])
+    ->name('truck.updateGPS');

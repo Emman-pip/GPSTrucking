@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TruckLocationUpdated;
 use App\Models\Barangay;
 use App\Models\TruckAndDriver;
 use Illuminate\Http\Request;
@@ -31,6 +32,24 @@ class DriverController extends Controller
         $user = ['name' => $request->name, 'truckID' => $request->truckID, 'residency' => ['barangay_id' => $barangay->id], 'barangay_official_info' => []];
         return Inertia::render('driver/driversAndTrucks', ['barangay' => $barangay, 'user' => $user]);
     }
+
+    public function postGPS(Request $request){
+        $data = $request->validate([
+            'truckID' => 'required',
+            'name' => 'required',
+            'barangay_id' => 'required',
+            'lng' => 'required',
+            'lat' => 'required',
+        ]);
+        TruckLocationUpdated::dispatch(
+            $data['truckID'],
+            $data['name'],
+            $data['barangay_id'],
+            $data['lng'],
+            $data['lat'],
+        );
+    }
+
 
     public function barangayView() {
         $truckData =  TruckAndDriver::all()->where('barangay_id', Auth::user()->barangayOfficialInfo->barangay_id);
