@@ -1,4 +1,9 @@
 import { FullscreenControl, Layer, MapMouseEvent, MapRef, Source } from "@vis.gl/react-maplibre"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { GeolocateControl, Map, Marker, NavigationControl, ScaleControl, TerrainControl } from "@vis.gl/react-maplibre";
 import { cn } from "@/lib/utils";
 import { DropSite, MAP_STYLE } from "./MapView"
@@ -395,9 +400,17 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         })}
 
         {!isDriver && trucks && trucks.map(truck => <Marker longitude={truck.lng} latitude={truck.lat} anchor="center">
-            <div className="cursor-pointer p-2 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-red-500 to-yellow-600 text-white rounded-full ring-2 ring-green-200 dark:ring-green-800">
-                <Truck className="" />
-            </div>
+            <Tooltip>
+                <TooltipTrigger>
+                    <div className="cursor-pointer p-2 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-red-500 to-yellow-600 text-white rounded-full ring-2 ring-green-200 dark:ring-green-800">
+                        <Truck className="" />
+                    </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <div>TruckID: {truck.truckID}</div>
+                    <div>Driver: {truck.name}</div>
+                </TooltipContent>
+            </Tooltip>
         </Marker>
         )}
 
