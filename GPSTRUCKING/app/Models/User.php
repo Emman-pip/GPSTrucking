@@ -80,4 +80,9 @@ class User extends Authenticatable implements FilamentUser
         return $this->role->name === 'admin';
     }
 
+    public function barangayRatings()
+    {
+        return $this->hasMany(BarangayRating::class);
+    }
+
 }

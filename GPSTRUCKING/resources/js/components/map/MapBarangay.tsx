@@ -143,7 +143,6 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
             .then(res => res.json())
             .then(res => setDropSites(res))
 
-        console.log(`${window.location.origin}${get.routes().url}`);
         // fetch(`${window.location.origin}${get.routes().url}`)
         //     .then(res => res.json())
         //     .then(res => {
@@ -258,8 +257,8 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                     lat: driverMarker[1],
                 },
                         {
-                            onSuccess: () => console.log("position updated"),
-                            onError: (e) => console.log("error updating location: e")
+                            // onSuccess: () => console.log("position updated"),
+                            // onError: (e) => console.log("error updating location: e")
                         }
             )
         }
@@ -278,7 +277,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                 }
             },
             (error) => {
-                console.error("Error watching position:", error);
+                // console.error("Error watching position:", error);
             },
             {
                 enableHighAccuracy: true,
@@ -338,14 +337,14 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                 bin_id: bin_id
             },
             {
-                onError: (e) => console.log("error", e),
+                // onError: (e) => console.log("error", e),
                 onSuccess: () => setStatus(binStatus)
             }
         )
     }
 
     const [ status, setStatus ] = useState('pending');
-    console.log("STAT", status, dropSites);
+    // console.log("STAT", status, dropSites);
 
     useEffect(()=>{
         dropSites.forEach((dropsiteTMP, index) => {
@@ -358,7 +357,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         tmp.sort((a, b) => a.distance - b.distance);
         setDropSites(tmp);
     }, [dropSites, driverMarker])
-    console.log("DS",dropSites);
+    // console.log("DS",dropSites);
 
 
     const [ drawerOpen2, setDrawerOpen2 ] = useState(false);

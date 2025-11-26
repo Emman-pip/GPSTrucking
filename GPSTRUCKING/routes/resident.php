@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AlertController;
+use App\Http\Controllers\BarangayRatingController;
 use App\Http\Controllers\ResidencyController;
 use App\Models\Barangay;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -18,9 +20,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/resident-dashboard', function () {
             $data = Auth::user()->residency->barangay;
             $data['coordinates']=  json_decode($data['coordinates']);
+
+            $week_start = Carbon::now()->startOfWeek()->toDateString();
+
+            $userRatingThisWeek = \App\Models\BarangayRating::where('user_id', auth()->id())
+                ->where('barangay_id', Auth::user()->residency->barangay_id)
+                ->where('week_start', $week_start)
+                ->exists();
+
             return Inertia::render('resident/dashboard', [
                 'barangayData' => $data,
                 'barangays' => Barangay::all()->select(['id', 'name']),
+                'userRatingThisWeek' => $userRatingThisWeek
             ]);
 
         })->name('resident.dashboard');
@@ -32,5 +43,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // for updating profile form
         Route::put('/resident/update-profile-form', [ResidencyController::class, 'update'])->name('resident.profile-form.update');
+
+        // for ratings
+        Route::get('/barangay-ratings', [BarangayRatingController::class, 'index'])->name('barangay.ratings.index');
+        Route::post('/barangay-ratings', [BarangayRatingController::class, 'store'])->name('barangay.ratings.store');
     });
 });

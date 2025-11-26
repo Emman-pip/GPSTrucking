@@ -6,6 +6,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import { Barangay } from '../barangay/profileForm';
 import { UpdateBarangay } from './updateProfile';
+import Submit from '../BarangayRatings/Submit';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -14,11 +15,12 @@ const breadcrumbs: BreadcrumbItem[] = [
     }
 ];
 
-export default function Dashboard({ barangayData, barangays }:{
+export default function Dashboard({ barangayData, barangays, userRatingThisWeek }:{
     barangayData: Barangay;
     barangays: Barangay[];
+    userRatingThisWeek: boolean;
 }) {
-    const { user } = usePage().props.auth;
+    const { auth } = usePage().props;
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -28,6 +30,7 @@ export default function Dashboard({ barangayData, barangays }:{
             <UpdateBarangay barangays={barangays} barangayData={barangayData}/>
             </div>
             </div>
+            <Submit auth={auth} userRatingThisWeek={userRatingThisWeek}/>
             </AppLayout>
     );
 }

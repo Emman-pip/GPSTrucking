@@ -30,4 +30,10 @@ class Barangay extends Model
     public function routes(){
         return $this->hasMany(Route::class);
     }
+
+    public function ratings()
+    {
+        return $this->hasMany(BarangayRating::class);
+    }
+
 }
