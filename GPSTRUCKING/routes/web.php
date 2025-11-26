@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BinStatusController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\DropSiteController;
 use App\Http\Controllers\MessageController;
@@ -60,6 +61,10 @@ Route::get('/sample-{id}', function ($id) {
 Route::middleware(['ensure_valid_link'])->group(function () {
     Route::get('/driver', [DriverController::class, 'index'])
         ->name('driver');
+    Route::put('/driver', [BinStatusController::class, 'update'])
+        ->name('driver.updateBin');
 });
+
 Route::post('/update-location', [DriverController::class, 'postGPS'])
     ->name('truck.updateGPS');
+

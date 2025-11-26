@@ -320,6 +320,19 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         };
     }, []);
 
+    function updateStatus(bin_id: number, binStatus: string) {
+        router.put(window.location.href,
+            {
+                status: binStatus,
+                bin_id: bin_id
+            },
+            {
+                onError: (e) => console.log("error", e),
+                onSuccess: () => console.log("success")
+            }
+        )
+    }
+
     return <><Map
         ref={mapRef}
         mapStyle={MAP_STYLE}
@@ -367,6 +380,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         {routes && routes.map((route, index) => <LineRenderer route={route} index={index} map={mapRef.current?.getMap()} onClick={sample} />)}
         /* {routes && <LineRenderer route={routes[0]} map={mapRef.current?.getMap()} />} */
         {dropSites && dropSites.map(dropsite => {
+            let status = dropsite?.status ? dropsite?.status[0].status : 'pending';
             try {
                 dropsite.coordinates = JSON.parse(dropsite.coordinates);
             } catch {}
@@ -380,7 +394,9 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                     </DrawerTrigger>
                     <DrawerContent>
                         <DrawerHeader className="overflow-y-scroll" style={{ scrollbarWidth: 'none' }}>
-                            <DrawerTitle className="capitalize">{dropsite.bin_name}</DrawerTitle>
+                            <DrawerTitle className="capitalize">
+                                <div>{dropsite.bin_name}</div>
+                            </DrawerTitle>
                             <DrawerDescription className="flex  flex-col items-center gap-2 justify-center">
                                 <Card className="border-current/30">
                                     <CardContent className="max-w-100">
@@ -388,23 +404,33 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                         <div className="grid grid-cols-2">
                                             <div className="w-full text-left">BIN ID</div>
                                             <div className="w-full text-left">BIN-{dropsite.id}</div>
+                                            <div className="w-full text-left">Status</div>
+                                            <div className="w-full text-left">
+                                                <div className={cn("text-center px-2 py-1 text-sm font-thin rounded-2xl bg-red-500 text-white", status === 'pending' ? "bg-red-500/60" : status === 'collected' ? "bg-green-500/60" : 'bg-gray-600/60')}>{status}</div>
+                                            </div>
                                         </div>
-                                            <div className="w-full pt-3 font-bold text-left">Notes</div>
-                                            <div className="break-all md:w-[50vw] w-full text-justify">{dropsite.description}</div>
+                                        <div className="w-full pt-3 font-bold text-left">Notes</div>
+                                        <div className="break-all md:w-[50vw] w-full text-justify">{dropsite.description}</div>
                                     </CardContent>
                                 </Card>
-                                            <div className="flex  flex-col items-center">
-                                                <img className="border border-current/30 rounded-xl w-100" src={window.location.origin + '/storage/' + dropsite.image} />
-                                            </div>
+                                <div className="flex  flex-col items-center">
+                                    <img className="border border-current/30 rounded-xl w-100" src={window.location.origin + '/storage/' + dropsite.image} />
+                                </div>
                             </DrawerDescription>
 
                         </DrawerHeader>
                         <DrawerFooter>
                             <div className="flex justify-center gap-2">
                                 {isDriver && <section className="grid grid-cols-2 gap-2">
-                                    <Button variant="default" className="col-span-2"><CircleCheck/>Mark As Collected</Button>
-                                    <Button variant="outline"><SkipForward/>Skip</Button>
-                                    <Button variant="outline"><TriangleAlert/>Report</Button>
+                                    <Button variant="default" className="col-span-2" onClick={() => {
+                                        updateStatus(dropsite.id, 'collected')
+                                        status = 'collected';
+                                    }}><CircleCheck />Mark As Collected</Button>
+                                    <Button variant="outline" onClick={() => {
+                                        updateStatus(dropsite.id, 'uncollected');
+                                        'uncollected';
+                                    }}><SkipForward />Skip</Button>
+                                    <Button variant="outline"><TriangleAlert />Report</Button>
                                 </section>}
                                 {withControls && <Button className="w-fit" onClick={() => {
                                     setDropSiteToEdit(dropsite);

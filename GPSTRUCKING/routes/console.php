@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Barangay;
+use App\Models\BinStatus;
 use App\Models\DropSite;
 use App\Models\PickUpSchedule;
 use App\Models\User;
@@ -108,9 +109,11 @@ Schedule::call(function () {
     $dropsites = DropSite::all();
     // create a status per dropsite
     foreach ($dropsites as $dropsite) {
-        DropSite::create([
+        BinStatus::updateOrCreate([
             'bin_id' => $dropsite->id,
-        ]);
+            'week_number' => now()->weekOfYear,
+            'year' => now()->year,
+        ], []);
     }
 })
     ->timezone('Asia/Manila')

@@ -30,7 +30,7 @@ class DropSiteController extends Controller
 
     public function dropSites(Request $request) {
         $barangay_id = $request['barangay_id'];
-        return response()->json(DropSite::where('barangay_id', $barangay_id)->get());
+        return response()->json(DropSite::where('barangay_id', $barangay_id)->with('status')->get());
     }
 
     public function updateDescription(Request $request) {
