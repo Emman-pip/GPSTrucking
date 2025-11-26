@@ -48,74 +48,152 @@ export default function Chat({unread, read, chatToAdmin}: {
 }) {
     console.log("UNREAD", unread, "READ", read)
     const { user } = usePage().props.auth;
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Chats" />
-            <main className="p-2">
-                {chatToAdmin && chatToAdmin?.length > 0 &&
-                    <>
-                        <h1 className="text-2xl font-bold">Admins</h1>
-                        <section className=" border p-2 rounded-xl grid md:grid-cols-3 gap-2 m-2 ">
-                            {chatToAdmin.map(admin => {
-                                return <Link href={individualChat(admin.id)}>
-                                    <Card className="transition-all duration-200 hover:bg-gray-300/30">
-                                        <CardTitle className="p-2">
-                                            {admin.name}
-                                        </CardTitle>
-                                    </Card>
-                                </Link>
-                            })}
-                        </section>
-                    </>
-                }
-                <h1 className="text-2xl font-bold">Chats</h1>
-                <section>
-                    <div className="flex flex-col gap-1">
-                        {/*unread?.length > 0 &&
-                unread.map(message => {
-                    if (message.data?.sender_id === 0 ) {
-                        return
-                    }
-                    return <Link href={message.data?.sender_id !== 0 ? individualChat(message.data?.sender_id) : '#'} className=""><Card className="transition-all duration-200 hover:bg-gray-300/30 px-2">
-                        <CardTitle className="capitalize flex justify-between items-center">
-                        <div className="flex flex-col gap-3">
-                        {message.data?.sender_name}
-                        <small>{message.data?.message}</small>
-                        </div>
-                        <Dot size={50} className="text-blue-500"/>
-                        </CardTitle>
-                        </Card></Link>})
-                     */}
-                        {read?.length > 0 ?
-                            read.filter(message =>
-                                !unread?.map(unreadmess => unreadmess.data?.sender_id)
-                                    ?.includes(message.data?.sender_id))
-                                ?.map(message => {
-                                    console.log("here", message)
-                                    if (message.data?.sender_id === 0) {
-                                        return;
-                                    }
-                                    try {
-                                        message = JSON.parse(message);
-                                    } catch (e) {}
-                                    return <Link href={message.data?.sender_id !== 0 ? individualChat(message.data?.sender_id) : '#'} className=""><Card className="transition-all duration-200 hover:bg-gray-300/30 px-2">
-                                        <CardTitle className="flex justify-between items-center">
-                                            <div className={cn("flex items-center gap-2", message?.read_at || user.name === message.data.real_sender_name ? "font-thin" : "")}>
-                                                <UserInfo showName={false} user={{ name: message.data?.sender_name }} />
 
-                                                <div className="flex gap-1 flex-col">
-                                                    <div className="capitalize flex gap-2 items-center">
-                                                        {message.data?.sender_name}
+            <main className="p-4 text-gray-900 dark:text-gray-200">
+
+                {/* ADMIN LIST */}
+{chatToAdmin && chatToAdmin.length > 0 && (
+    <>
+        <h1 className="text-xl font-semibold mb-2 text-green-900 dark:text-green-600">
+            Admins
+        </h1>
+
+        <section
+            className="
+                flex gap-3 overflow-x-auto pb-2
+                scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600
+            "
+        >
+            {chatToAdmin.map(admin => (
+                <Link key={admin.id} href={individualChat(admin.id)}>
+                    <Card
+                        className="
+                            min-w-[230px] p-3 rounded-xl shadow-sm
+                            dark:800/30
+                            border border-gray-200 dark:border-gray-700
+                            hover:bg-gray-100 hover:dark:bg-gray-700
+                            transition
+                            flex items-center gap-3
+                        "
+                    >
+                        {/* Avatar */}
+                        <div className="
+                            w-12 h-12 rounded-full bg-green-200 dark:bg-green-900
+                            flex items-center justify-center
+                            text-green-700 dark:text-green-300
+                            text-xl font-bold flex-shrink-0
+                        ">
+                    {admin.name.toUpperCase().charAt(0)}
+                        </div>
+
+                        {/* Name */}
+                        <CardTitle className="text-lg font-medium text-gray-900 dark:text-gray-200">
+                            {admin.name}
+                        </CardTitle>
+                    </Card>
+                </Link>
+            ))}
+        </section>
+
+        <div className="mb-6"></div>
+    </>
+)}
+
+                {/* MAIN CHAT LIST */}
+                <h1 className="text-xl font-semibold mb-2 text-green-700 dark:text-green-600">Chats</h1>
+
+                <section>
+                    <div className="flex flex-col gap-2">
+
+                        {read?.length > 0 ? (
+                            read
+                                .filter(msg => !unread?.map(u => u.data?.sender_id).includes(msg.data?.sender_id))
+                                .map(message => {
+                                    if (message.data?.sender_id === 0) return;
+
+                                    try { message = JSON.parse(message); } catch {}
+
+                                    return (
+                                        <Link
+                                            key={message.id}
+                                            href={
+                                                message.data?.sender_id !== 0
+                                                    ? individualChat(message.data?.sender_id)
+                                                    : '#'
+                                            }
+                                        >
+                                            <Card
+                                                className="
+                                                    flex items-center p-3 rounded-xl shadow-sm
+                                                    dark:800/30
+                                                    border border-gray-200 dark:border-gray-700
+                                                    hover:bg-gray-100 hover:dark:bg-gray-700
+                                                    transition
+                                                "
+                                            >
+                                                <CardTitle className="flex w-full items-center justify-between">
+
+                                                    {/* LEFT SIDE */}
+                                                    <div className={cn(
+                                                        "flex items-center gap-3 w-full",
+                                                        message?.read_at || user.name === message.data.real_sender_name
+                                                            ? "font-normal"
+                                                            : "font-semibold"
+                                                    )}>
+
+                                                        {/* Avatar */}
+                                                        <div className="
+                                                            w-12 h-12 rounded-full bg-green-200 dark:bg-green-900 aspect-square
+                                                            flex items-center justify-center
+                                                            text-green-700 dark:text-green-300
+                                                            text-xl font-bold
+                                                        ">
+                                                            {message.data?.sender_name?.toUpperCase().charAt(0)}
+                                                        </div>
+
+                                                        {/* Name + Message */}
+                                                        <div className="flex flex-col gap-2 w-full">
+                                                            <span className="capitalize text-[15px] text-gray-900 dark:text-gray-200">
+                                                                {message.data?.sender_name}
+                                                            </span>
+                                                            <small className="text-gray-500 dark:text-gray-400 truncate block max-w-[220px]">
+                                                                <span className="capitalize text-gray-700 dark:text-gray-300">
+                                                                    {message.data?.real_sender_name || message.data?.sender_name}:
+                                                                </span> {message.data?.message}
+                                                            </small>
+                                                        </div>
                                                     </div>
-                                                    <small className='break-all'><span className="capitalize">{message.data?.real_sender_name ? message.data?.real_sender_name : message.data?.sender_name} </span>: {message.data?.message}</small>
-                                                </div>
-                                            </div>
-                                        </CardTitle>
-                                    </Card></Link>
+
+                                                    {/* RIGHT SIDE: TIME + UNREAD */}
+                                                    <div className="flex flex-col items-end">
+                                                        <span className="text-xs text-gray-400 dark:text-gray-500">
+                                                            {new Date(message.created_at || '').toLocaleTimeString([], {
+                                                                hour: '2-digit',
+                                                                minute: '2-digit'
+                                                            })}
+                                                        </span>
+
+                                                        {!message.read_at && (
+                                                            <span className="w-3 h-3 bg-green-500 rounded-full mt-1"></span>
+                                                        )}
+                                                    </div>
+                                                </CardTitle>
+                                            </Card>
+                                        </Link>
+                                    );
                                 })
-                            : <Card className='p-4'>
-                                <CardTitle className="font-thin">No messages. Yay!</CardTitle>
-                            </Card>}
+                        ) : (
+                            <Card className="p-4 rounded-xl shadow-sm bg-white dark:800/30 border border-gray-200 dark:border-gray-700">
+                                <CardTitle className="font-light text-gray-500 dark:text-gray-400">
+                                    No messages. Yay!
+                                </CardTitle>
+                            </Card>
+                        )}
+
                     </div>
                 </section>
             </main>
