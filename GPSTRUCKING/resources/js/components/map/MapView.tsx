@@ -10,7 +10,11 @@ export const MAP_STYLE: MapStyle = {
   sources: {
     osm: {
       type: "raster",
-      tiles: ["https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"],
+      tiles: [
+          // "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          !document.documentElement.classList.contains('dark') ? "https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}.png"
+          : "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png"
+      ],
       tileSize: 256,
       attribution: "&copy; OpenStreetMap Contributors",
       maxzoom: 19
