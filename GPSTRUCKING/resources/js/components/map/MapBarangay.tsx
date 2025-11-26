@@ -328,11 +328,13 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
             },
             {
                 onError: (e) => console.log("error", e),
-                onSuccess: () => console.log("success")
+                onSuccess: () => setStatus(binStatus)
             }
         )
     }
 
+    const [ status, setStatus ] = useState('pending');
+    console.log("STAT", status, dropSites);
     return <><Map
         ref={mapRef}
         mapStyle={MAP_STYLE}
@@ -380,13 +382,16 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         {routes && routes.map((route, index) => <LineRenderer route={route} index={index} map={mapRef.current?.getMap()} onClick={sample} />)}
         /* {routes && <LineRenderer route={routes[0]} map={mapRef.current?.getMap()} />} */
         {dropSites && dropSites.map(dropsite => {
-            let status = dropsite?.status ? dropsite?.status[0].status : 'pending';
+            let curretStatus = "pending";
+            try {
+                 curretStatus = dropsite?.status ? dropsite?.status[dropsite?.status.length - 1].status : 'pending';
+            } catch {}
             try {
                 dropsite.coordinates = JSON.parse(dropsite.coordinates);
             } catch {}
             return <Marker key={dropsite.id} longitude={dropsite?.coordinates[0]} latitude={dropsite?.coordinates[1]} anchor="center">
                 <Drawer direction="bottom">
-                    <DrawerTrigger>
+                    <DrawerTrigger onClick={() => setStatus(curretStatus)}>
                         <MapPin
                             size={30}
                             className="cursor-pointer p-2 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-green-500 to-green-600 text-white rounded-full ring-2 ring-green-200 dark:ring-green-800"
@@ -406,7 +411,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                             <div className="w-full text-left">BIN-{dropsite.id}</div>
                                             <div className="w-full text-left">Status</div>
                                             <div className="w-full text-left">
-                                                <div className={cn("text-center px-2 py-1 text-sm font-thin rounded-2xl bg-red-500 text-white", status === 'pending' ? "bg-red-500/60" : status === 'collected' ? "bg-green-500/60" : 'bg-gray-600/60')}>{status}</div>
+                                                <div className={cn("capitalize font-bold text-center px-2 py-1 text-sm rounded-2xl bg-red-500 text-white", status === 'pending' ? "bg-red-500/60" : status === 'collected' ? "bg-green-500/60" : 'bg-gray-600/60')}>{status}</div>
                                             </div>
                                         </div>
                                         <div className="w-full pt-3 font-bold text-left">Notes</div>
@@ -424,7 +429,6 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                 {isDriver && <section className="grid grid-cols-2 gap-2">
                                     <Button variant="default" className="col-span-2" onClick={() => {
                                         updateStatus(dropsite.id, 'collected')
-                                        status = 'collected';
                                     }}><CircleCheck />Mark As Collected</Button>
                                     <Button variant="outline" onClick={() => {
                                         updateStatus(dropsite.id, 'uncollected');
