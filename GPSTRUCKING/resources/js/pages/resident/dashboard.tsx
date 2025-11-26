@@ -37,9 +37,16 @@ export default function Dashboard({ barangayData, barangays, userRatingThisWeek 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
         <main className="p-2">
+
+
+      {/* Map Barangay */}
+      <div className="w-full h-[60vh] mb-2 rounded-xl overflow-hidden shadow">
+        <MapBarangay barangayCoordinates={barangayData.coordinates} />
+      </div>
+
       {/* Hero / Welcome Banner */}
       <div className="bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl p-6 mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold">Good morning, {userName}!</h1>
+        <h1 className="text-2xl md:text-3xl font-bold">Hello, {userName}!</h1>
         <p className="mt-1 text-sm md:text-base">{today}</p>
       </div>
 
@@ -65,11 +72,6 @@ export default function Dashboard({ barangayData, barangays, userRatingThisWeek 
           <span className="text-sm font-semibold text-gray-500/50 dark:text-gray-400/50">Chat Admins</span>
 
         </div>
-      </div>
-
-      {/* Map Barangay */}
-      <div className="w-full h-[60vh] rounded-xl overflow-hidden shadow">
-        <MapBarangay barangayCoordinates={barangayData.coordinates} />
       </div>
 
       {/* Optional Update Form Below */}
