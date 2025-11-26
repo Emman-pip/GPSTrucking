@@ -34,7 +34,7 @@ export default function DriversAndTrucks({
         <Head title="Drivers and Trucks" />
         <main className="p-2">
             <section className="h-120">
-                <MapBarangay barangayCoordinates={barangay.coordinates} userData={user} zoom={17} isDriver={true}/>
+                    <MapBarangay barangayCoordinates={barangay.coordinates} userData={user} zoom={17} isDriver={true} />
             </section>
         </main>
     </AppLayout>

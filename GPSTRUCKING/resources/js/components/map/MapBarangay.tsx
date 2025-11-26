@@ -48,6 +48,8 @@ import { User } from "@/types";
 import { driver } from "@/routes";
 import truck from "@/routes/truck";
 import { Card, CardContent, CardDescription } from "../ui/card";
+import NearbyTrash from "./NearbyTrash";
+import { Accordion, AccordionContent } from "../ui/accordion";
 
 export interface PickUpSite {
     id?: number;
@@ -57,6 +59,7 @@ export interface PickUpSite {
     description?: string;
     barangay_id?: number;
     barangay?: string;
+    distance?: number;
 }
 
 export interface PickUpSched {
@@ -83,6 +86,13 @@ export interface PickUpSite {
     barangay?: string;
 }
 
+function formatDistance(meters) {
+  if (meters >= 1000) {
+    return (meters / 1000).toFixed(1).replace(/\.0$/, '') + " km";
+  }
+
+  return meters + " m";
+}
 
 function getDistanceInMeters(coord1:[number, number], coord2:[number,number]) {
     const R = 6371000; // Earth radius in meters
@@ -98,7 +108,7 @@ function getDistanceInMeters(coord1:[number, number], coord2:[number,number]) {
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-    return R * c; // distance in meters
+    return parseInt(R * c); // distance in meters
 }
 
 
@@ -117,7 +127,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
     const map = mapRef.current?.getMap();
     const user:User = userData !== null ? userData : usePage().props.auth.user;
 
-    const [dropSites, setDropSites] = useState<PickUpSite[]>();
+    const [dropSites, setDropSites] = useState<PickUpSite[]>([]);
     const [routes, setRoutes] = useState<Route[]>();
 
     function refresh() {
@@ -335,7 +345,37 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
 
     const [ status, setStatus ] = useState('pending');
     console.log("STAT", status, dropSites);
-    return <><Map
+
+    useEffect(()=>{
+        dropSites.forEach((dropsiteTMP, index) => {
+            const tmp = dropSites;
+            dropsiteTMP.distance = getDistanceInMeters(dropsiteTMP.coordinates, driverMarker)
+            tmp[index] = dropsiteTMP;
+            setDropSites(tmp);
+        })
+        const tmp = dropSites;
+        tmp.sort((a, b) => a.distance - b.distance);
+        setDropSites(tmp);
+    }, [dropSites, driverMarker])
+    console.log("DS",dropSites);
+
+
+    const [ drawerOpen2, setDrawerOpen2 ] = useState(false);
+    const [ viewMarker, setViewMarker ] = useState(false);
+    const [dropSiteToView, setDropSiteToView ] = useState(null);
+
+    const [ dropsiteData, setDropSiteData ] = useState(dropSites);
+
+    useEffect(()=>{
+        setDropSiteData(dropSites);
+    }, [dropSites])
+
+
+
+    return <>
+    <section className="h-full">
+
+    <Map
         ref={mapRef}
         mapStyle={MAP_STYLE}
         style={{ borderRadius: 19, height: "100%" }}
@@ -389,18 +429,25 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
             try {
                 dropsite.coordinates = JSON.parse(dropsite.coordinates);
             } catch {}
-            return <Marker key={dropsite.id} longitude={dropsite?.coordinates[0]} latitude={dropsite?.coordinates[1]} anchor="center">
-                <Drawer direction="bottom">
-                    <DrawerTrigger onClick={() => setStatus(curretStatus)}>
+            return <Marker key={dropsite?.id} longitude={dropsite?.coordinates[0]} latitude={dropsite?.coordinates[1]} anchor="center">
+                <Drawer open={viewMarker} onOpenChange={setViewMarker} direction="bottom">
+                    <DrawerTrigger onClick={() => {
+                        setDropSiteToView(dropsite);
+                        setStatus(curretStatus);
+                    }}>
                         <MapPin
                             size={30}
-                            className="cursor-pointer p-2 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-green-500 to-green-600 text-white rounded-full ring-2 ring-green-200 dark:ring-green-800"
-                        />
+                            className={cn(
+                                "cursor-pointer p-2 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-green-500 to-green-600 text-white rounded-full ring-2 ring-green-200 dark:ring-green-800",
+                                curretStatus === 'pending' && "from-red-500 to-red-600 ring-2 ring-red-200 dark:ring-red-800",
+                                curretStatus === 'uncollected' && "from-yellow-500 to-yellow-600 ring-2 ring-yellow-200 dark:ring-yellow-800",
+                            )
+                         }/>
                     </DrawerTrigger>
                     <DrawerContent>
                         <DrawerHeader className="overflow-y-scroll" style={{ scrollbarWidth: 'none' }}>
                             <DrawerTitle className="capitalize">
-                                <div>{dropsite.bin_name}</div>
+                                <div>{dropSiteToView?.bin_name}</div>
                             </DrawerTitle>
                             <DrawerDescription className="flex  flex-col items-center gap-2 justify-center">
                                 <Card className="border-current/30">
@@ -408,18 +455,18 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                         <div className="text-left font-bold">Bin Information</div>
                                         <div className="grid grid-cols-2">
                                             <div className="w-full text-left">BIN ID</div>
-                                            <div className="w-full text-left">BIN-{dropsite.id}</div>
+                                            <div className="w-full text-left">BIN-{dropSiteToView?.id}</div>
                                             <div className="w-full text-left">Status</div>
                                             <div className="w-full text-left">
-                                                <div className={cn("capitalize font-bold text-center px-2 py-1 text-sm rounded-2xl bg-red-500 text-white", status === 'pending' ? "bg-red-500/60" : status === 'collected' ? "bg-green-500/60" : 'bg-gray-600/60')}>{status}</div>
+                                                <div className={cn("capitalize font-bold text-center px-2 py-1 text-sm rounded-2xl bg-red-500 text-white", status === 'pending' ? "bg-red-500/60" : status === 'collected' ? "bg-green-500/60" : 'bg-yellow-600/60')}>{status}</div>
                                             </div>
                                         </div>
                                         <div className="w-full pt-3 font-bold text-left">Notes</div>
-                                        <div className="break-all md:w-[50vw] w-full text-justify">{dropsite.description}</div>
+                                        <div className="break-all md:w-[50vw] w-full text-justify">{dropSiteToView?.description}</div>
                                     </CardContent>
                                 </Card>
                                 <div className="flex  flex-col items-center">
-                                    <img className="border border-current/30 rounded-xl w-100" src={window.location.origin + '/storage/' + dropsite.image} />
+                                    <img className="border border-current/30 rounded-xl w-100" src={window.location.origin + '/storage/' + dropSiteToView?.image} />
                                 </div>
                             </DrawerDescription>
 
@@ -428,10 +475,12 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                             <div className="flex justify-center gap-2">
                                 {isDriver && isCollectingGarbage ? <section className="grid grid-cols-2 gap-2">
                                     <Button variant="default" className="col-span-2" onClick={() => {
-                                        updateStatus(dropsite.id, 'collected')
+                                        updateStatus(dropSiteToView?.id, 'collected')
+                                        refresh();
                                     }}><CircleCheck />Mark As Collected</Button>
                                     <Button variant="outline" onClick={() => {
-                                        updateStatus(dropsite.id, 'uncollected');
+                                        updateStatus(dropSiteToView?.id, 'uncollected');
+                                        refresh();
                                         'uncollected';
                                     }}><SkipForward />Skip</Button>
                                     <Button variant="outline"><TriangleAlert />Report</Button>
@@ -441,7 +490,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                     </DrawerClose>
                                 }
                                 {withControls && <Button className="w-fit" onClick={() => {
-                                    setDropSiteToEdit(dropsite);
+                                    setDropSiteToEdit(dropSiteToView);
                                     setOpenEdit(true);
                                 }}>Edit</Button>}
                                 {!isDriver && <DrawerClose>
@@ -556,7 +605,60 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                     setDriverMarker([0,0]);
                 }} variant="destructive"><Trash2Icon/>End Garbage Collection</Button>
             }
-            <Button variant="outline" onClick={()=>recenter()}>Recenter</Button>
+            {
+
+                        isCollectingGarbage == true && <Drawer onOpenChange={setDrawerOpen2} open={drawerOpen2} direction="bottom">
+                            <DrawerTrigger>
+                                <Button variant="outline">See Nearby Sites</Button>
+                            </DrawerTrigger>
+                            <DrawerContent>
+                                <DrawerHeader>
+                                    <DrawerTitle>Nearby PickUp Sites</DrawerTitle>
+                                    <DrawerDescription>This area shows the drop sites in your area</DrawerDescription>
+
+                                    {
+                                        dropsiteData && dropSites.map(site => {
+
+                                            let curretStatus = "pending";
+                                            try {
+                                                curretStatus = site?.status ? site?.status[site?.status.length - 1].status : 'pending';
+                                            } catch {}
+                                            return <div className="flex items-center gap-2 justify-between border border-current/30 rounded-xl p-2" onClick={() => {
+                                            setDropSiteToView(site);
+                                            setStatus(curretStatus);
+                                            setViewMarker(true);
+                                            }}>
+                                                <div className="flex gap-2">
+
+                                                    <div className={cn("cursor-pointer p-1 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-green-500 to-green-600 text-white text-xs rounded-full ring-2 ring-green-200 dark:ring-green-800",
+                                curretStatus === 'pending' && "from-red-500 to-red-600 ring-2 ring-red-200 dark:ring-red-800",
+                                curretStatus === 'uncollected' && "from-yellow-500 to-yellow-600 ring-2 ring-yellow-200 dark:ring-yellow-800")}>
+                                                        <MapPin />
+                                                    </div>
+                                                    <div>{site.bin_name}</div>
+                                                </div>
+                                                <div>
+                                                    <div className={cn("cursor-pointer p-1 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-green-500 to-green-600 text-white text-xs rounded-full ring-2 ring-green-200 dark:ring-green-800",
+                                curretStatus === 'pending' && "from-red-500 to-red-600 ring-2 ring-red-200 dark:ring-red-800",
+                                curretStatus === 'uncollected' && "from-yellow-500 to-yellow-600 ring-2 ring-yellow-200 dark:ring-yellow-800")}>
+                                                        {curretStatus}
+                                                    </div>
+                                                    <div>{formatDistance(site.distance)}</div>
+                                                </div>
+                                            </div>
+                                        })
+                                    }
+                                </DrawerHeader>
+                                <DrawerFooter>
+                                    <DrawerClose>
+                                        <Button className="w-full" variant="outline">Close</Button>
+                                    </DrawerClose>
+                                </DrawerFooter>
+                            </DrawerContent>
+                        </Drawer>
+
+                    }
+                    <Button variant="outline" onClick={() => recenter()}>Recenter</Button>
         </section>
     }
 
@@ -596,5 +698,6 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         <EditDropSite open={openEdit} setOpen={setOpenEdit} pickUpSite={dropSiteToEdit} refreshData={refresh} />
         <CreateRoute open={openNewRoute} setOpen={setOpenNewRoute} pickUpSite={dropSiteToEdit} coordinatesArray={points} setCoordinates={setPoints} refreshData={refresh} />
         <EditRoute open={openEditRoute} setOpen={setOpenEditRoute} route={routeToEdit}  refreshData={refresh} withControls={withControls} />
+    </section>
     </>
 }
