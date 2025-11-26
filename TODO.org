@@ -27,21 +27,17 @@
 - [X] profile
 - [ ] residents using the application
 - [X] send broadcast messages
-- [ ] additional
-  - [ ] should have a way to contact trucks
+- [-] additional
+  - [X] should have a way to contact trucks
     - [X] link to truck to:
     - [X] share location
-    - [ ] update dropsite status
-      - [ ] collected
-      - [ ] to be collected
-      - [ ] missed/uncollected
-    - [ ] trash volume
-    - [ ] efficiency score
-  - [ ] Barangay rating (their team)
-    - [ ] comments about the barangay
-  - [ ]
-  - [ ]
-  
+    - [X] update dropsite status
+      - [X] collected
+      - [X] to be collected
+      - [X] missed/uncollected
+  - [X] Barangay rating (their team)
+    - [X] comments about the barangay
+
 
 
 * Resident
@@ -57,8 +53,8 @@
   - [X]  through chat
 - [X] receive broadcast messages
 - [X] receive broadcast notifications
-- [ ] additional
-  - [ ] Barangay rating (their team)
+- [-] additional
+  - [X] Barangay rating (their team)
     - [ ] comments about the barangay
 
 * Admin
@@ -83,23 +79,7 @@
 
 
 * TODO TO CREATE THIS:
-i need to give the link the following:
-1. [X] barangay_id
-2. [X] barangay official that gave the permission
-3. ability to share the current marker
-   - can be disabled by the admin
-   - will automatically be activated
-4. capability to
-   - see map
-     - routes
-     - markers
-5. ability to update data
-   - garbage volume
-   - update the dropsite status
-     - collected
-     - to be collected
-     - missed/uncollected
-6. scheduled tasks
+1. scheduled tasks
    - when the route's schedule is finished and some of the markers are not
      marked as collected, it will notify the barangay
    - report of missed shit every collection
