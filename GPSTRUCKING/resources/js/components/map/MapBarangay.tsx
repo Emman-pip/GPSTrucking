@@ -612,7 +612,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                 <Button variant="outline">See Nearby Sites</Button>
                             </DrawerTrigger>
                             <DrawerContent>
-                                <DrawerHeader>
+                        <DrawerHeader className="overflow-y-scroll" style={{ scrollbarWidth: 'none' }}>
                                     <DrawerTitle>Nearby PickUp Sites</DrawerTitle>
                                     <DrawerDescription>This area shows the drop sites in your area</DrawerDescription>
 
@@ -631,16 +631,16 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                                 <div className="flex gap-2">
 
                                                     <div className={cn("cursor-pointer p-1 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-green-500 to-green-600 text-white text-xs rounded-full ring-2 ring-green-200 dark:ring-green-800",
-                                curretStatus === 'pending' && "from-red-500 to-red-600 ring-2 ring-red-200 dark:ring-red-800",
-                                curretStatus === 'uncollected' && "from-yellow-500 to-yellow-600 ring-2 ring-yellow-200 dark:ring-yellow-800")}>
+                                                        curretStatus === 'pending' && "from-red-500 to-red-600 ring-2 ring-red-200 dark:ring-red-800",
+                                                        curretStatus === 'uncollected' && "from-yellow-500 to-yellow-600 ring-2 ring-yellow-200 dark:ring-yellow-800")}>
                                                         <MapPin />
                                                     </div>
                                                     <div>{site.bin_name}</div>
                                                 </div>
                                                 <div>
                                                     <div className={cn("cursor-pointer p-1 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-green-500 to-green-600 text-white text-xs rounded-full ring-2 ring-green-200 dark:ring-green-800",
-                                curretStatus === 'pending' && "from-red-500 to-red-600 ring-2 ring-red-200 dark:ring-red-800",
-                                curretStatus === 'uncollected' && "from-yellow-500 to-yellow-600 ring-2 ring-yellow-200 dark:ring-yellow-800")}>
+                                                        curretStatus === 'pending' && "from-red-500 to-red-600 ring-2 ring-red-200 dark:ring-red-800",
+                                                        curretStatus === 'uncollected' && "from-yellow-500 to-yellow-600 ring-2 ring-yellow-200 dark:ring-yellow-800")}>
                                                         {curretStatus}
                                                     </div>
                                                     <div>{formatDistance(site.distance)}</div>
