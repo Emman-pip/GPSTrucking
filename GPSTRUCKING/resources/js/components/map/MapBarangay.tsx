@@ -473,7 +473,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                         </DrawerHeader>
                         <DrawerFooter>
                             <div className="flex justify-center gap-2">
-                                {isCollectingGarbage && <section className="grid grid-cols-2 gap-2">
+                                {isCollectingGarbage && <section className="grid grid-cols-2 gap-1">
                                     <Button variant="default" className="col-span-2" onClick={() => {
                                         updateStatus(dropSiteToView?.id, 'collected')
                                         refresh();
@@ -483,13 +483,13 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                         refresh();
                                         'uncollected';
                                     }}><SkipForward />Skip</Button>
-                                    <Button variant="outline"><TriangleAlert />Report</Button>
-                                </section>}
+                                    {/*  <Button variant="outline"><TriangleAlert />Report</Button> */}
                                 {
-                                    !isCollectingGarbage && isDriver && <DrawerClose>
-                                        <Button variant="outline">Close</Button>
+                                    isDriver && <DrawerClose>
+                                        <Button className="w-full" variant="outline">Close</Button>
                                     </DrawerClose>
                                 }
+                                </section>}
                                 {withControls && <Button className="w-fit" onClick={() => {
                                     setDropSiteToEdit(dropSiteToView);
                                     setOpenEdit(true);

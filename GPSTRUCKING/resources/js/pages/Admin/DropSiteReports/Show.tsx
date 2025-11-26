@@ -92,10 +92,10 @@ export default function Show({ report }: Props) {
                 onChange={(e) => form.setData('status', e.target.value)}
                 className="border rounded px-2 py-1 w-full"
               >
-                <option value="pending">Pending</option>
-                <option value="in_review">In Review</option>
-                <option value="resolved">Resolved</option>
-                <option value="rejected">Rejected</option>
+                <option className="dark:text-black" value="pending">Pending</option>
+                <option className="dark:text-black" value="in_review">In Review</option>
+                <option className="dark:text-black" value="resolved">Resolved</option>
+                <option className="dark:text-black" value="rejected">Rejected</option>
               </select>
             </div>
 

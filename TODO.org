@@ -53,8 +53,8 @@
     - [X] picture about the dropsite
 - [X] contact the barangay for garbage collection-related problem
 - [X] profile form
-- [ ] file complaints/ratings
-  - [ ]  through chat
+- [X] file complaints/ratings
+  - [X]  through chat
 - [X] receive broadcast messages
 - [X] receive broadcast notifications
 - [ ] additional
@@ -80,8 +80,6 @@
         - [X] collected
         - [X] to be collected
         - [X] missed/uncollected
-      - [ ] trash volume
-      - [ ] efficiency score
 
 
 * TODO TO CREATE THIS:
