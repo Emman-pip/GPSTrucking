@@ -373,7 +373,6 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
 
 
     return <>
-    <section className="h-full">
 
     <Map
         ref={mapRef}
@@ -698,6 +697,5 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         <EditDropSite open={openEdit} setOpen={setOpenEdit} pickUpSite={dropSiteToEdit} refreshData={refresh} />
         <CreateRoute open={openNewRoute} setOpen={setOpenNewRoute} pickUpSite={dropSiteToEdit} coordinatesArray={points} setCoordinates={setPoints} refreshData={refresh} />
         <EditRoute open={openEditRoute} setOpen={setOpenEditRoute} route={routeToEdit}  refreshData={refresh} withControls={withControls} />
-    </section>
     </>
 }
