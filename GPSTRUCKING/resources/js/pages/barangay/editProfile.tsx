@@ -274,7 +274,7 @@ export default function editProfile({ barangay, barangays }: {
             <main className="min-h-screen p-4 md:p-8 transition-colors duration-300">
                 <div className="max-w-4xl mx-auto">
                     {/* Header Card */}
-                    <div className="bg-white dark:bg-black rounded-3xl shadow-lg overflow-hidden mb-6 transition-colors duration-300">
+                    <div className="bg-white/30 dark:bg-black rounded-3xl shadow-lg overflow-hidden mb-6 transition-colors duration-300">
                         <div className="bg-gradient-to-r from-green-600 to-green-800 dark:from-green-600 dark:to-green-800 px-8 py-6">
                             <h1 className="text-3xl font-bold text-white">Barangay Official Profile</h1>
                             <p className="text-green-100 dark:text-green-200 mt-1">
@@ -286,7 +286,7 @@ export default function editProfile({ barangay, barangays }: {
                     {/* Main Content Grid */}
                     <div className="grid md:grid-cols-2 gap-6">
                         {/* Personal Information Card */}
-                        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 space-y-5 transition-colors duration-300">
+                        <div className="bg-white/30 dark:bg-gray-900/30 rounded-2xl shadow-lg p-6 space-y-5 transition-colors duration-300">
                             <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
                                 <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
                                     <User className="w-5 h-5 text-green-600 dark:text-green-400" />
@@ -316,7 +316,7 @@ export default function editProfile({ barangay, barangays }: {
                         </div>
 
                         {/* Contact Information Card */}
-                        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 space-y-5 transition-colors duration-300">
+                        <div className="bg-white/30 dark:bg-gray-900/30 rounded-2xl shadow-lg p-6 space-y-5 transition-colors duration-300">
                             <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
                                 <div className="p-2 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg">
                                     <Phone className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
@@ -351,7 +351,7 @@ export default function editProfile({ barangay, barangays }: {
                         </div>
 
                         {/* Barangay Assignment Card */}
-                        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 transition-colors duration-300">
+                        <div className="bg-white/30 dark:bg-gray-900/30 rounded-2xl shadow-lg p-6 transition-colors duration-300">
                             <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
                                 <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
                                     <MapPin className="w-5 h-5 text-green-600 dark:text-green-400" />
@@ -369,7 +369,7 @@ export default function editProfile({ barangay, barangays }: {
                         </div>
 
                         {/* Documents Card */}
-                        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 transition-colors duration-300">
+                        <div className="bg-white/30 dark:bg-gray-900/30 rounded-2xl shadow-lg p-6 transition-colors duration-300">
                             <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
                                 <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
                                     <FileText className="w-5 h-5 text-purple-600 dark:text-purple-400" />
