@@ -4,6 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import dropSiteReports from '@/routes/drop-site-reports';
+import { TriangleAlert } from 'lucide-react';
 
 interface Props {
   dropSiteId: number;
@@ -29,7 +30,7 @@ export function DropSiteReportModal({ dropSiteId }: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive">Report Drop Site</Button>
+        <Button variant="destructive"><TriangleAlert/>Report</Button>
       </DialogTrigger>
 
       <DialogContent>
