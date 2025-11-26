@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/sidebar';
 import { SharedData, type NavItem } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Map, MessageSquare, Siren, Truck, User } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Map, MessageSquare, Siren, TriangleAlert, Truck, User } from 'lucide-react';
 import AppLogo from './app-logo';
 import barangay from '@/routes/barangay';
 import resident from '@/routes/resident';
@@ -77,6 +77,11 @@ const BarangayMainNavItems: NavItem[] = [
         title: 'Notifications & Feedbacks',
         href: barangay.alerts().url,
         icon: Siren,
+    },
+    {
+        title: 'Reports',
+        href: barangay.reports.index().url,
+        icon: TriangleAlert,
     }
 ];
 

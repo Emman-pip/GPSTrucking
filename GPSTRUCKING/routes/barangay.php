@@ -5,6 +5,7 @@ use App\Http\Controllers\BarangayController;
 use App\Http\Controllers\BarangayOfficialInformationController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\DropSiteController;
+use App\Http\Controllers\DropSiteReportController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RouteController;
@@ -58,6 +59,10 @@ Route::middleware(['auth', 'ensure_role:barangay', 'verified',])->group(function
             Route::put('/barangay/drivers', [DriverController::class, 'update'])->name('barangay.drivers.put');
             Route::get('/generate-driver-link', [DriverController::class, 'generate'])->name('barangay.generate.driver');
 
+            // reports management
+            Route::get('/barangay/reports', [DropSiteReportController::class, 'index'])->name('barangay.reports.index');
+            Route::get('barangay/{report}', [DropSiteReportController::class, 'show'])->name('barangay.reports.show');
+            Route::post('barangay/{report}/status', [DropSiteReportController::class, 'updateStatus'])->name('barangay.reports.updateStatus');
         });
     });
     // for form
