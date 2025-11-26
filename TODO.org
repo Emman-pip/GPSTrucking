@@ -29,8 +29,8 @@
 - [X] send broadcast messages
 - [ ] additional
   - [ ] should have a way to contact trucks
-    - [ ] link to truck to:
-    - [ ] share location
+    - [X] link to truck to:
+    - [X] share location
     - [ ] update dropsite status
       - [ ] collected
       - [ ] to be collected
@@ -74,12 +74,12 @@
 * NOTES
 - [ ] additional
   - [ ] should have a way to contact trucks
-    - [ ] link to truck to:
-      - [ ] share location
-      - [ ] update dropsite status
-        - [ ] collected
-        - [ ] to be collected
-        - [ ] missed/uncollected
+    - [X] link to truck to:
+      - [X] share location
+      - [X] update dropsite status
+        - [X] collected
+        - [X] to be collected
+        - [X] missed/uncollected
       - [ ] trash volume
       - [ ] efficiency score
 
