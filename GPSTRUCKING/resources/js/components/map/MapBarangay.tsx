@@ -258,13 +258,13 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
 
     function recenter(){
         const map = mapRef.current?.getMap();
-        map?.flyTo({ center: [ driverMarker[0], driverMarker[1]], zoom: 17, speed: 1})
+        map?.flyTo({ center: [driverMarker[0], driverMarker[1]], zoom: 17, speed: 1 })
         const watchId = navigator.geolocation.watchPosition(
             (position) => {
-                map?.flyTo({ center: [ position.coords.longitude,  position.coords.latitude], zoom: 17, speed: 1})
-                setDriverMarker([ position.coords.longitude,  position.coords.latitude]);
-                console.log("Updated Latitude:", position.coords.latitude);
-                console.log("Updated Longitude:", position.coords.longitude);
+                if (isCollectingGarbage) {
+                    map?.flyTo({ center: [position.coords.longitude, position.coords.latitude], zoom: 17, speed: 1 })
+                    setDriverMarker([position.coords.longitude, position.coords.latitude]);
+                }
             },
             (error) => {
                 console.error("Error watching position:", error);
@@ -426,7 +426,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                         </DrawerHeader>
                         <DrawerFooter>
                             <div className="flex justify-center gap-2">
-                                {isDriver && <section className="grid grid-cols-2 gap-2">
+                                {isDriver && isCollectingGarbage ? <section className="grid grid-cols-2 gap-2">
                                     <Button variant="default" className="col-span-2" onClick={() => {
                                         updateStatus(dropsite.id, 'collected')
                                     }}><CircleCheck />Mark As Collected</Button>
@@ -435,7 +435,11 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                         'uncollected';
                                     }}><SkipForward />Skip</Button>
                                     <Button variant="outline"><TriangleAlert />Report</Button>
-                                </section>}
+                                </section>
+                                    : <DrawerClose>
+                                        <Button variant="outline">Close</Button>
+                                    </DrawerClose>
+                                }
                                 {withControls && <Button className="w-fit" onClick={() => {
                                     setDropSiteToEdit(dropsite);
                                     setOpenEdit(true);
