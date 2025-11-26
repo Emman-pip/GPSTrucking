@@ -441,7 +441,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                 curretStatus === 'pending' && "from-red-500 to-red-600 ring-2 ring-red-200 dark:ring-red-800",
                                 curretStatus === 'uncollected' && "from-yellow-500 to-yellow-600 ring-2 ring-yellow-200 dark:ring-yellow-800",
                             )
-                         }/>
+                            } />
                     </DrawerTrigger>
                     <DrawerContent>
                         <DrawerHeader className="overflow-y-scroll" style={{ scrollbarWidth: 'none' }}>
@@ -449,23 +449,40 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                 <div>{dropSiteToView?.bin_name}</div>
                             </DrawerTitle>
                             <DrawerDescription className="flex  flex-col items-center gap-2 justify-center">
-                                <Card className="border-current/30">
-                                    <CardContent className="max-w-100">
-                                        <div className="text-left font-bold">Bin Information</div>
-                                        <div className="grid grid-cols-2">
-                                            <div className="w-full text-left">BIN ID</div>
-                                            <div className="w-full text-left">BIN-{dropSiteToView?.id}</div>
-                                            <div className="w-full text-left">Status</div>
-                                            <div className="w-full text-left">
-                                                <div className={cn("capitalize font-bold text-center px-2 py-1 text-sm rounded-2xl bg-red-500 text-white", status === 'pending' ? "bg-red-500/60" : status === 'collected' ? "bg-green-500/60" : 'bg-yellow-600/60')}>{status}</div>
+                                <div className="flex flex-col items-center w-full md:max-w-[30vw]">
+                                    <Card className="w-full border-current/30">
+                                        <CardContent>
+                                            <div className="text-left font-bold">Bin Information</div>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <div className="text-left">BIN ID</div>
+                                                <div className="text-left">BIN-{dropSiteToView?.id}</div>
+
+                                                <div className="text-left">Status</div>
+                                                <div className="text-left">
+                                                    <div
+                                                        className={cn(
+                                                            "capitalize font-bold w-fit text-center px-2 py-1 text-xs rounded-2xl",
+                                                            status === 'pending'
+                                                                ? "bg-red-500/60 text-white"
+                                                                : status === 'collected'
+                                                                    ? "bg-green-500/60 text-white"
+                                                                    : "bg-yellow-600/60 text-white"
+                                                        )}
+                                                    >
+                                                        {status}
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="w-full pt-3 font-bold text-left">Notes</div>
-                                        <div className="break-all md:w-[50vw] w-full text-justify">{dropSiteToView?.description}</div>
-                                    </CardContent>
-                                </Card>
-                                <div className="flex  flex-col items-center">
-                                    <img className="border border-current/30 rounded-xl w-100" src={window.location.origin + '/storage/' + dropSiteToView?.image} />
+
+                                            <div className="pt-3 font-bold text-left">Notes</div>
+                                            <div className="break-all text-justify">{dropSiteToView?.description}</div>
+                                        </CardContent>
+                                    </Card>
+
+                                    <img
+                                        className="w-full mt-4 border border-current/30 rounded-xl object-cover"
+                                        src={window.location.origin + '/storage/' + dropSiteToView?.image}
+                                    />
                                 </div>
                             </DrawerDescription>
 
