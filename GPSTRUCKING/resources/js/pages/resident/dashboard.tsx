@@ -17,10 +17,11 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 import { format } from 'date-fns';
-import { MessageSquare } from 'lucide-react';
+import { AlertCircle, MessageSquare } from 'lucide-react';
 import { chat } from '@/routes';
 import { PanelGroup } from 'react-resizable-panels';
 import { ResizableHandle, ResizablePanel } from '@/components/ui/resizable';
+import { Alert } from '@/components/ui/alert';
 
 interface DashboardProps {
   barangayData: Barangay;
@@ -71,10 +72,10 @@ export default function Dashboard({ barangayData, barangays, userRatingThisWeek 
 
                             {/* KPI Cards */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                                {/* Active Bins */}
-                                <div className="bg-white dark:bg-gray-800/50 p-4 rounded-xl shadow flex flex-col items-center">
-                                    <span className="text-sm font-semibold text-gray-500 dark:text-gray-400">Active Bins</span>
-                                    <span className="text-2xl font-bold mt-2">{activeBins}</span>
+                                <div className="bg-white dark:bg-gray-800/50 p-4 rounded-xl shadow flex flex-col items-center justify-center" onClick={() => router.get(chat().url)}>
+                                    <AlertCircle />
+                                    <span className="text-sm font-semibold text-gray-500/50 dark:text-gray-400/50">Notifications</span>
+
                                 </div>
 
                                 {/* Rating This Week */}
