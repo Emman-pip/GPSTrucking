@@ -305,6 +305,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         const channel = window.Echo.channel(`barangay.${user.barangay_official_info?.barangay_id ? user.barangay_official_info.barangay_id : user.residency.barangay_id}`);
 
         channel.listen(".gps.updated", (data) => {
+            console.log(data)
             let flag = false;
             let index = 0;
             for (let i = 0; i < trucks.length; i++) {
@@ -321,6 +322,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                 setTrucks(tmp);
             } else {
                 tmp.push(data)
+                console.log(tmp)
                 setTrucks(tmp);
             }
         });
@@ -328,7 +330,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         return () => {
             window.Echo.leave(`barangay-${user.barangay_official_info?.barangay_id ? user.barangay_official_info.barangay_id : user.residency.barangay_id}`);
         };
-    }, []);
+    }, [trucks]);
 
     function updateStatus(bin_id: number, binStatus: string) {
         router.put(window.location.href,
@@ -373,7 +375,6 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
 
 
     return <>
-
     <Map
         ref={mapRef}
         mapStyle={MAP_STYLE}
