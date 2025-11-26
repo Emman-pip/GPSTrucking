@@ -67,7 +67,7 @@ class MessageController extends Controller
                     })
                     ->get()
                     ->firstOrFail()->toArray();
-                ($tmp);
+
                 if ($tmp['data']['sender_name'] === $user->name) {
                     $tmp['data']['real_sender_name'] = $tmp['data']['sender_name'];
                     $tmp['data']['sender_id'] = $tmp['notifiable_id'];

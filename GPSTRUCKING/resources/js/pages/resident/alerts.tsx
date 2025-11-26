@@ -33,45 +33,90 @@ export interface Alert {
     "sender_id"?: number|null;
 }
 
-export default function Alerts({ alerts }: {
-    alerts: Alert[];
-}) {
+export default function Alerts({ alerts }: { alerts: Alert[] }) {
     const { user } = usePage().props.auth;
-    console.log(alerts);
+
     useEffect(() => {
-        console.log("not marking yet! ")
         return () => {
             return router.put(resident.alerts.makeRead().url);
-        }
-    }, [])
+        };
+    }, []);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-            <main className="p-2 pb-4">
-                <div>
-                    <div className="text-xl font-bold">Notifications & Feedback</div>
-                </div>
-                <div className="p-2 border border-current/30  flex flex-col gap-2 rounded-xl">
-                    <div className="font-semibold text-lg">Notification feed</div>
-                    <div className="flex flex-col gap-2 max-h-[100vh] overflow-y-auto">
-                        {
-                            alerts?.length > 0 ? alerts.map((alert, index) => {
-                                return <div className={ cn( "rounded-sm flex items-center gap-2  border border-current/50 p-2", alert.read_at ? "border-current/30" : "" )}>
-                                    <div className="bg-blue-500/40 p-2 rounded-lg">
-                                        <Bell className="text-blue-700"/>
+
+            <main className="p-4 pb-6 text-gray-800 dark:text-gray-200">
+                <h1 className="text-2xl font-bold mb-4">Notifications & Feedback</h1>
+
+                <section
+                    className="
+                        p-4 rounded-2xl shadow-sm
+                        bg-white dark:bg-gray-900
+                        border border-gray-200 dark:border-gray-700
+                        flex flex-col gap-4
+                    "
+                >
+                    <div className="text-lg font-semibold text-green-700 dark:text-green-400">
+                        Notification Feed
+                    </div>
+
+                    <div className="flex flex-col gap-4 max-h-[80vh] overflow-y-auto pr-1">
+
+                        {alerts?.length > 0 ? (
+                            alerts.map((alert, index) => (
+                                <div
+                                    key={index}
+                                    className={cn(
+                                        "relative flex items-start gap-4 p-4 rounded-xl shadow-sm",
+                                        "bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700",
+                                        "transition hover:bg-gray-100 hover:dark:bg-gray-700"
+                                    )}
+                                >
+                                    {/* Icon bubble */}
+                                    <div
+                                        className="
+                                            w-12 h-12 flex items-center justify-center rounded-full
+                                            bg-green-100 dark:bg-green-900
+                                            text-green-700 dark:text-green-300
+                                            flex-shrink-0
+                                        "
+                                    >
+                                        <Bell className="w-6 h-6" />
                                     </div>
-                                    <div>
-                                        <div className="font-semibold flex gap-1 items-center break-words">{ !alert.read_at ? <Dot size={30} className="text-red-500"/> : ""}{alert.data?.title}</div>
-                                        <div className="text-sm font-thin opacity-60 break-words">{alert.data?.message}</div>
+
+                                    {/* Title + Message */}
+                                    <div className="flex flex-col flex-grow">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-1">
+                                                {!alert.read_at && (
+                                                    <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+                                                )}
+                                                <span className="font-semibold text-gray-900 dark:text-gray-100">
+                                                    {alert.data?.title}
+                                                </span>
+                                            </div>
+
+                                            {/* Right-side date (like template) */}
+                                            <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                                                {alert.created_at
+                                                    ? new Date(alert.created_at).toLocaleDateString()
+                                                    : ""}
+                                            </span>
+                                        </div>
+
+                                        <div className="text-sm mt-1 text-gray-600 dark:text-gray-300 break-words">
+                                            {alert.data?.message}
+                                        </div>
                                     </div>
                                 </div>
-                            }) : <div>
-                                No alerts yet!
-                            </div>
+                            ))
+                        ) : (
+                            <div className="text-gray-500 dark:text-gray-400">No alerts yet!</div>
+                        )}
 
-                        }
                     </div>
-                </div>
+                </section>
             </main>
         </AppLayout>
     );
