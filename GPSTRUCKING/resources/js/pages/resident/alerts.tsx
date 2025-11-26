@@ -52,7 +52,7 @@ export default function Alerts({ alerts }: { alerts: Alert[] }) {
                 <section
                     className="
                         p-4 rounded-2xl shadow-sm
-                        bg-white dark:bg-gray-900
+                        bg-white dark:bg-gray-900/30
                         border border-gray-200 dark:border-gray-700
                         flex flex-col gap-4
                     "
@@ -69,7 +69,7 @@ export default function Alerts({ alerts }: { alerts: Alert[] }) {
                                     key={index}
                                     className={cn(
                                         "relative flex items-start gap-4 p-4 rounded-xl shadow-sm",
-                                        "bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700",
+                                        "bg-gray-50 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700",
                                         "transition hover:bg-gray-100 hover:dark:bg-gray-700"
                                     )}
                                 >
