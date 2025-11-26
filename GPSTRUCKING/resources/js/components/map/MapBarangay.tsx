@@ -50,6 +50,7 @@ import truck from "@/routes/truck";
 import { Card, CardContent, CardDescription } from "../ui/card";
 import NearbyTrash from "./NearbyTrash";
 import { Accordion, AccordionContent } from "../ui/accordion";
+import { DropSiteReportModal } from "../DropSiteReportModal";
 
 export interface PickUpSite {
     id?: number;
@@ -472,7 +473,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                         </DrawerHeader>
                         <DrawerFooter>
                             <div className="flex justify-center gap-2">
-                                {isDriver && isCollectingGarbage ? <section className="grid grid-cols-2 gap-2">
+                                {isCollectingGarbage && <section className="grid grid-cols-2 gap-2">
                                     <Button variant="default" className="col-span-2" onClick={() => {
                                         updateStatus(dropSiteToView?.id, 'collected')
                                         refresh();
@@ -483,8 +484,9 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                         'uncollected';
                                     }}><SkipForward />Skip</Button>
                                     <Button variant="outline"><TriangleAlert />Report</Button>
-                                </section>
-                                    : <DrawerClose>
+                                </section>}
+                                {
+                                    !isCollectingGarbage && isDriver && <DrawerClose>
                                         <Button variant="outline">Close</Button>
                                     </DrawerClose>
                                 }
@@ -492,6 +494,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                     setDropSiteToEdit(dropSiteToView);
                                     setOpenEdit(true);
                                 }}>Edit</Button>}
+                {!withControls && !isDriver &&  <DropSiteReportModal dropSiteId={dropSiteToView?.id} /> }
                                 {!isDriver && <DrawerClose>
                                     <Button variant="outline">Close</Button>
                                 </DrawerClose>

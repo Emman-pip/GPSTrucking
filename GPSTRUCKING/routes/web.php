@@ -3,6 +3,7 @@
 use App\Http\Controllers\BinStatusController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\DropSiteController;
+use App\Http\Controllers\DropSiteReportController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RouteController;
 use App\Models\Barangay;
@@ -68,3 +69,5 @@ Route::middleware(['ensure_valid_link'])->group(function () {
 Route::post('/update-location', [DriverController::class, 'postGPS'])
     ->name('truck.updateGPS');
 
+Route::post('/drop-site-reports', [DropSiteReportController::class, 'store'])
+    ->name('drop-site-reports.store');
