@@ -16,17 +16,19 @@ use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
 Route::get('/', function () {
+    if (!Auth::user()) {
+        return Inertia::render('landing/LandingPage');//redirect()->route('login');
+    }
     if (Features::enabled(Features::registration())){
         return redirect()->route('evaluate-user');
     }
-    return Inertia::render('hero-page');//redirect()->route('login');
     /* return Inertia::render('welcome', [ */
     /*     'canRegister' => Features::enabled(Features::registration()), */
     /* ]); */
 })->name('home');
 
 Route::get('/hero', function() {
-    return Inertia::render('hero-page');//redirect()->route('login');
+    return Inertia::render('landing/LandingPage');//redirect()->route('login');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

@@ -1,0 +1,463 @@
+import React, { useState, useEffect } from 'react';
+import { Moon, Sun, Truck, MapPin, Cpu, Clock, Users, Mail, Phone, ChevronRight } from 'lucide-react';
+import { login } from '@/routes';
+import { router } from '@inertiajs/react';
+import MapView from '@/components/map/MapView';
+
+// Scroll animation hook
+const useScrollAnimation = () => {
+  useEffect(() => {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('aos-animate');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('[data-aos]').forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+};
+
+const App: React.FC = () => {
+  const [darkMode, setDarkMode] = useState(false);
+
+  useScrollAnimation();
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
+
+  useEffect(() => {
+    document.documentElement.style.scrollBehavior = 'smooth';
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-white dark:bg-gradient-to-br dark:from-[#031A0F] dark:via-[#052417] dark:to-[#031A0F] transition-colors duration-500">
+      <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
+      <Hero />
+      <Features />
+      <MapSection />
+      <HowItWorks />
+      <About />
+      <Contact />
+      <Footer />
+    </div>
+  );
+};
+
+const Navbar: React.FC<{ darkMode: boolean; setDarkMode: (val: boolean) => void }> = ({ darkMode, setDarkMode }) => {
+  const links = ['Hero', 'Features', 'Map', 'How It Works', 'About', 'Contact'];
+
+  return (
+    <nav className="fixed top-0 w-full bg-white/95 dark:bg-[#031A0F]/95 backdrop-blur-sm z-50 border-b border-gray-200 dark:border-emerald-900/30 transition-all duration-300">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <Truck className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+          <span className="text-2xl font-bold text-gray-900 dark:text-white">GPS Trucking</span>
+        </div>
+
+        <div className="hidden md:flex items-center space-x-8">
+          {links.map(link => (
+            <a
+              key={link}
+              href={`#${link.toLowerCase().replace(' ', '-')}`}
+              className="text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 dark:hover:drop-shadow-[0_0_8px_rgba(16,185,129,0.5)] transition-all duration-300 font-medium"
+            >
+              {link}
+            </a>
+          ))}
+        </div>
+
+        <button
+          onClick={() => setDarkMode(!darkMode)}
+          className="p-2 rounded-lg bg-gray-100 dark:bg-emerald-900/30 hover:bg-gray-200 dark:hover:bg-emerald-800/40 transition-all duration-300 dark:border dark:border-emerald-500/30"
+        >
+          {darkMode ? (
+            <Sun className="w-5 h-5 text-emerald-400" />
+          ) : (
+            <Moon className="w-5 h-5 text-gray-700" />
+          )}
+        </button>
+      </div>
+    </nav>
+  );
+};
+
+const Hero: React.FC = () => {
+  return (
+    <section id="hero" className="relative pt-32 pb-20 px-6 overflow-hidden">
+      {/* Premium Neon Wave Background for Dark Mode */}
+      <div className="absolute inset-0 opacity-0 dark:opacity-100 transition-opacity duration-500">
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-emerald-500/10 via-emerald-600/5 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-green-600/10 via-emerald-500/5 to-transparent rounded-full blur-3xl" />
+      </div>
+
+      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center relative z-10">
+        <div data-aos="fade-up" className="space-y-6">
+          <h1 className="text-6xl md:text-7xl font-black text-gray-900 dark:text-white leading-tight">
+            GPS <span className="text-emerald-600 dark:text-emerald-400 dark:drop-shadow-[0_0_20px_rgba(16,185,129,0.6)]">Trucking</span>
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
+            Efficient Waste Collection Through Smart GPS Technology
+          </p>
+          <button className="group px-8 py-4 bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-700 dark:hover:bg-emerald-400 text-white rounded-lg font-semibold transition-all duration-300 flex items-center space-x-2 shadow-lg dark:shadow-emerald-500/25" onClick={() => router.get(login().url)}>
+            <span>Get Started</span>
+            <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </button>
+        </div>
+
+        <div data-aos="fade-left" className="relative">
+          <div className="relative z-10">
+            <svg viewBox="0 0 400 300" className="w-full h-auto">
+              {/* Truck Body */}
+              <rect x="120" y="140" width="200" height="80" fill="currentColor" className="text-emerald-600 dark:text-emerald-400" rx="8"/>
+              {/* Truck Cabin */}
+              <rect x="80" y="160" width="60" height="60" fill="currentColor" className="text-emerald-700 dark:text-emerald-500" rx="6"/>
+              {/* Windows */}
+              <rect x="90" y="170" width="20" height="20" fill="currentColor" className="text-white dark:text-emerald-200" rx="2"/>
+              <rect x="115" y="170" width="20" height="20" fill="currentColor" className="text-white dark:text-emerald-200" rx="2"/>
+              {/* Wheels */}
+              <circle cx="140" cy="230" r="20" fill="currentColor" className="text-gray-800 dark:text-gray-700"/>
+              <circle cx="280" cy="230" r="20" fill="currentColor" className="text-gray-800 dark:text-gray-700"/>
+              <circle cx="140" cy="230" r="10" fill="currentColor" className="text-gray-400"/>
+              <circle cx="280" cy="230" r="10" fill="currentColor" className="text-gray-400"/>
+              {/* GPS Signal */}
+              <circle cx="200" cy="100" r="4" fill="currentColor" className="text-emerald-500 dark:text-emerald-300 animate-ping"/>
+              <circle cx="200" cy="100" r="4" fill="currentColor" className="text-emerald-500 dark:text-emerald-300"/>
+              <path d="M200 100 L200 140" stroke="currentColor" strokeWidth="2" strokeDasharray="4" className="text-emerald-500 dark:text-emerald-300"/>
+            </svg>
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-100 dark:from-emerald-900/20 to-transparent rounded-3xl blur-2xl -z-10" />
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Features: React.FC = () => {
+  const features = [
+    {
+      icon: <MapPin className="w-8 h-8" />,
+      title: "Real-Time Tracking",
+      description: "Monitor your fleet in real-time with precision GPS tracking and live location updates."
+    },
+    {
+      icon: <Clock className="w-8 h-8" />,
+      title: "Automated Scheduling",
+      description: "Smart route optimization and automated scheduling for maximum efficiency."
+    },
+    {
+      icon: <Cpu className="w-8 h-8" />,
+      title: "IoT Integration",
+      description: "Seamless integration with IoT sensors for intelligent waste management."
+    },
+    {
+      icon: <Truck className="w-8 h-8" />,
+      title: "Malvar, Batangas Exclusivity",
+      description: "Specially designed and optimized for Malvar, Batangas waste collection operations."
+    }
+  ];
+
+  return (
+    <section id="features" className="py-24 px-6 bg-gray-50 dark:bg-transparent">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-5xl font-bold text-center text-gray-900 dark:text-white mb-16" data-aos="fade-up">
+          Key <span className="text-emerald-600 dark:text-emerald-400">Features</span>
+        </h2>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {features.map((feature, idx) => (
+            <div
+              key={idx}
+              data-aos="zoom-in"
+              data-aos-delay={idx * 100}
+              className="group p-8 bg-white dark:bg-[#052417] rounded-2xl shadow-lg dark:shadow-emerald-500/10 hover:shadow-xl dark:hover:shadow-emerald-500/20 dark:border dark:border-emerald-500/30 transition-all duration-300 hover:-translate-y-2"
+            >
+              <div className="text-emerald-600 dark:text-emerald-400 mb-4 group-hover:scale-110 transition-transform duration-300">
+                {feature.icon}
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                {feature.title}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                {feature.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const MapSection: React.FC = () => {
+  return (
+    <section id="map" className="py-24 px-6">
+      <div className="max-w-7xl mx-auto">
+        <div
+          data-aos="fade-up"
+          className="relative h-96 bg-gradient-to-br from-emerald-50 to-green-50 dark:from-[#052417] dark:to-[#031A0F] rounded-3xl shadow-xl dark:shadow-emerald-500/10 dark:border dark:border-emerald-500/30 flex items-center justify-center overflow-hidden"
+        >
+            <MapView/>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const HowItWorks: React.FC = () => {
+  const steps = [
+    { title: "IoT Sensor", description: "Smart sensors detect fill levels" },
+    { title: "Application", description: "Data processed in real-time" },
+    { title: "Processed Data", description: "Optimized routes generated" }
+  ];
+
+  return (
+    <section id="how-it-works" className="py-24 px-6 bg-gray-50 dark:bg-transparent">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-5xl font-bold text-center text-gray-900 dark:text-white mb-16" data-aos="fade-up">
+          How It <span className="text-emerald-600 dark:text-emerald-400">Works</span>
+        </h2>
+
+        <div className="flex flex-col md:flex-row items-center justify-center gap-8">
+          {steps.map((step, idx) => (
+            <React.Fragment key={idx}>
+              <div
+                data-aos="fade-up"
+                data-aos-delay={idx * 150}
+                className="flex-1 max-w-xs p-8 bg-white dark:bg-[#052417] rounded-2xl shadow-lg dark:shadow-emerald-500/10 dark:border dark:border-emerald-500/30 text-center"
+              >
+                <div className="w-12 h-12 bg-emerald-600 dark:bg-emerald-500 text-white dark:text-gray-900 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-xl">
+                  {idx + 1}
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                  {step.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  {step.description}
+                </p>
+              </div>
+              {idx < steps.length - 1 && (
+                <ChevronRight className="hidden md:block w-8 h-8 text-emerald-600 dark:text-emerald-400" data-aos="fade-up" data-aos-delay={idx * 150 + 75} />
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const About: React.FC = () => {
+  const team = [
+    { name: "Development Team", role: "BSU - Malvar Students" },
+    { name: "Research & Design", role: "Computer Science" },
+    { name: "IoT Integration", role: "Engineering Team" }
+  ];
+
+  return (
+    <section id="about" className="py-24 px-6">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-5xl font-bold text-center text-gray-900 dark:text-white mb-16" data-aos="fade-up">
+          About <span className="text-emerald-600 dark:text-emerald-400">Us</span>
+        </h2>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {team.map((member, idx) => (
+            <div
+              key={idx}
+              data-aos="fade-up"
+              data-aos-delay={idx * 100}
+              className="p-8 bg-white dark:bg-[#052417] rounded-2xl shadow-lg dark:shadow-emerald-500/10 dark:border dark:border-emerald-500/30 text-center"
+            >
+              <Users className="w-12 h-12 text-emerald-600 dark:text-emerald-400 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                {member.name}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                {member.role}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-12 text-center" data-aos="fade-up">
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Developed by passionate students from Batangas State University - Malvar Campus,
+            dedicated to creating innovative solutions for efficient waste management in our community.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Contact: React.FC = () => {
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Form submitted:', formData);
+    alert('Message sent! Thank you for contacting us.');
+    setFormData({ name: '', email: '', message: '' });
+  };
+
+  return (
+    <section id="contact" className="py-24 px-6 bg-gray-50 dark:bg-transparent">
+      <div className="max-w-3xl mx-auto">
+        <h2 className="text-5xl font-bold text-center text-gray-900 dark:text-white mb-16" data-aos="fade-up">
+          Get In <span className="text-emerald-600 dark:text-emerald-400">Touch</span>
+        </h2>
+
+        <div data-aos="fade-up" className="space-y-6">
+          <div>
+            <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
+              Name
+            </label>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              className="w-full px-4 py-3 bg-white dark:bg-[#052417] border border-gray-300 dark:border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 text-gray-900 dark:text-white transition-all"
+              placeholder="Your name"
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
+              Email
+            </label>
+            <input
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              className="w-full px-4 py-3 bg-white dark:bg-[#052417] border border-gray-300 dark:border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 text-gray-900 dark:text-white transition-all"
+              placeholder="your.email@example.com"
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
+              Message
+            </label>
+            <textarea
+              rows={5}
+              value={formData.message}
+              onChange={(e) => setFormData({...formData, message: e.target.value})}
+              className="w-full px-4 py-3 bg-white dark:bg-[#052417] border border-gray-300 dark:border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 text-gray-900 dark:text-white transition-all resize-none"
+              placeholder="Your message..."
+            />
+          </div>
+
+          <button
+            onClick={handleSubmit}
+            className="w-full px-8 py-4 bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-700 dark:hover:bg-emerald-400 text-white rounded-lg font-semibold transition-all duration-300 shadow-lg dark:shadow-emerald-500/25"
+          >
+            Send Message
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Footer: React.FC = () => {
+  return (
+    <footer className="bg-gray-900 dark:bg-[#020F09] text-white py-12 px-6 border-t border-gray-800 dark:border-emerald-900/30">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center space-x-2">
+            <Truck className="w-8 h-8 text-emerald-400" />
+            <span className="text-2xl font-bold">GPS Trucking</span>
+          </div>
+
+          <div className="flex items-center space-x-6">
+            <a href="mailto:contact@gpstrucking.com" className="flex items-center space-x-2 hover:text-emerald-400 transition-colors">
+              <Mail className="w-5 h-5" />
+              <span>contact@gpstrucking.com</span>
+            </a>
+            <a href="tel:+639123456789" className="flex items-center space-x-2 hover:text-emerald-400 transition-colors">
+              <Phone className="w-5 h-5" />
+              <span>+63 912 345 6789</span>
+            </a>
+          </div>
+        </div>
+
+        <div className="mt-8 pt-8 border-t border-gray-800 dark:border-emerald-900/30 text-center text-gray-400">
+          <p>© 2025 GPS Trucking System. Developed by BSU - Malvar Students.</p>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default App;
+
+<style>{`
+  [data-aos] {
+    opacity: 0;
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  [data-aos].aos-animate {
+    opacity: 1;
+  }
+
+  [data-aos="fade-up"] {
+    transform: translateY(30px);
+  }
+
+  [data-aos="fade-up"].aos-animate {
+    transform: translateY(0);
+  }
+
+  [data-aos="fade-left"] {
+    transform: translateX(30px);
+  }
+
+  [data-aos="fade-left"].aos-animate {
+    transform: translateX(0);
+  }
+
+  [data-aos="zoom-in"] {
+    transform: scale(0.9);
+  }
+
+  [data-aos="zoom-in"].aos-animate {
+    transform: scale(1);
+  }
+
+  [data-aos][data-aos-delay="100"] {
+    transition-delay: 0.1s;
+  }
+
+  [data-aos][data-aos-delay="150"] {
+    transition-delay: 0.15s;
+  }
+
+  [data-aos][data-aos-delay="75"] {
+    transition-delay: 0.075s;
+  }
+
+  @keyframes ping {
+    75%, 100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+
+  .animate-ping {
+    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+`}</style>

@@ -46,21 +46,21 @@ export interface DropSite {
 }
 
 const sampleDropSites: DropSite[] = [
-    {
-        longitude: 121.10080361366272,
-        latitude: 14.08910798929304,
-        description: "sample dropsite one"
-    },
-    {
-        longitude: 121.10180139541626,
-        latitude: 14.089924866252261,
-        description: "sample dropsite two"
-    },
-    {
-        longitude: 121.09885096549988,
-        latitude: 14.08833793699894,
-        description: "sample dropsite three",
-    }
+    // {
+    //     longitude: 121.10080361366272,
+    //     latitude: 14.08910798929304,
+    //     description: "sample dropsite one"
+    // },
+    // {
+    //     longitude: 121.10180139541626,
+    //     latitude: 14.089924866252261,
+    //     description: "sample dropsite two"
+    // },
+    // {
+    //     longitude: 121.09885096549988,
+    //     latitude: 14.08833793699894,
+    //     description: "sample dropsite three",
+    // }
 ]
 
 async function getFallbackLocation() {
@@ -100,7 +100,7 @@ export default function MapView() {
     if (mapRef.current && position) {
       mapRef.current.flyTo({
         center: [position.longitude, position.latitude],
-        zoom: 15,
+        zoom: 1,
         speed: 1.2,
       });
     }
