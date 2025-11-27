@@ -51,6 +51,19 @@ export default function Register() {
                                         role === 'Barangay Official' && 'bg-green-500 dark:bg-green-700 border-2'
                                     )}>Barangay</div>
                                 </div>
+                        <Input
+                                    id="role"
+                                    type="text"
+                    className="hidden"
+                                    required
+                                    autoFocus
+                                    tabIndex={0}
+                                    autoComplete="role"
+                                    name="role"
+                                    value={role}
+                                    placeholder="Role"
+                                />
+
                                 <InputError
                                     message={errors.role}
                                     className="mt-2"
