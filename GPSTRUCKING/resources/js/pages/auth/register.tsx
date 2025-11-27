@@ -1,4 +1,5 @@
 import { login } from '@/routes';
+import { cn } from '@/lib/utils';
 import { store } from '@/routes/register';
 import { Form, Head } from '@inertiajs/react';
 
@@ -42,18 +43,14 @@ export default function Register() {
                                     toggleRole();
                                 }}
                             >
-                                <Label htmlFor="role">Role</Label>
-                                <Input
-                                    id="role"
-                                    type="text"
-                                    required
-                                    autoFocus
-                                    tabIndex={0}
-                                    autoComplete="role"
-                                    name="role"
-                                    value={role}
-                                    placeholder="Role"
-                                />
+                                <div className="flex font-bold select-none">
+                                    <div className={cn("border border-current/30 w-full p-2 text-center rounded-tl-xl rounded-bl-xl",
+                                        role === 'Resident' && 'bg-green-500 dark:bg-green-700 border-2'
+                                    )}>Resident</div>
+                                    <div className={cn("border border-current/30 w-full p-2 text-center border-l-0 rounded-tr-xl rounded-br-xl",
+                                        role === 'Barangay Official' && 'bg-green-500 dark:bg-green-700 border-2'
+                                    )}>Barangay</div>
+                                </div>
                                 <InputError
                                     message={errors.role}
                                     className="mt-2"
