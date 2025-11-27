@@ -23,6 +23,17 @@ use Inertia\Inertia;
  *
  */
 Route::middleware(['auth', 'ensure_role:barangay', 'verified',])->group(function () {
+    // for form
+    Route::get('/barangay/create-profile', [BarangayOfficialInformationController::class, 'displayProfileForm'])->name('barangay.barangay-profile-form');
+    Route::post('/barangay/create-profile', [BarangayOfficialInformationController::class, 'submitProfileForm'])->name('barangay.submit-barangay-profile-form');
+    Route::get('/barangay/profile-edit', [BarangayOfficialInformationController::class, 'profile'])->name('barangay.profile.edit');
+    Route::put('/barangay/update-contact', [BarangayOfficialInformationController::class, 'updateContactInfo'])->name('barangay.contact.update');
+    Route::put('/barangay/update-assignment', [BarangayOfficialInformationController::class, 'updateAssignment'])->name('barangay.assignment.update');
+    Route::put('/barangay/update-barangay-official-id', [BarangayOfficialInformationController::class, 'updateOfficialId'])->name('barangay.official-id.update');
+    Route::put('/barangay/update-valid-id', [BarangayOfficialInformationController::class, 'updateValidID'])->name('barangay.valid-id.update');
+    // get routes information
+    Route::get('/barangay/get-routes', [RouteController::class, 'get'])->name('barangay.get.routes');
+    Route::get('barangay/get-pickup-sites', [DropSiteController::class, 'dropSites'])->name('barangay.get.dropsites');
     // must be verified first
     Route::middleware(['ensure_has_profile'])->group(function() {
         // for barangay dashboard
@@ -65,15 +76,4 @@ Route::middleware(['auth', 'ensure_role:barangay', 'verified',])->group(function
             Route::post('barangay/{report}/status', [DropSiteReportController::class, 'updateStatus'])->name('barangay.reports.updateStatus');
         });
     });
-    // for form
-    Route::get('/barangay/create-profile', [BarangayOfficialInformationController::class, 'displayProfileForm'])->name('barangay.barangay-profile-form');
-    Route::post('/barangay/create-profile', [BarangayOfficialInformationController::class, 'submitProfileForm'])->name('barangay.submit-barangay-profile-form');
-    Route::get('/barangay/profile-edit', [BarangayOfficialInformationController::class, 'profile'])->name('barangay.profile.edit');
-    Route::put('/barangay/update-contact', [BarangayOfficialInformationController::class, 'updateContactInfo'])->name('barangay.contact.update');
-    Route::put('/barangay/update-assignment', [BarangayOfficialInformationController::class, 'updateAssignment'])->name('barangay.assignment.update');
-    Route::put('/barangay/update-barangay-official-id', [BarangayOfficialInformationController::class, 'updateOfficialId'])->name('barangay.official-id.update');
-    Route::put('/barangay/update-valid-id', [BarangayOfficialInformationController::class, 'updateValidID'])->name('barangay.valid-id.update');
-    // get routes information
-    Route::get('/barangay/get-routes', [RouteController::class, 'get'])->name('barangay.get.routes');
-    Route::get('barangay/get-pickup-sites', [DropSiteController::class, 'dropSites'])->name('barangay.get.dropsites');
 });
