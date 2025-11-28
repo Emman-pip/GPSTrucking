@@ -1,9 +1,13 @@
 * TODO URGENT Order of Things
 - [X] add cascade delete
+- [ ] add notifications when garbage collection starts in a barangay,
+  - [ ] and when it ends, mark the *uncollected or pending* stuff as missed
+- [ ] fix the bug wher reports are not updated immediately
+- [ ] FIX UI to routes
+- [ ] FIX UI OF BARANGAY
+- [ ] FIX UI OF SUPERADMIN
 - [ ] get the notifications to the sidebar
-- [ ] add ratings
 - [ ] add toast as real time notifications
-
 
 * Barangay
 - [X] fix the app-header
@@ -68,18 +72,11 @@
   - [X] user growth
 
 * NOTES
-- [ ] additional
-  - [ ] should have a way to contact trucks
+- [X] additional
+  - [X] should have a way to contact trucks
     - [X] link to truck to:
       - [X] share location
       - [X] update dropsite status
         - [X] collected
         - [X] to be collected
         - [X] missed/uncollected
-
-
-* TODO TO CREATE THIS:
-1. scheduled tasks
-   - when the route's schedule is finished and some of the markers are not
-     marked as collected, it will notify the barangay
-   - report of missed shit every collection
