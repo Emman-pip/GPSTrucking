@@ -1,7 +1,7 @@
 * TODO URGENT Order of Things
 - [X] add cascade delete
-- [ ] add notifications when garbage collection starts in a barangay,
-- [ ] and when it ends, mark the *uncollected or pending* stuff as missed
+- [X] add notifications when garbage collection starts in a barangay,
+- [X] and when it ends, mark the *uncollected or pending* stuff as missed
 - [X] fix the bug wher reports are not updated immediately
 - [ ] FIX UI to routes
 - [ ] FIX UI OF BARANGAY

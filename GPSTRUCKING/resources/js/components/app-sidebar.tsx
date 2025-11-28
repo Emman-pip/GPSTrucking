@@ -67,6 +67,7 @@ const BarangayMainNavItems: NavItem[] = [
         title: 'Chats',
         href: chat().url,
         icon: MessageSquare,
+        count: 10,
     },
     {
         title: 'Trucks and Drivers',
@@ -77,6 +78,7 @@ const BarangayMainNavItems: NavItem[] = [
         title: 'Notifications & Feedbacks',
         href: barangay.alerts().url,
         icon: Siren,
+
     },
     {
         title: 'Reports',
