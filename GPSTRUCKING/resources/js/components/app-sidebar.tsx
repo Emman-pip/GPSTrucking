@@ -16,95 +16,103 @@ import { BookOpen, Folder, LayoutGrid, Map, MessageSquare, Siren, TriangleAlert,
 import AppLogo from './app-logo';
 import barangay from '@/routes/barangay';
 import resident from '@/routes/resident';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { chat } from '@/routes';
+import count from '@/routes/count';
+import { toast } from 'sonner';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: resident.dashboard().url,
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Chats',
-        href: chat().url,
-        icon: MessageSquare,
-    },
-    {
-        title: 'Alerts',
-        href: resident.alerts().url,
-        icon: Siren,
-    }
-];
-
-
-
-const adminMainNavItems: NavItem[] = [
-    {
-        title: 'Admin Dashboard',
-        href: '#',
-        icon: LayoutGrid,
-    },
-];
-
-const BarangayMainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: barangay.dashboard.url(),
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Map',
-        href: barangay.map.url(),
-        icon: Map,
-    },
-    {
-        title: 'Profile',
-        href: barangay.profile.url(),
-        icon: User,
-    },
-    {
-        title: 'Chats',
-        href: chat().url,
-        icon: MessageSquare,
-        count: 10,
-    },
-    {
-        title: 'Trucks and Drivers',
-        href: barangay.drivers().url,
-        icon: Truck,
-    },
-    {
-        title: 'Notifications & Feedbacks',
-        href: barangay.alerts().url,
-        icon: Siren,
-
-    },
-    {
-        title: 'Reports',
-        href: barangay.reports.index().url,
-        icon: TriangleAlert,
-    }
-];
-
-
-const footerNavItems: NavItem[] = [
-    // {
-    //     title: 'Repository',
-    //     href: 'https://github.com/laravel/react-starter-kit',
-    //     icon: Folder,
-    // },
-    // {
-    //     title: 'Documentation',
-    //     href: 'https://laravel.com/docs/starter-kits#react',
-    //     icon: BookOpen,
-    // },
-];
 
 export function AppSidebar() {
     const { auth } = usePage<SharedData>().props;
 
     const userId = auth.user.id;
+
+    const [ chatCount, setChatCount ] = useState(0);
+    const [ alertsCount, setAlertsCount ] = useState(0);
+
+    const mainNavItems: NavItem[] = [
+        {
+            title: 'Dashboard',
+            href: resident.dashboard().url,
+            icon: LayoutGrid,
+        },
+        {
+            title: 'Chats',
+            href: chat().url,
+            icon: MessageSquare,
+            count: true
+        },
+        {
+            title: 'Alerts',
+            href: resident.alerts().url,
+            icon: Siren,
+        }
+    ];
+
+
+
+    const adminMainNavItems: NavItem[] = [
+        {
+            title: 'Admin Dashboard',
+            href: '#',
+            icon: LayoutGrid,
+        },
+    ];
+
+    const BarangayMainNavItems: NavItem[] = [
+        {
+            title: 'Dashboard',
+            href: barangay.dashboard.url(),
+            icon: LayoutGrid,
+        },
+        {
+            title: 'Map',
+            href: barangay.map.url(),
+            icon: Map,
+        },
+        {
+            title: 'Profile',
+            href: barangay.profile.url(),
+            icon: User,
+        },
+        {
+            title: 'Chats',
+            href: chat().url,
+            icon: MessageSquare,
+            count: true,
+        },
+        {
+            title: 'Trucks and Drivers',
+            href: barangay.drivers().url,
+            icon: Truck,
+        },
+        {
+            title: 'Notifications & Alerts',
+            href: barangay.alerts().url,
+            icon: Siren,
+
+        },
+        {
+            title: 'Reports',
+            href: barangay.reports.index().url,
+            icon: TriangleAlert,
+        }
+    ];
+
+
+    const footerNavItems: NavItem[] = [
+        // {
+        //     title: 'Repository',
+        //     href: 'https://github.com/laravel/react-starter-kit',
+        //     icon: Folder,
+        // },
+        // {
+        //     title: 'Documentation',
+        //     href: 'https://laravel.com/docs/starter-kits#react',
+        //     icon: BookOpen,
+        // },
+    ];
+
     useEffect(() => {
         if (!userId) return;
 
@@ -113,7 +121,7 @@ export function AppSidebar() {
         channel.notification((notification) => {
             console.log(notification);
             router.reload();
-            // You can update local state or show a toast here
+            toast("new notification");
         });
 
         return () => {
