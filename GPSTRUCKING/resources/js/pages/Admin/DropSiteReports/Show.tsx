@@ -1,6 +1,6 @@
 import React from 'react';
 import AppLayout from '@/layouts/barangay/app-layout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import moment from 'moment';
 import barangay from '@/routes/barangay';
 
@@ -42,6 +42,7 @@ export default function Show({ report }: Props) {
       preserveState: true,
       onSuccess: () => {
         // Could show toast; for now rely on server flash
+        router.get("#");
       },
     });
   }
