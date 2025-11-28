@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/barangay/app-layout';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import moment from 'moment';
 import barangay from '@/routes/barangay';
+import { toast } from 'sonner';
 
 type Report = {
   id: string;
@@ -40,10 +41,11 @@ export default function Show({ report }: Props) {
     e.preventDefault();
     form.post(barangay.reports.updateStatus(report.id).url, {
       preserveState: true,
-      onSuccess: () => {
-        // Could show toast; for now rely on server flash
-        router.get("#");
-      },
+        onSuccess: () => {
+            // Could show toast; for now rely on server flash
+            router.get("#");
+            toast.info("Report status updated")
+        },
     });
   }
 
