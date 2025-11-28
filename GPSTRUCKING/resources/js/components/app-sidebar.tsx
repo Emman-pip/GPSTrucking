@@ -17,9 +17,10 @@ import AppLogo from './app-logo';
 import barangay from '@/routes/barangay';
 import resident from '@/routes/resident';
 import { useEffect, useState } from 'react';
-import { chat } from '@/routes';
-import count from '@/routes/count';
+import { chat, individualChat } from '@/routes';
+import count, { chats } from '@/routes/count';
 import { toast } from 'sonner';
+import { Button } from '@headlessui/react';
 
 
 export function AppSidebar() {
@@ -119,9 +120,16 @@ export function AppSidebar() {
         const channel = window.Echo.private(`App.Models.User.${userId}`);
 
         channel.notification((notification) => {
-            console.log(notification);
             router.reload();
-            toast("new notification");
+            if (notification.type.toLowerCase().includes('message')) {
+                toast(notification?.sender_name + " has sent a message", {
+                    description: notification?.message.substr(0, 10 < notification.message.length ?  10: notification.message.length),
+                    action: {
+                        label: "view",
+                        onClick: () => router.get(individualChat(notification.sender_id).url)
+                    },
+                })
+            }
         });
 
         return () => {
