@@ -51,6 +51,8 @@ import { Card, CardContent, CardDescription } from "../ui/card";
 import NearbyTrash from "./NearbyTrash";
 import { Accordion, AccordionContent } from "../ui/accordion";
 import { DropSiteReportModal } from "../DropSiteReportModal";
+import { toast } from "sonner";
+import collection from "@/routes/collection";
 
 export interface PickUpSite {
     id?: number;
@@ -264,6 +266,22 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         }
     },[isCollectingGarbage, driverMarker]);
 
+    function startCollection() {
+        router.post(collection.start(user.barangay_official_info?.barangay_id ? user.barangay_official_info.barangay_id : user.residency.barangay_id).url, {},
+            {
+                onSuccess: () => toast.warning('Garbage collection has started'),
+                onError: () => toast.warning('Cannot start garbage collection'),
+            });
+    }
+
+    function endCollection() {
+            router.post(collection.end(user.barangay_official_info?.barangay_id ? user.barangay_official_info.barangay_id : user.residency.barangay_id).url, {},
+                       {
+                onSuccess: () => toast.warning('Garbage collection has ended'),
+                onError: () => toast.warning('Cannot end garbage collection'),
+            });
+    }
+
     const [watchID, setWatchID] = useState<number|null>(null);
 
     function recenter(){
@@ -307,6 +325,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         channel.listen(".gps.updated", (data) => {
             console.log(data)
             let flag = false;
+            refresh();
             let index = 0;
             for (let i = 0; i < trucks.length; i++) {
                 const truck = trucks[i];
@@ -441,6 +460,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                 "cursor-pointer p-2 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-green-500 to-green-600 text-white rounded-full ring-2 ring-green-200 dark:ring-green-800",
                                 curretStatus === 'pending' && "from-red-500 to-red-600 ring-2 ring-red-200 dark:ring-red-800",
                                 curretStatus === 'uncollected' && "from-yellow-500 to-yellow-600 ring-2 ring-yellow-200 dark:ring-yellow-800",
+                                curretStatus === 'missed' && "from-yellow-700 to-yellow-900 ring-2 ring-yellow-400 dark:ring-yellow-800",
                             )
                             } />
                     </DrawerTrigger>
@@ -616,10 +636,14 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         isDriver == true && <section className="p-2">
             {
                 isCollectingGarbage == false ?
-                        <Button onClick={() => setIsCollectingGarbage(true)}><Trash2Icon/>Start Garbage Collection</Button>
+                    <Button onClick={() => {
+                        setIsCollectingGarbage(true);
+                        startCollection();
+                    }}><Trash2Icon/>Start Garbage Collection</Button>
                 :
                 <Button  onClick={() => {
                     setIsCollectingGarbage(false);
+                    endCollection();
                     untrackMe();
                     setDriverMarker([0,0]);
                 }} variant="destructive"><Trash2Icon/>End Garbage Collection</Button>
@@ -651,7 +675,9 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
 
                                                     <div className={cn("cursor-pointer p-1 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-green-500 to-green-600 text-white text-xs rounded-full ring-2 ring-green-200 dark:ring-green-800",
                                                         curretStatus === 'pending' && "from-red-500 to-red-600 ring-2 ring-red-200 dark:ring-red-800",
-                                                        curretStatus === 'uncollected' && "from-yellow-500 to-yellow-600 ring-2 ring-yellow-200 dark:ring-yellow-800")}>
+                                                        curretStatus === 'uncollected' && "from-yellow-500 to-yellow-600 ring-2 ring-yellow-200 dark:ring-yellow-800",
+                                                        curretStatus === 'missed' && "from-yellow-700 to-yellow-900 ring-2 ring-yellow-400 dark:ring-yellow-800",
+                                                    )}>
                                                         <MapPin />
                                                     </div>
                                                     <div>{site.bin_name}</div>
@@ -659,7 +685,9 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                                 <div>
                                                     <div className={cn("cursor-pointer p-1 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-green-500 to-green-600 text-white text-xs rounded-full ring-2 ring-green-200 dark:ring-green-800",
                                                         curretStatus === 'pending' && "from-red-500 to-red-600 ring-2 ring-red-200 dark:ring-red-800",
-                                                        curretStatus === 'uncollected' && "from-yellow-500 to-yellow-600 ring-2 ring-yellow-200 dark:ring-yellow-800")}>
+                                                        curretStatus === 'uncollected' && "from-yellow-500 to-yellow-600 ring-2 ring-yellow-200 dark:ring-yellow-800",
+                                                        curretStatus === 'missed' && "from-yellow-700 to-yellow-900 ring-2 ring-yellow-400 dark:ring-yellow-800",
+                                                                      )}>
                                                         {curretStatus}
                                                     </div>
                                                     <div>{formatDistance(site.distance)}</div>

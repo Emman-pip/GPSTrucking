@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Events\TruckLocationUpdated;
 use App\Models\Barangay;
+use App\Models\BinStatus;
+use App\Models\DropSite;
 use App\Models\TruckAndDriver;
+use App\Models\User;
+use App\Notifications\Alert;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 
@@ -81,5 +86,62 @@ class DriverController extends Controller
 
     public function delete(Request $request, $id) {
         TruckAndDriver::destroy($id);
+    }
+
+    public function  notifyStart($id) {
+        // notify all residents and barangay
+        $barangayUsers = User::all();
+        $arr = [];
+        $id = (int)$id;
+        foreach ($barangayUsers as $user) {
+            if (($user?->barangayOfficialInfo && $user?->barangayOfficialInfo->barangay_id === $id) ||
+                ($user?->residency && $user?->residency->barangay_id === $id)
+            ) {
+                array_push($arr, $user);
+            }
+        }
+        Notification::send($barangayUsers, new Alert('Garbage collection in your barangay has started.',
+                                                     'The garbage collection team in your barangay has started collecting. Please ensure you follow the guidelines the barangay has provided you!',
+                                                     ['info']
+        ));
+    }
+
+    public function notifyEnd($id)
+    {
+        // notify all residents and barangay
+        $dropsites = DropSite::where('barangay_id', $id)->get();
+        foreach ($dropsites as $dropsite) {
+            $tmp = $dropsite?->status?->first();
+            if ($tmp?->week_number === now()->weekOfYear && $tmp?->year === now()->year) {
+                if ($dropsite?->status->first()->status === 'collected')
+                    continue;
+            }
+            BinStatus::updateOrCreate(
+                [
+                    'bin_id' => $dropsite->id,
+                    'week_number' => now()->weekOfYear,
+                    'year' => now()->year,
+                ],
+                [
+                    'status' => 'missed'
+                ]
+            );
+        }
+        $barangayUsers = User::all();
+        $arr = [];
+        $id = (int)$id;
+        foreach ($barangayUsers as $user) {
+            if (($user?->barangayOfficialInfo && $user?->barangayOfficialInfo->barangay_id === $id) ||
+                ($user?->residency && $user?->residency->barangay_id === $id)
+            ) {
+                array_push($arr, $user);
+            }
+        }
+        Notification::send($barangayUsers, new Alert(
+            'Garbage collection in your barangay has ended.',
+            'The garbage collection team in your barangay has finished collecting!',
+            ['info']
+        ));
+        // update the bins that are uncollected, pending, or does not have a status yet
     }
 }

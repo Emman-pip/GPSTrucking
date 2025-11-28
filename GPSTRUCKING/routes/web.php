@@ -73,3 +73,9 @@ Route::post('/update-location', [DriverController::class, 'postGPS'])
 
 Route::post('/drop-site-reports', [DropSiteReportController::class, 'store'])
     ->name('drop-site-reports.store');
+
+Route::post('/start-collection-{id}', [DriverController::class, 'notifyStart'])
+    ->name('collection.start') ;
+
+Route::post('/end-collection-{id}', [DriverController::class, 'notifyEnd'])
+    ->name('collection.end') ;
