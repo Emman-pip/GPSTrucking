@@ -20,7 +20,9 @@ import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Barangay } from './profileForm';
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card';
 import { Calendar, CirclePlus, CloudAlert, LucideChartArea, PersonStanding, MessageCircle, MessageSquare, LucideUsers2} from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { ChartAreaInteractive } from '@/components/barangay/AreaChart';
+import get from '@/routes/get';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -39,7 +41,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 //       location
 //    new routes
 //
-export default function Dashboard({ barangay: barangayData }: {
+export default function Dashboard({ barangay: barangayData, chartData }: {
     barangay: Barangay
 }) {
     const isVerified = usePage().props.auth.user.isVerified;
@@ -107,6 +109,9 @@ export default function Dashboard({ barangay: barangayData }: {
                 <section className="h-120">
                         <MapBarangay barangayCoordinates={barangayData.coordinates} />
                 </section>
+        <section>
+        <ChartAreaInteractive chartData={chartData}/>
+        </section>
             </main>
         </AppLayout>
     </>);

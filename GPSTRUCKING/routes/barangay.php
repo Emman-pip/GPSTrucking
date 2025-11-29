@@ -74,6 +74,9 @@ Route::middleware(['auth', 'ensure_role:barangay', 'verified',])->group(function
             Route::get('/barangay/reports', [DropSiteReportController::class, 'index'])->name('barangay.reports.index');
             Route::get('barangay/{report}', [DropSiteReportController::class, 'show'])->name('barangay.reports.show');
             Route::post('barangay/{report}/status', [DropSiteReportController::class, 'updateStatus'])->name('barangay.reports.updateStatus');
+
+            Route::get('/get-resident-count-{barangay_id}', [ChartController::class, 'residentsTrend'])
+                ->name('get.residentCount');
         });
     });
 });

@@ -7,6 +7,9 @@
 - [ ] FIX UI OF BARANGAY
   - [ ] dashboard
     - [ ] add graph of number of residents (cumulative)
+        - [ ] 10232  # create a controller in which the data will come from
+        - [ ] 10233  # link controller to the routes (GET)
+        - [ ] 10234  # fetch that from the dashboard
     - [ ] add logs
     - [ ] add average rating
     - [ ] resident lists

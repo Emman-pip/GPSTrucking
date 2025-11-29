@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BinStatusController;
+use App\Http\Controllers\ChartController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\DropSiteController;
 use App\Http\Controllers\DropSiteReportController;
@@ -87,3 +88,5 @@ Route::post('/start-collection-{id}', [DriverController::class, 'notifyStart'])
 
 Route::post('/end-collection-{id}', [DriverController::class, 'notifyEnd'])
     ->name('collection.end') ;
+
+Route::get('/get-barangay-{barangay_id}', [ChartController::class, 'residentsTrend']);
