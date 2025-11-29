@@ -73,10 +73,17 @@ class UserResource extends Resource
                             TextEntry::make('role.name')
                                 ->label('Role')
                                 ->inlineLabel(),
+                            TextEntry::make('created_at')
+                                ->label('Created at')
+                                ->inlineLabel(),
                         ])
                         ->columnSpanFull(),
                     Section::make('Details')
                         ->schema([
+                            TextEntry::make('barangayOfficialInfo.barangay.name')
+                                ->label('Barangay')
+                                ->icon(Heroicon::BuildingOffice)
+                                ->inlineLabel(),
                             TextEntry::make('barangayOfficialInfo.proof_of_identity')
                                 ->label('Proof of Identity')
                                 ->icon(Heroicon::OutlinedEye)
@@ -94,6 +101,9 @@ class UserResource extends Resource
                             TextEntry::make('barangayOfficialInfo.contact_number')
                                 ->label('Contact number')
                                 ->icon(Heroicon::DevicePhoneMobile)
+                                ->inlineLabel(),
+                            TextEntry::make('barangayOfficialInfo.updated_at')
+                                ->label('Last updated at')
                                 ->inlineLabel(),
                         ])
                         ->visible(fn($record) => ! is_null($record->barangayOfficialInfo))
@@ -128,12 +138,18 @@ class UserResource extends Resource
                     TextEntry::make('role.name')
                         ->label('Role')
                         ->inlineLabel(),
+                    TextEntry::make('created_at')
+                        ->label('Date created')
+                        ->inlineLabel(),
                 ])
                 ->columnSpanFull(),
             Section::make("Residency Information")
                 ->schema([
-                    TextEntry::make('residency.barangayID.name')
+                    TextEntry::make('residency.barangay.name')
                         ->label('Barangay')
+                        ->inlineLabel(),
+                    TextEntry::make('residency.updated_at')
+                        ->label('Last updated at')
                         ->inlineLabel(),
                 ])
                 ->visible(fn($record) => ! is_null($record->residency))

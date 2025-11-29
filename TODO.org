@@ -4,13 +4,13 @@
 - [X] and when it ends, mark the *uncollected or pending* stuff as missed
 - [X] fix the bug wher reports are not updated immediately
 - [X] FIX UI to routes
-- [ ] FIX UI OF BARANGAY
-  - [ ] dashboard
-    - [ ] add graph of number of residents (cumulative)
-        - [ ] 10232  # create a controller in which the data will come from
-        - [ ] 10233  # link controller to the routes (GET)
-        - [ ] 10234  # fetch that from the dashboard
-    - [ ] add logs
+- [-] FIX UI OF BARANGAY
+  - [-] dashboard
+    - [X] add graph of number of residents (cumulative)
+      - [X] 10232  # create a controller in which the data will come from
+      - [X] 10233  # link controller to the routes (GET)
+        - [X] 10234  # fetch that from the dashboard
+    - [ ] add logs (optional)
     - [ ] add average rating
     - [ ] resident lists
 - [ ] FIX UI OF SUPERADMIN
