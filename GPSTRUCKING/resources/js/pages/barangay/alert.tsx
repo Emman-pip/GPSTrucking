@@ -70,7 +70,7 @@ function MakeAlertForm() {
                 </Button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-[450px] bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
+            <DialogContent className="sm:max-w-[450px] bg-white dark:bg-gray-900/30 border-gray-200 dark:border-gray-700/30">
                 <form onSubmit={handleSubmit}>
                     <DialogHeader>
                         <DialogTitle className="text-green-700 dark:text-green-300">
@@ -90,7 +90,7 @@ function MakeAlertForm() {
                                 defaultValue={data.title}
                                 onChange={(e) => setData('title', e.target.value)}
                                 placeholder="A descriptive title..."
-                                className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700"
+                                className="bg-gray-50 dark:bg-gray-800/30 border-gray-300 dark:border-gray-700"
                             />
                         </div>
 
@@ -102,7 +102,7 @@ function MakeAlertForm() {
                                 defaultValue={data.message}
                                 onChange={(e) => setData('message', e.target.value)}
                                 placeholder="Describe the alert..."
-                                className="bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-700"
+                                className="bg-gray-50 dark:bg-gray-800/30 border-gray-300 dark:border-gray-700"
                             />
                         </div>
 
@@ -166,7 +166,7 @@ export default function Alerts({ alerts, sentAlerts, allBarangayAlerts }) {
                 {/* Wrapper card */}
                 <div className="
                     p-4 rounded-2xl shadow-sm
-                    bg-white dark:bg-gray-900
+                    bg-white dark:bg-gray-900/30
                     border border-gray-200 dark:border-gray-700
                     flex flex-col gap-4
                 ">
@@ -188,8 +188,8 @@ export default function Alerts({ alerts, sentAlerts, allBarangayAlerts }) {
                                         key={i}
                                         className={cn(
                                             "relative flex items-start gap-4 p-4 rounded-xl shadow-sm",
-                                            "bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700",
-                                            "hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                                            "bg-gray-50 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700",
+                                            "hover:bg-gray-100/30 dark:hover:bg-gray-700/30 transition"
                                         )}
                                     >
                                         {/* Icon Bubble */}
@@ -235,7 +235,7 @@ export default function Alerts({ alerts, sentAlerts, allBarangayAlerts }) {
                         {/* SENT NOTIFICATIONS */}
                         {/* -------------------------------------------------- */}
 
-                        <AccordionItem value="item-2" className="border-b border-gray-200 dark:border-gray-700">
+                        <AccordionItem value="item-2" className="border-b border-gray-200 dark:border-gray-700" >
                             <AccordionTrigger className="text-lg font-semibold">
                                 Sent Notifications
                             </AccordionTrigger>
@@ -246,8 +246,9 @@ export default function Alerts({ alerts, sentAlerts, allBarangayAlerts }) {
                                         key={i}
                                         className="
                                             flex items-start gap-4 p-4 rounded-xl
-                                            bg-gray-50 dark:bg-gray-800
+                                            bg-gray-50 dark:bg-gray-800/30
                                             border border-gray-200 dark:border-gray-700
+                                            hover:bg-gray-100/30 dark:hover:bg-gray-700/30 transition
                                         "
                                     >
                                         <div className="
@@ -288,8 +289,9 @@ export default function Alerts({ alerts, sentAlerts, allBarangayAlerts }) {
                                         key={i}
                                         className="
                                             flex items-start gap-4 p-4 rounded-xl
-                                            bg-gray-50 dark:bg-gray-800
+                                            bg-gray-50 dark:bg-gray-800/30
                                             border border-gray-200 dark:border-gray-700
+                                            hover:bg-gray-100/30 dark:hover:bg-gray-700/30 transition
                                         "
                                     >
                                         <div className="
