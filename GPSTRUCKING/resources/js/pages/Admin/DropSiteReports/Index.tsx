@@ -5,6 +5,7 @@ import moment from 'moment';
 import barangay from '@/routes/barangay';
 import appLayout from '@/layouts/barangay/app-layout';
 import AppLayout from '@/layouts/barangay/app-layout';
+import { Button } from '@/components/ui/button';
 
 type ReportItem = {
   id: string;
@@ -110,12 +111,11 @@ export default function Index({ reports, filters }: Props) {
         </div>
 
         <div className="ml-auto">
-          <button
+          <Button
             onClick={applyFilters}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
           >
             Apply
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -158,7 +158,7 @@ export default function Index({ reports, filters }: Props) {
                     href={barangay.reports.show(r.id).url}
                     className="text-blue-600 underline text-sm"
                   >
-                    View
+                    <Button variant={"link"}>View</Button>
                   </Link>
                 </td>
               </tr>
@@ -198,5 +198,5 @@ function StatusBadge({ status }: { status: string }) {
     rejected: 'bg-red-100 text-red-800',
   };
   const cls = map[status] ?? '';
-  return <span className={`px-2 py-1 rounded text-xs font-medium ${cls}`}>{status.replace('_', ' ')}</span>;
+  return <div className={`px-2 py-1 rounded text-center text-xs font-medium ${cls}`}>{status.replace('_', ' ')}</div>;
 }

@@ -4,6 +4,9 @@ import { Head, Link, router, useForm } from '@inertiajs/react';
 import moment from 'moment';
 import barangay from '@/routes/barangay';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { chat, individualChat } from '@/routes';
+import { BreadcrumbItem } from '@/types';
 
 type Report = {
   id: string;
@@ -54,10 +57,13 @@ export default function Show({ report }: Props) {
       <Head title={`Report ${report.id}`} />
 
           <main className="p-2">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Report Details</h1>
-          <Link href={barangay.reports.index().url} className="text-sm text-blue-600 underline">Back to list</Link>
-      </div>
+              <div className="mb-6 flex items-center justify-between">
+                  <h1 className="text-2xl font-semibold">Report Details</h1>
+          <div>
+          <Link href={individualChat(report?.user?.id).url}><Button variant="outline" >Message</Button></Link>
+                  <Link href={barangay.reports.index().url}><Button variant="outline" >Back to list</Button></Link>
+          </div>
+              </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2 p-4 rounded shadow-sm">
@@ -103,13 +109,12 @@ export default function Show({ report }: Props) {
             </div>
 
             <div className="flex gap-2">
-              <button
+              <Button
                 type="submit"
                 disabled={form.processing}
-                className="bg-green-600 text-white px-4 py-2 rounded"
               >
                 Update Status
-              </button>
+              </Button>
 
           <Link href={barangay.reports.index().url} className="px-4 py-2 border rounded text-sm">Cancel</Link>
             </div>
