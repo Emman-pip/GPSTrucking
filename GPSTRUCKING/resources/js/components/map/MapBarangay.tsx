@@ -466,6 +466,9 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                         setDropSiteToView(dropsite);
                         setStatus(curretStatus);
                     }}>
+
+            <Tooltip>
+                <TooltipTrigger>
                         <MapPin
                             size={30}
                             className={cn(
@@ -475,6 +478,11 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                 curretStatus === 'missed' && "from-yellow-700 to-yellow-900 ring-2 ring-yellow-400 dark:ring-yellow-800",
                             )
                             } />
+                </TooltipTrigger>
+                <TooltipContent>
+                    <div className="capitalize">{dropsite.bin_name}</div>
+                </TooltipContent>
+            </Tooltip>
                     </DrawerTrigger>
                     <DrawerContent>
                         <DrawerHeader className="overflow-y-scroll" style={{ scrollbarWidth: 'none' }}>
