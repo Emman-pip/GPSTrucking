@@ -28,6 +28,7 @@ import { Button } from "@/components/ui/button";
 import { User, Mail, Phone, MapPin, FileText, CreditCard } from 'lucide-react';
 import profile from "@/routes/profile";
 import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -67,13 +68,21 @@ export function EditBarangayAssignment({ barangay: barangayName, barangays } : {
         }
         e.preventDefault();
         put(barangay.assignment.update().url, {
-            preserveScroll: true
+            preserveScroll: true,
+            onSuccess: () => {
+                toast.info("Updated barangay assignment", {
+                    description: "Your account may need to be verified before being used again.",
+                })
+                setFormOpen(false)
+            }
         });
     }
 
     const [open, setOpen] = useState(false);
+    const [formOpen, setFormOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog onOpenChange={setFormOpen} open={formOpen}>
+
         <DialogTrigger asChild>
           <Edit className="cursor-pointer"/>
         </DialogTrigger>
@@ -142,6 +151,7 @@ export function EditContactInformation({ user } : {user : User}) {
         'email': user.barangay_official_info.email
     });
 
+    const [formOpen, setFormOpen] = useState(false);
 
     function submitForm(e: FormEvent) {
         if (!e.target.checkValidity()){
@@ -150,12 +160,16 @@ export function EditContactInformation({ user } : {user : User}) {
         e.preventDefault();
         put(barangay.contact.update().url,
            {
-            preserveScroll: true
+            preserveScroll: true,
+            onSuccess: () => {
+                toast.info("Updated contact information", {})
+                setFormOpen(false)
+            }
         });
     }
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={setFormOpen} open={formOpen}>
         <DialogTrigger asChild>
           <Edit className="cursor-pointer"/>
         </DialogTrigger>
@@ -209,9 +223,16 @@ export function EditFiles({ user } : {user : User}) {
         e.preventDefault();
         post(barangay.validId.update().url,
            {
-               preserveScroll: true
+               preserveScroll: true,
+            onSuccess: () => {
+                toast.info("Updated Valid ID", {
+                    description: "Your account may need to be verified before being used again.",
+                })
+                setFormOpen(false)
+            }
         });
     }
+    const [formOpen, setFormOpen] = useState(false);
 
     function submitBarangayID(e:FormEvent) {
         if (!e.target.checkValidity()){
@@ -219,12 +240,18 @@ export function EditFiles({ user } : {user : User}) {
         }
         e.preventDefault();
         post(barangay.officialId.update().url, {
-            preserveScroll: true
+            preserveScroll: true,
+            onSuccess: () => {
+                toast.info("Updated Barangay ID", {
+                    description: "Your account may need to be verified before being used again.",
+                })
+                setFormOpen(false)
+            }
         });
     }
 
   return (
-    <Dialog>
+      <Dialog onOpenChange={setFormOpen} open={formOpen}>
         <DialogTrigger asChild>
           <Edit className="cursor-pointer" />
         </DialogTrigger>
