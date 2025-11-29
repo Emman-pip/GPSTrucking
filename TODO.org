@@ -6,7 +6,8 @@
 - [ ] FIX UI to routes
 - [ ] FIX UI OF BARANGAY
 - [ ] FIX UI OF SUPERADMIN
-- [ ] FIX NAWAWLANG CHATS
+- [X] FIX NAWAWLANG CHATS
+- [ ] FIX BARANGAY PROFILE UPDATE THINGY
 - [X] get the notifications to the sidebar
 - [X] add toast as real time notifications
 
