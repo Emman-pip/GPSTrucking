@@ -5,7 +5,15 @@
 - [X] fix the bug wher reports are not updated immediately
 - [X] FIX UI to routes
 - [ ] FIX UI OF BARANGAY
+  - [ ] dashboard
+    - [ ] add graph of number of residents (cumulative)
+    - [ ] add logs
+    - [ ] add average rating
+    - [ ] resident lists
 - [ ] FIX UI OF SUPERADMIN
+  - [ ] make green
+  - [ ] add more charts
+  - [ ] add logs
 - [X] FIX NAWAWLANG CHATS
 - [X] FIX BARANGAY PROFILE UPDATE THINGY
 - [X] get the notifications to the sidebar
