@@ -118,7 +118,8 @@ export function EditRoute({
                     </div>
                 </DialogTitle>
                 <DialogDescription>
-                    <form onSubmit={handleSave}>
+                    { withControls &&
+                        <form onSubmit={handleSave}>
                         <div className="space-y-2">
                             {withControls ? <Combobox setValue={setData} value={data} /> : <Input type="text" value={data.day_of_the_week} disabled />}
                         </div>
@@ -128,6 +129,13 @@ export function EditRoute({
                         </div>
                         {withControls && <Button className="mt-2 w-full" type="submit">Save</Button>}
                     </form>
+                    }
+                    { !withControls && <div>
+                        <div>This route is scheduled every:</div>
+                        <div className="text-center font-bold p-2 text-lg">{data.day_of_the_week}
+                        <span>{" " + data.time}</span>
+                        </div>
+                        </div>}
                 </DialogDescription>
                     <DialogFooter className="pt-2">
                         <DialogClose>
