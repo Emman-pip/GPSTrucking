@@ -26,6 +26,7 @@ import { FormEvent, FormEventHandler } from 'react';
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 import { individualChat } from '@/routes';
 import { UserInfo } from '@/components/user-info';
+import { toast } from 'sonner';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -51,8 +52,8 @@ function CreateNewTruckForm() {
         e.preventDefault();
         post(barangay.drivers.post().url, {
             onSuccess: () => {
-                router.get('#');
                 setOpen(false);
+                toast.info(`Driver ${data.name} successfully created`)
             },
         }); // your route here
     };
@@ -77,7 +78,7 @@ function CreateNewTruckForm() {
                             <Input id="name" name="name" placeholder="driver name..." onChange={(e) => setData('name', e.target.value)} />
                             {errors.name && <span className='text-red-500'>{errors.name}</span> }
                         </div>
-                        <div className="grid gap-3">
+                        <div className="grid gap-3 pb-2">
                             <Label htmlFor="truckID">Truck ID<span className="text-red-500">*</span> </Label>
                             <Input id="truckID" name="truckID" placeholder="plate number, identification code, etc" onChange={(e) => setData('truckID', e.target.value)} required />
                             { errors.truckID && <span className='text-red-500'>{errors.truckID}</span> }
