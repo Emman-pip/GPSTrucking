@@ -187,7 +187,7 @@ export default function Chat({unread, read, chatToAdmin}: {
                                     );
                                 })
                         ) : (
-                            <Card className="p-4 rounded-xl shadow-sm bg-white dark:800/30 border border-gray-200 dark:border-gray-700">
+                            <Card className="p-4 rounded-xl shadow-sm dark:800/30 border border-gray-200 dark:border-gray-700">
                                 <CardTitle className="font-light text-gray-500 dark:text-gray-400">
                                     No messages. Yay!
                                 </CardTitle>
