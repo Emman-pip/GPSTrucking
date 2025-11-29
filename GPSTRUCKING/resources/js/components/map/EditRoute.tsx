@@ -114,7 +114,6 @@ export function EditRoute({
                 <DialogTitle >
                     <div className="flex justify-between items-center">
                         {withControls ? "Edit Route" : "Route Schedule"}
-                        {withControls && <Trash onClick={() => handleDelete()} className="text-red-300 cursor-pointer transition-all duration-100 hover:text-red-500"/>}
                     </div>
                 </DialogTitle>
                 <DialogDescription>
@@ -137,7 +136,8 @@ export function EditRoute({
                         </div>
                         </div>}
                 </DialogDescription>
-                    <DialogFooter className="pt-2">
+                    <DialogFooter className="pt-2 flex justify-between w-full items-center">
+                        {withControls && <Trash onClick={() => handleDelete()} className="text-red-300 cursor-pointer transition-all duration-100 hover:text-red-500"/>}
                         <DialogClose>
                             <Button variant="outline" className="">{withControls ? 'Cancel' : "Close"}</Button>
                         </DialogClose>
