@@ -138,7 +138,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         setIsSettingRoute(false);
         setOpenEdit(false);
         setOpenNewRoute(false);
-        setPoints([]);
+        setPoints([[]]);
         setOpenEditRoute(false);
 
         fetch(`${window.location.origin}${get.dropsites().url}?barangay_id=${user.barangay_official_info?.barangay_id ? user.barangay_official_info.barangay_id : user.residency.barangay_id}`)
@@ -228,11 +228,22 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
     }; //: null;
 
 
-    const handleRouteCreate = (e: MapMouseEvent) => {
+    const handleRouteCreate = (e: MapMouseEvent, isDroping=false) => {
         if (!isSettingRoute) return;
         const { lng, lat } = e.lngLat;
-        setPoints(prev => [...prev, [lng, lat]]);
+        if (isDroping) {
+            setPoints(prev => [...prev, [lng, lat]]);
+            return;
+        }
+        const tmp  = [...points];
+        tmp.pop();
+        tmp.push([lng, lat]);
+        setPoints(tmp);
     }
+
+    useEffect(()=>{
+        console.log("POINTS",points);
+    }, [points])
 
     // states for edit route
     const [ openEditRoute, setOpenEditRoute ] = useState<boolean>(false);
@@ -408,7 +419,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
             [121.20, 14.10]
         ]}
 
-        onMouseMove={() => {
+        onMouseMove={(e) => {
             const map = mapRef.current?.getMap();
             map.getCanvas().style.cursor = "grab";
             if (!withControls) return;
@@ -416,10 +427,11 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                 map.getCanvas().style.cursor = "";
                 return;
             }
+            handleRouteCreate(e);
             map.getCanvas().style.cursor = "url('/resources/MapPinAdd.svg') 8 8, pointer"
         }}
         onClick={(e: MapMouseEvent) => {
-            handleRouteCreate(e);
+            handleRouteCreate(e, true);
             if (isMarking && withControls) {
                 setIsMarking(false);
                 setNewPickUpSite({ coordinates: [e.lngLat.lng, e.lngLat.lat] })

@@ -167,6 +167,7 @@ export function CreateRoute({setOpen, open, refreshData, coordinatesArray, setCo
         'time': null,
         'coordinates': coordinatesArray,
     });
+
     useEffect(()=>{
         setData(prev => ({ ...prev, coordinates: coordinatesArray }));
     }, [coordinatesArray]);
@@ -176,6 +177,9 @@ export function CreateRoute({setOpen, open, refreshData, coordinatesArray, setCo
         }
 
         e.preventDefault();
+        const tmp = data.coordinates;
+        tmp.pop();
+        setData(prev => ({ ...prev, coordinates: tmp }));
         post(barangay.create.route().url, {
             onSuccess: () => {
                 refreshData();
