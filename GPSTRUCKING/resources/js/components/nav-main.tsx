@@ -63,19 +63,24 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                                 {item.icon &&
                                     <div className="relative">
                                         <item.icon />
-                                        { item.count === true
-                                            && (item.title.toLocaleLowerCase().includes('alert') || item.title.toLocaleLowerCase().includes('chat'))
-                                            && item.title.toLocaleLowerCase().includes('alert') ? alertsCount > 0 : chatCount > 0
-                                            && <div className={ cn("absolute -top-1 -right-1 text-[0.7rem] text-white rounded-2xl aspect-square size-4 justify-center flex items-center bg-red-500",
-                                                                  item.count !== true && "hidden") }>
-                                                {item.title.toLocaleLowerCase().includes('alert') &&
-                                                    alertsCount}
-                                                {item.title.toLocaleLowerCase().includes('chat') &&
-                                                    chatCount}
+                                        { item?.count === true
+                                            && (item.title.toLowerCase().includes('alert') || item.title.toLowerCase().includes('chat'))
+                                            // && (item.title.toLowerCase().includes('alert') || item.title.toLowerCase().includes('notif'))
+                                            // ? alertsCount > 0 : chatCount > 0
+                                            && <div className={cn(
+                                                alertsCount > 0 && (item.title.toLowerCase().includes('alert') || item.title.toLowerCase().includes('notif')) &&
+                                                "absolute -top-1 -left-1 z-100 text-[0.7rem] text-white rounded-2xl aspect-square size-4 justify-center flex items-center bg-red-500",
+                                                chatCount > 0 && item.title.toLowerCase().includes('chat') &&
+                                                "absolute -top-1 -left-1 z-100 text-[0.7rem] text-white rounded-2xl aspect-square size-4 justify-center flex items-center bg-red-500",
+                                                                  item.count != true && "hidden") }>
+                                            {alertsCount > 0 && (item.title.toLowerCase().includes('alert') || item.title.toLowerCase().includes('notif')) &&
+                                                <div>{alertsCount}</div>}
+                                                { chatCount > 0 && item.title.toLowerCase().includes('chat') &&
+                                                    <div>{ chatCount }</div>}
                                             </div>
                                         }
                                     </div>
-                                    }
+                                }
                                 <span>{item.title}</span>
                             </Link>
                         </SidebarMenuButton>

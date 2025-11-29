@@ -47,6 +47,7 @@ export function AppSidebar() {
             title: 'Alerts',
             href: resident.alerts().url,
             icon: Siren,
+            count: true
         }
     ];
 
@@ -91,6 +92,7 @@ export function AppSidebar() {
             title: 'Notifications & Alerts',
             href: barangay.alerts().url,
             icon: Siren,
+            count: true
 
         },
         {
@@ -121,12 +123,20 @@ export function AppSidebar() {
 
         channel.notification((notification) => {
             router.reload();
-            if (notification.type.toLowerCase().includes('message')) {
+            console.log("t", notification.type.toLowerCase().includes('message'));
+            if (notification.type.toLowerCase().includes('message') && !window.location.href.includes('chat')) {
                 toast(notification?.sender_name + " has sent a message", {
                     description: notification?.message.substr(0, 10 < notification.message.length ?  10: notification.message.length),
                     action: {
                         label: "view",
                         onClick: () => router.get(individualChat(notification.sender_id).url)
+                    },
+                })
+            } else if (notification.type.toLowerCase().includes('alert')) {
+                toast("You received an alert!", {
+                    action: {
+                        label: "view",
+                        onClick: () => router.get( auth?.user?.barangayOfficialInfo ? '/barangay/alerts' : '/alerts')
                     },
                 })
             }
