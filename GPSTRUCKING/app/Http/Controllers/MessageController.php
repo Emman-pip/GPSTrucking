@@ -35,7 +35,8 @@ class MessageController extends Controller
                         ->whereJsonContains('data->sender_id', (int) $id)
                         ->orWhere(function ($q) use ($id) {
                             $q->where('notifiable_id', $id)
-                                ->where('data->sender_id', Auth::user()->id);
+                                ->where('data->sender_id', Auth::user()->id)
+                                ->where('type', 'App\Notifications\Message');
                         })
                         ->get()
                         ->firstOrFail()->toArray();
@@ -63,11 +64,11 @@ class MessageController extends Controller
                     ->whereJsonContains('data->sender_id', (int) $id)
                     ->orWhere(function ($q) use ($id) {
                         $q->where('notifiable_id', $id)
-                            ->where('data->sender_id', Auth::user()->id);
+                            ->where('data->sender_id', Auth::user()->id)
+                            ->where('type', 'App\Notifications\Message');
                     })
                     ->get()
                     ->firstOrFail()->toArray();
-
                 if ($tmp['data']['sender_name'] === $user->name) {
                     $tmp['data']['real_sender_name'] = $tmp['data']['sender_name'];
                     $tmp['data']['sender_id'] = $tmp['notifiable_id'];
@@ -102,7 +103,8 @@ class MessageController extends Controller
             ->whereJsonContains('data->sender_id', (int) $id)
             ->orWhere(function ($q) use ($id) {
                 $q->where('notifiable_id', $id)
-                    ->where('data->sender_id', Auth::user()->id);
+                    ->where('data->sender_id', Auth::user()->id)
+                    ->where('type', 'App\Notifications\Message');
             })
             ->get()
             ->reverse();
