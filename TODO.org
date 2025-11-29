@@ -7,7 +7,7 @@
 - [ ] FIX UI OF BARANGAY
 - [ ] FIX UI OF SUPERADMIN
 - [X] FIX NAWAWLANG CHATS
-- [ ] FIX BARANGAY PROFILE UPDATE THINGY
+- [X] FIX BARANGAY PROFILE UPDATE THINGY
 - [X] get the notifications to the sidebar
 - [X] add toast as real time notifications
 
