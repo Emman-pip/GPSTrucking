@@ -6,8 +6,9 @@
 - [ ] FIX UI to routes
 - [ ] FIX UI OF BARANGAY
 - [ ] FIX UI OF SUPERADMIN
-- [ ] get the notifications to the sidebar
-- [ ] add toast as real time notifications
+- [ ] FIX NAWAWLANG CHATS
+- [X] get the notifications to the sidebar
+- [X] add toast as real time notifications
 
 * Barangay
 - [X] fix the app-header
