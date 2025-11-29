@@ -21,9 +21,10 @@ class isVerified
 
         if (!$user->isVerified && $role === 'barangay') {
             return redirect()->route('barangay.dashboard');
-        } else if (!$user->isVerified && $role === 'resident') {
-            return redirect()->route('resident.dashboard');
-        } 
+        }
+        // else if (!$user->isVerified && $role === 'resident') {
+        //     return redirect()->route('resident.dashboard');
+        // }
 
         return $next($request);
     }

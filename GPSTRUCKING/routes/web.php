@@ -42,9 +42,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return redirect('/admin');
     })->name('evaluate-user');
     // for chats
-    Route::get('/chats', [MessageController::class, 'view'])->name('chat');
-    Route::get('/chats-{id}', [MessageController::class, 'viewSingle'])->name('individualChat');
-    Route::post('/send-chat', [MessageController::class, 'send'])->name('sendChat');
+    Route::middleware(['ensure_verified'])->group(function () {
+        Route::get('/chats', [MessageController::class, 'view'])->name('chat');
+        Route::get('/chats-{id}', [MessageController::class, 'viewSingle'])->name('individualChat');
+        Route::post('/send-chat', [MessageController::class, 'send'])->name('sendChat');
+    });
     Route::get('/unread-chats', function() {
         return response()->json([ 'count' => Auth::user()->unreadNotifications()->where('type', 'App\Notifications\Message')->get()->count() ]);
     })->name('count.chats');
