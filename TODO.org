@@ -3,7 +3,7 @@
 - [X] add notifications when garbage collection starts in a barangay,
 - [X] and when it ends, mark the *uncollected or pending* stuff as missed
 - [X] fix the bug wher reports are not updated immediately
-- [ ] FIX UI to routes
+- [X] FIX UI to routes
 - [ ] FIX UI OF BARANGAY
 - [ ] FIX UI OF SUPERADMIN
 - [X] FIX NAWAWLANG CHATS

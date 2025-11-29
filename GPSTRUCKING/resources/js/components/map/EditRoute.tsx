@@ -107,6 +107,19 @@ export function EditRoute({
         })
     }
 
+function formatTime(time: string) {
+    if (!time?.split) return time;
+  const [hour, minute] = time?.split(":");
+  const date = new Date();
+  date.setHours(Number(hour), Number(minute));
+
+  return date.toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+
     return <Dialog onOpenChange={setOpen}
                    open={open}>
         <DialogContent>
@@ -132,7 +145,7 @@ export function EditRoute({
                     { !withControls && <div>
                         <div>This route is scheduled every:</div>
                         <div className="text-center font-bold p-2 text-lg">{data.day_of_the_week}
-                        <span>{" " + data.time}</span>
+                        <span>{" " + formatTime(data.time)}</span>
                         </div>
                         </div>}
                 </DialogDescription>
