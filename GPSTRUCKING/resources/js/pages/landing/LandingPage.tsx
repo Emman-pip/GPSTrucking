@@ -5,6 +5,7 @@ import { router } from '@inertiajs/react';
 import MapView from '@/components/map/MapView';
 import { useAppearance } from '@/hooks/use-appearance';
 import AppLogoIcon from '@/components/app-logo-icon';
+import MapBarangay from '@/components/map/MapBarangay';
 
 // Scroll animation hook
 const useScrollAnimation = () => {
@@ -115,7 +116,7 @@ const Hero: React.FC = () => {
 
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center relative z-10">
         <div data-aos="fade-up" className="space-y-6">
-          <h1 className="text-6xl md:text-7xl font-black text-gray-900 dark:text-white leading-tight">
+          <h1 className="text-6xl md:text-7xl font-black text-gray-900 dark:text-white leading-tight flex-wrap flex">
             GPS<span className="text-emerald-600 dark:text-emerald-400 dark:drop-shadow-[0_0_20px_rgba(16,185,129,0.6)]">Trucking</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
@@ -196,13 +197,19 @@ const Features: React.FC = () => {
 const MapSection: React.FC = () => {
   return (
     <section id="map" className="py-24 px-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="relative max-w-7xl mx-auto">
+          <h2 className="block md:absolute text-black/60 dark:text-white top-10 left-10 bg-none md:bg-emerald-200/30 backdrop-blur md:shadow md:shadow-xl py-3 px-2 rounded-xl z-2 select-none text-5xl font-bold text-center text-gray-900 dark:text-white mb-16">
+           <span className="text-emerald-600 dark:text-emerald-400">Real-time</span> Map
+          </h2>
         <div
           data-aos="fade-up"
-          className="relative h-96 bg-gradient-to-br from-emerald-50 to-green-50 dark:from-[#052417] dark:to-[#031A0F] rounded-3xl shadow-xl dark:shadow-emerald-500/10 dark:border dark:border-emerald-500/30 flex items-center justify-center overflow-hidden"
+          className="relative h-120 bg-gradient-to-br shadow shadow-xl from-emerald-50 to-green-50 dark:from-[#052417] dark:to-[#031A0F] rounded-3xl shadow-xl dark:shadow-emerald-500/10 dark:border dark:border-emerald-500/30 flex items-center justify-center overflow-hidden"
         >
-            <MapView/>
+          <MapBarangay barangayCoordinates={[121.1583,14.0449]} userData={{barangay_official_info: {barangay_id: 6 } }} zoom={15}/>
         </div>
+          <div className="weight-300 text-md text-center pt-2 md:mx-30 text-current/50">
+          Each site is displayed on an interactive map and includes detailed bin statuses, such as whether containers are empty, nearing capacity, or full, helping users choose the best location for disposal.
+          </div>
       </div>
     </section>
   );
