@@ -97,9 +97,17 @@ const Navbar: React.FC<{ darkMode: boolean; setDarkMode: (val: boolean) => void 
 
 const Hero: React.FC = () => {
   return (
-    <section id="hero" className="relative pt-32 pb-20 px-6 overflow-hidden">
+    <section id="hero" className="relative  pt-32 pb-20 px-6 overflow-hidden h-screen">
+      <video
+        className="absolute top-0 left-0 w-full h-full object-cover opacity-10  pointer-events-none"
+        src="/vid2.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+      />
       {/* Premium Neon Wave Background for Dark Mode */}
-      <div className="absolute inset-0 opacity-0 dark:opacity-100 transition-opacity duration-500">
+      <div className="absolute inset-0 opacity-100 transition-opacity duration-500">
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-emerald-500/10 via-emerald-600/5 to-transparent rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-green-600/10 via-emerald-500/5 to-transparent rounded-full blur-3xl" />
       </div>
@@ -120,24 +128,6 @@ const Hero: React.FC = () => {
 
         <div data-aos="fade-left" className="relative">
           <div className="relative z-10">
-            <svg viewBox="0 0 400 300" className="w-full h-auto">
-              {/* Truck Body */}
-              <rect x="120" y="140" width="200" height="80" fill="currentColor" className="text-emerald-600 dark:text-emerald-400" rx="8"/>
-              {/* Truck Cabin */}
-              <rect x="80" y="160" width="60" height="60" fill="currentColor" className="text-emerald-700 dark:text-emerald-500" rx="6"/>
-              {/* Windows */}
-              <rect x="90" y="170" width="20" height="20" fill="currentColor" className="text-white dark:text-emerald-200" rx="2"/>
-              <rect x="115" y="170" width="20" height="20" fill="currentColor" className="text-white dark:text-emerald-200" rx="2"/>
-              {/* Wheels */}
-              <circle cx="140" cy="230" r="20" fill="currentColor" className="text-gray-800 dark:text-gray-700"/>
-              <circle cx="280" cy="230" r="20" fill="currentColor" className="text-gray-800 dark:text-gray-700"/>
-              <circle cx="140" cy="230" r="10" fill="currentColor" className="text-gray-400"/>
-              <circle cx="280" cy="230" r="10" fill="currentColor" className="text-gray-400"/>
-              {/* GPS Signal */}
-              <circle cx="200" cy="100" r="4" fill="currentColor" className="text-emerald-500 dark:text-emerald-300 animate-ping"/>
-              <circle cx="200" cy="100" r="4" fill="currentColor" className="text-emerald-500 dark:text-emerald-300"/>
-              <path d="M200 100 L200 140" stroke="currentColor" strokeWidth="2" strokeDasharray="4" className="text-emerald-500 dark:text-emerald-300"/>
-            </svg>
           </div>
           <div className="absolute inset-0 bg-gradient-to-br from-emerald-100 dark:from-emerald-900/20 to-transparent rounded-3xl blur-2xl -z-10" />
         </div>
