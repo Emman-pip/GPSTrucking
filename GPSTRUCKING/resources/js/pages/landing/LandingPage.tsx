@@ -3,6 +3,7 @@ import { Moon, Sun, Truck, MapPin, Cpu, Clock, Users, Mail, Phone, ChevronRight 
 import { login } from '@/routes';
 import { router } from '@inertiajs/react';
 import MapView from '@/components/map/MapView';
+import { useAppearance } from '@/hooks/use-appearance';
 
 // Scroll animation hook
 const useScrollAnimation = () => {
@@ -26,15 +27,15 @@ const useScrollAnimation = () => {
 };
 
 const App: React.FC = () => {
-  const [darkMode, setDarkMode] = useState(false);
+    const [darkMode, setDarkMode] = useState(document.documentElement.classList.contains('dark'));
 
   useScrollAnimation();
-
+  const hook = useAppearance();
   useEffect(() => {
     if (darkMode) {
-      document.documentElement.classList.add('dark');
+        hook.updateAppearance('dark');
     } else {
-      document.documentElement.classList.remove('dark');
+        hook.updateAppearance('light');
     }
   }, [darkMode]);
 
