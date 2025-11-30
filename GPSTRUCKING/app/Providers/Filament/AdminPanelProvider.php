@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Jacobtims\FilamentLogger\FilamentLoggerPlugin;
 use App\Filament\Pages\Dashboard;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -54,6 +55,10 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->plugins([
+                FilamentLoggerPlugin::make(),
             ]);
+
     }
 }
