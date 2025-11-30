@@ -4,6 +4,7 @@ import { login } from '@/routes';
 import { router } from '@inertiajs/react';
 import MapView from '@/components/map/MapView';
 import { useAppearance } from '@/hooks/use-appearance';
+import AppLogoIcon from '@/components/app-logo-icon';
 
 // Scroll animation hook
 const useScrollAnimation = () => {
@@ -58,14 +59,14 @@ const App: React.FC = () => {
 };
 
 const Navbar: React.FC<{ darkMode: boolean; setDarkMode: (val: boolean) => void }> = ({ darkMode, setDarkMode }) => {
-  const links = ['Hero', 'Features', 'Map', 'How It Works', 'About', 'Contact'];
+  const links = ['Home', 'Features', 'Map', 'About', 'Contact'];
 
   return (
     <nav className="fixed top-0 w-full bg-white/95 dark:bg-[#031A0F]/95 backdrop-blur-sm z-50 border-b border-gray-200 dark:border-emerald-900/30 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <Truck className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
-          <span className="text-2xl font-bold text-gray-900 dark:text-white">GPS Trucking</span>
+          <img src='/images/LOGO2.svg' className="size-5 aspect-square h-10 w-10 " />
+          <span className="text-2xl font-bold text-gray-900 dark:text-white">GPSTrucking</span>
         </div>
 
         <div className="hidden md:flex items-center space-x-8">
@@ -97,9 +98,9 @@ const Navbar: React.FC<{ darkMode: boolean; setDarkMode: (val: boolean) => void 
 
 const Hero: React.FC = () => {
   return (
-    <section id="hero" className="relative  pt-32 pb-20 px-6 overflow-hidden h-screen">
+    <section id="hero" className="relative  pt-32 pb-20 px-6 overflow-hidden  bg-emerald-500/10 dark:bg-current/0 h-screen">
       <video
-        className="absolute top-0 left-0 w-full h-full object-cover opacity-10  pointer-events-none"
+        className="absolute top-0 left-0 w-full h-full object-cover opacity-20 dark:opacity-10  pointer-events-none"
         src="/vid2.mp4"
         autoPlay
         loop
@@ -115,7 +116,7 @@ const Hero: React.FC = () => {
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center relative z-10">
         <div data-aos="fade-up" className="space-y-6">
           <h1 className="text-6xl md:text-7xl font-black text-gray-900 dark:text-white leading-tight">
-            GPS <span className="text-emerald-600 dark:text-emerald-400 dark:drop-shadow-[0_0_20px_rgba(16,185,129,0.6)]">Trucking</span>
+            GPS<span className="text-emerald-600 dark:text-emerald-400 dark:drop-shadow-[0_0_20px_rgba(16,185,129,0.6)]">Trucking</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
             Efficient Waste Collection Through Smart GPS Technology

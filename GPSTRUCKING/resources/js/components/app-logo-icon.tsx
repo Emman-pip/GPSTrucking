@@ -1,8 +1,8 @@
 import { SVGAttributes } from 'react';
 
-export default function AppLogoIcon(props: SVGAttributes<SVGElement>) {
+export default function AppLogoIcon({ className } : { className?:string }) {
     return (
-        <img src='/images/LOGO2.svg' className=""/>
+        <img src='/images/LOGO2.svg' className={className ==true  ? className : "" }/>
         // <svg {...props} viewBox="0 0 40 42" xmlns="http://www.w3.org/2000/svg">
         //     <path
         //         fillRule="evenodd"
