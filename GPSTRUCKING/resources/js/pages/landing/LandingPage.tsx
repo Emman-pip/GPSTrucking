@@ -99,7 +99,7 @@ const Navbar: React.FC<{ darkMode: boolean; setDarkMode: (val: boolean) => void 
 
 const Hero: React.FC = () => {
   return (
-    <section id="hero" className="relative  pt-32 pb-20 px-6 overflow-hidden  bg-emerald-500/10 dark:bg-current/0 h-screen">
+    <section id="hero" className="relative  pt-32 pb-20 px-6 overflow-hidden  bg-emerald-500/10 dark:bg-current/0 h-150">
       <video
         className="absolute top-0 left-0 w-full h-full object-cover opacity-20 dark:opacity-10  pointer-events-none"
         src="/vid2.mp4"
