@@ -29,7 +29,11 @@ class UsersTable
                 //     ->sortable(),
                 ToggleColumn::make('isVerified')
                     ->label('Status')
-                    ->inline(false),
+                    ->inline(false)
+                    ->disabled(fn ($record) =>
+                               !($record?->barangayOfficialInfo || $record?->residency)
+                    )
+                ,
                 TextColumn::make('role.name')
                     ->label('Role')
                     ->sortable(),
@@ -61,8 +65,14 @@ class UsersTable
                     ])
             ])
             ->recordActions([
-                EditAction::make(),
-                ViewAction::make(),
+                EditAction::make()
+                    ->disabled(fn ($record) =>
+                               !($record?->barangayOfficialInfo || $record?->residency)
+                    )
+                ,
+                ViewAction::make()
+                    // ->disabled(fn ($record) => ! $record?->barangayOfficialInfo || ! $record?->residency)
+                    ,
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

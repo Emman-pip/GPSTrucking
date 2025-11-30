@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use Jacobtims\FilamentLogger\FilamentLoggerPlugin;
 use App\Filament\Pages\Dashboard;
+use App\Models\User;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -29,6 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->globalSearch(true)
             ->colors([
                 'primary' => 'oklch(0.6071 0.1330 150.2913)'
             ])
