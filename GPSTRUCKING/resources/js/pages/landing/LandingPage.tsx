@@ -6,6 +6,7 @@ import MapView from '@/components/map/MapView';
 import { useAppearance } from '@/hooks/use-appearance';
 import AppLogoIcon from '@/components/app-logo-icon';
 import MapBarangay from '@/components/map/MapBarangay';
+import { toast } from 'sonner';
 
 // Scroll animation hook
 const useScrollAnimation = () => {
@@ -217,9 +218,9 @@ const MapSection: React.FC = () => {
 
 const HowItWorks: React.FC = () => {
   const steps = [
-    { title: "IoT Sensor", description: "Smart sensors detect fill levels" },
-    { title: "Application", description: "Data processed in real-time" },
-    { title: "Processed Data", description: "Optimized routes generated" }
+    { title: "GPS Sensor on Garbage Trucks", description: "GPS sensors detect the movement of garbage trucks" },
+    { title: "Application", description: "Data is processed through an algorithm" },
+    { title: "Smart services", description: "Generated smart services" }
   ];
 
   return (
@@ -294,7 +295,7 @@ const About: React.FC = () => {
         <div className="mt-12 text-center" data-aos="fade-up">
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
             Developed by passionate students from Batangas State University - Malvar Campus,
-            dedicated to creating innovative solutions for efficient waste management in our community.
+            dedicated to creating innovative solutions for efficient waste management in their community.
           </p>
         </div>
       </div>
@@ -308,7 +309,9 @@ const Contact: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
-    alert('Message sent! Thank you for contacting us.');
+    toast.info("Message sent!", {
+        description: "Thank you for contacting us."
+    })
     setFormData({ name: '', email: '', message: '' });
   };
 
