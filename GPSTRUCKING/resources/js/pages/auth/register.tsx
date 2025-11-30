@@ -37,7 +37,7 @@ export default function Register() {
                     <>
                         <div className="grid gap-6">
 
-                            <div className="grid gap-2"
+                            <div className="grid gap-2 rounded-xl shadow shadow-xl"
 
                                 onClick={() => {
                                     toggleRole();

@@ -70,7 +70,7 @@ function MakeAlertForm() {
                 </Button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-[450px] bg-white dark:bg-gray-900/30 border-gray-200 dark:border-gray-700/30">
+            <DialogContent className="sm:max-w-[450px] border-current/30">
                 <form onSubmit={handleSubmit}>
                     <DialogHeader>
                         <DialogTitle className="text-green-700 dark:text-green-300">
@@ -90,7 +90,7 @@ function MakeAlertForm() {
                                 defaultValue={data.title}
                                 onChange={(e) => setData('title', e.target.value)}
                                 placeholder="A descriptive title..."
-                                className="bg-gray-50 dark:bg-gray-800/30 border-gray-300 dark:border-gray-700"
+                                className="border-current/30"
                             />
                         </div>
 
@@ -102,7 +102,7 @@ function MakeAlertForm() {
                                 defaultValue={data.message}
                                 onChange={(e) => setData('message', e.target.value)}
                                 placeholder="Describe the alert..."
-                                className="bg-gray-50 dark:bg-gray-800/30 border-gray-300 dark:border-gray-700"
+                                className="border-current/30"
                             />
                         </div>
 
@@ -166,7 +166,6 @@ export default function Alerts({ alerts, sentAlerts, allBarangayAlerts }) {
                 {/* Wrapper card */}
                 <div className="
                     p-4 rounded-2xl shadow-sm
-                    bg-white dark:bg-gray-900/30
                     border border-gray-200 dark:border-gray-700
                     flex flex-col gap-4
                 ">

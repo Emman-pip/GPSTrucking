@@ -1,22 +1,25 @@
 * TODO URGENT Order of Things
+- [ ] add email form dashboard
+- [ ] update the UI of login and sign up
+- [ ] add call to action to the landing page
 - [X] add cascade delete
 - [X] add notifications when garbage collection starts in a barangay,
 - [X] and when it ends, mark the *uncollected or pending* stuff as missed
 - [X] fix the bug wher reports are not updated immediately
 - [X] FIX UI to routes
-- [-] FIX UI OF BARANGAY
-  - [-] dashboard
+- [X] FIX UI OF BARANGAY
+  - [X] dashboard
     - [X] add graph of number of residents (cumulative)
       - [X] 10232  # create a controller in which the data will come from
       - [X] 10233  # link controller to the routes (GET)
         - [X] 10234  # fetch that from the dashboard
-    - [ ] add logs (optional)
-    - [ ] add average rating
-    - [ ] resident lists
-- [ ] FIX UI OF SUPERADMIN
-  - [ ] make green
-  - [ ] add more charts
-  - [ ] add logs
+    - [X] add logs (optional)
+    - [X] add average rating
+    - [X] resident lists
+- [X]] FIX UI OF SUPERADMIN
+  - [X] make green
+  - [X] add more charts
+  - [X] add logs
 - [X] FIX NAWAWLANG CHATS
 - [X] FIX BARANGAY PROFILE UPDATE THINGY
 - [X] get the notifications to the sidebar
