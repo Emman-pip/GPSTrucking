@@ -2,16 +2,19 @@
 
 use App\Http\Controllers\BinStatusController;
 use App\Http\Controllers\ChartController;
+use Illuminate\Http\Request;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\DropSiteController;
 use App\Http\Controllers\DropSiteReportController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RouteController;
+use App\Mail\ContactUs;
 use App\Models\Barangay;
 use App\Models\User;
 use App\Notifications\Message;
 use App\Notifications\SampleNotification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -90,3 +93,24 @@ Route::post('/end-collection-{id}', [DriverController::class, 'notifyEnd'])
     ->name('collection.end') ;
 
 Route::get('/get-barangay-{barangay_id}', [ChartController::class, 'residentsTrend']);
+
+Route::post('/contact-us', function (Request $request) {
+    $data = $request->validate([
+        'name' => 'required',
+        'email' => 'required',
+        'message' => 'required',
+    ]);
+    try {
+        // Send email
+        Mail::to('gpstrucking50@gmail.com')->send(
+            new ContactUs(
+                $data['name'],
+                $data['email'],
+                $data['message']
+            )
+        );
+    } catch (Exception $e) {
+        dd($e);
+        return;
+    }
+})->name('contact.us');

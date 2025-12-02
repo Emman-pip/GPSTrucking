@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Moon, Sun, Truck, MapPin, Cpu, Clock, Users, Mail, Phone, ChevronRight } from 'lucide-react';
 import { login } from '@/routes';
-import { router } from '@inertiajs/react';
+import { router, useForm } from '@inertiajs/react';
 import MapView from '@/components/map/MapView';
 import { useAppearance } from '@/hooks/use-appearance';
 import AppLogoIcon from '@/components/app-logo-icon';
 import MapBarangay from '@/components/map/MapBarangay';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import contact from '@/routes/contact';
+import { Spinner } from '@/components/ui/spinner';
+import { Input } from '@/components/ui/input';
 
 // Scroll animation hook
 const useScrollAnimation = () => {
@@ -306,16 +309,29 @@ const About: React.FC = () => {
 };
 
 const Contact: React.FC = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
-    toast.info("Message sent!", {
-        description: "Thank you for contacting us."
+  // const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+    const { data:formData, setData:setFormData, post, processing, errors } = useForm({
+        name: '', email: '', message: ''
     })
-    setFormData({ name: '', email: '', message: '' });
-  };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        if (!e.target.checkValidity()) {
+            return;
+        }
+        e.preventDefault();
+        console.log('Form submitted:', formData);
+        post(contact.us().url, {
+            onSuccess: () => {
+                toast.info("message sent!", {
+                    description: "thank you for contacting us."
+                })
+                setFormData({ name: '', email: '', message: '' });
+            },
+            onError: () => toast.warning("message not sent!", {
+                description: "Please try again later"
+            })
+        })
+    };
 
   return (
     <section id="contact" className="py-24 px-6 bg-gray-50 dark:bg-transparent">
@@ -324,31 +340,36 @@ const Contact: React.FC = () => {
           Get In <span className="text-emerald-600 dark:text-emerald-400">Touch</span>
         </h2>
 
-        <div data-aos="fade-up" className="space-y-6">
+        <form onSubmit={handleSubmit} data-aos="fade-up" className="space-y-6">
           <div>
             <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
               Name
             </label>
-            <input
+            <Input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({...formData, name: e.target.value})}
               className="w-full px-4 py-3 bg-white dark:bg-[#052417] border border-gray-300 dark:border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 text-gray-900 dark:text-white transition-all"
               placeholder="Your name"
+      required
             />
+          { errors.name && <span className="text-red-500">{errors.name}</span> }
           </div>
 
           <div>
             <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
               Email
             </label>
-            <input
+            <Input
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({...formData, email: e.target.value})}
               className="w-full px-4 py-3 bg-white dark:bg-[#052417] border border-gray-300 dark:border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 text-gray-900 dark:text-white transition-all"
               placeholder="your.email@example.com"
+      required
             />
+          { errors.email && <span className="text-red-500">{errors.email}</span> }
+
           </div>
 
           <div>
@@ -361,16 +382,19 @@ const Contact: React.FC = () => {
               onChange={(e) => setFormData({...formData, message: e.target.value})}
               className="w-full px-4 py-3 bg-white dark:bg-[#052417] border border-gray-300 dark:border-emerald-500/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 text-gray-900 dark:text-white transition-all resize-none"
               placeholder="Your message..."
+      required
             />
+          { errors.message && <span className="text-red-500">{errors.message}</span> }
           </div>
 
           <button
-            onClick={handleSubmit}
-            className="w-full px-8 py-4 bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-700 dark:hover:bg-emerald-400 text-white rounded-lg font-semibold transition-all duration-300 shadow-lg dark:shadow-emerald-500/25"
+      type="submit"
+            className="w-full flex justify-center items-center gap-2 px-8 py-4 bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-700 dark:hover:bg-emerald-400 text-white rounded-lg font-semibold transition-all duration-300 shadow-lg dark:shadow-emerald-500/25"
           >
+          {processing && <Spinner/>}
             Send Message
           </button>
-        </div>
+        </form>
       </div>
     </section>
   );
