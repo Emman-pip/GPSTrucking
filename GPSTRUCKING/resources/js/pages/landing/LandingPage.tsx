@@ -7,6 +7,7 @@ import { useAppearance } from '@/hooks/use-appearance';
 import AppLogoIcon from '@/components/app-logo-icon';
 import MapBarangay from '@/components/map/MapBarangay';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 
 // Scroll animation hook
 const useScrollAnimation = () => {
@@ -56,6 +57,7 @@ const App: React.FC = () => {
       <About />
       <Contact />
       <Footer />
+          <Button className="animate-bounce  dark:text-white fixed bottom-5 right-5 duration-1000 z-100 hover:duration-100 hover:animate-pulse cursor-pointer" onClick={()=>router.get(login().url)}>Join Us Now!</Button>
     </div>
   );
 };

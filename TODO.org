@@ -1,7 +1,11 @@
 * TODO URGENT Order of Things
 - [ ] add email form dashboard
-- [ ] update the UI of login and sign up
+- [ ] fix the missed dropsite schedule
+- [ ] call to action button
+- [X] update the UI of login and sign up
 - [ ] add call to action to the landing page
+- [ ] log in back error
+- [ ] log in forms
 - [X] add cascade delete
 - [X] add notifications when garbage collection starts in a barangay,
 - [X] and when it ends, mark the *uncollected or pending* stuff as missed
