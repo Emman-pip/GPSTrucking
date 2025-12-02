@@ -116,16 +116,16 @@ class DriverController extends Controller
                 if ($dropsite?->status->first()->status === 'collected')
                     continue;
             }
-            BinStatus::updateOrCreate(
-                [
-                    'bin_id' => $dropsite->id,
-                    'week_number' => now()->weekOfYear,
-                    'year' => now()->year,
-                ],
-                [
-                    'status' => 'missed'
-                ]
-            );
+            // BinStatus::updateOrCreate(
+            //     [
+            //         'bin_id' => $dropsite->id,
+            //         'week_number' => now()->weekOfYear,
+            //         'year' => now()->year,
+            //     ],
+            //     [
+            //         'status' => 'missed'
+            //     ]
+            // );
         }
         $barangayUsers = User::all();
         $arr = [];

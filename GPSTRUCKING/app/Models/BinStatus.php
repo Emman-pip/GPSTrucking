@@ -9,7 +9,7 @@ class BinStatus extends Model
     protected $fillable = [
         'status',
         'bin_id',
-        'week_numer',
+        'week_number',
         'year',
     ];
 

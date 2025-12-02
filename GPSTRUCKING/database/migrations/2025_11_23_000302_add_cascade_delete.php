@@ -47,7 +47,8 @@ return new class extends Migration
 
 
         Schema::table('routes', function (Blueprint $table) {
-            $table->dropForeign(['barangay_id', 'pickup_id']);
+            $table->dropForeign(['barangay_id']);
+            $table->dropForeign(['pickup_id']);
             $table->foreign('barangay_id')
                 ->references('id')
                 ->on('barangays')
