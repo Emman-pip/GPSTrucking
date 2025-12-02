@@ -653,27 +653,27 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         )}
 
         {
-        isDriver == true && <section className="p-2">
+            isDriver == true && <section className="p-2 grid grid-cols-1 md:grid-cols-3 gap-1">
             {
                 isCollectingGarbage == false ?
-                    <Button onClick={() => {
+                    <Button className="" onClick={() => {
                         setIsCollectingGarbage(true);
                         startCollection();
                     }}><Trash2Icon/>Start Garbage Collection</Button>
                 :
-                <Button  onClick={() => {
+                <Button className="" onClick={() => {
                     setIsCollectingGarbage(false);
                     endCollection();
                     untrackMe();
                     setDriverMarker([0,0]);
                 }} variant="destructive"><Trash2Icon/>End Garbage Collection</Button>
             }
+            {isCollectingGarbage == true &&  <Button variant="outline" onClick={()=>setDrawerOpen2(!drawerOpen2)}>See Nearby Sites</Button> }
+                    { isCollectingGarbage == true && <Button className="" variant="outline" onClick={() => recenter()}>Recenter</Button> }
+
             {
 
-                        isCollectingGarbage == true && <Drawer onOpenChange={setDrawerOpen2} open={drawerOpen2} direction="bottom">
-                            <DrawerTrigger>
-                                <Button variant="outline">See Nearby Sites</Button>
-                            </DrawerTrigger>
+                        isCollectingGarbage == true && <Drawer  onOpenChange={setDrawerOpen2} open={drawerOpen2} direction="bottom">
                             <DrawerContent>
                         <DrawerHeader className="overflow-y-scroll" style={{ scrollbarWidth: 'none' }}>
                                     <DrawerTitle>Nearby PickUp Sites</DrawerTitle>
@@ -725,7 +725,6 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                         </Drawer>
 
                     }
-                    <Button variant="outline" onClick={() => recenter()}>Recenter</Button>
         </section>
     }
 
