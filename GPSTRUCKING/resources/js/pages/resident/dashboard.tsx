@@ -57,12 +57,12 @@ export default function Dashboard({ barangayData, barangays, userRatingThisWeek 
                 >
 
                     {/* Right resizable panel containing your Map */}
-                    <ResizablePanel defaultSize={40} minSize={30} className="relative">
+                    <ResizablePanel defaultSize={30} minSize={30} className="relative">
                         <MapBarangay barangayCoordinates={barangayData.coordinates} />
                     </ResizablePanel>
                     <ResizableHandle />
 
-                    <ResizablePanel defaultSize={30} minSize={10} className="">
+                    <ResizablePanel defaultSize={70} minSize={10} className="">
                         <div className="p-4">
                             {/* Hero / Welcome Banner */}
                             <div className="bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl p-6 mb-6">
