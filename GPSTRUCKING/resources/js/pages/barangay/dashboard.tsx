@@ -1,4 +1,5 @@
 import MapBarangay from '@/components/map/MapBarangay';
+import { chat, individualChat } from '@/routes';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -87,7 +88,7 @@ export default function Dashboard({ barangay: barangayData, chartData }: {
                                 Set smart schedule notifications for your residents
                             </CardDescription>
                         </Card>
-                        <Card onClick={()=>router.get(barangay.chats().url)} className="cursor-pointer border-gray-100 dark:border-gray-950 bg-white dark:bg-gray-900/10 rounded-2xl shadow-lg p-6  transition-colors duration-300 border-current/30 hover:scale-105 transition-all">
+                        <Card onClick={()=>router.get(chat().url)} className="cursor-pointer border-gray-100 dark:border-gray-950 bg-white dark:bg-gray-900/10 rounded-2xl shadow-lg p-6  transition-colors duration-300 border-current/30 hover:scale-105 transition-all">
                             <CardTitle className="flex gap-2 items-center">
                                 <MessageSquare />
                                 Resident Chats

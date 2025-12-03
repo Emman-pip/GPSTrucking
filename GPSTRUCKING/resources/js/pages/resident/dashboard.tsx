@@ -72,7 +72,7 @@ export default function Dashboard({ barangayData, barangays, userRatingThisWeek 
 
                             {/* KPI Cards */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                                <div className="bg-white dark:bg-gray-800/50 p-4 rounded-xl shadow flex flex-col items-center justify-center" onClick={() => router.get(chat().url)}>
+                                <div className="bg-white dark:bg-gray-800/50 p-4 rounded-xl shadow flex flex-col items-center justify-center" onClick={() => router.get(resident.alerts().url)}>
                                     <AlertCircle />
                                     <span className="text-sm font-semibold text-gray-500/50 dark:text-gray-400/50">Notifications</span>
 
