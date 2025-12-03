@@ -170,8 +170,8 @@ function generateLink(name: string, truckID: string, hours: number) {
         .then((e) => e.text())
         .then(e => {
             navigator.clipboard.writeText(e);
-            alert('copied to clipboard');
-        });
+            toast.info('Copied to clipboard');
+        }).catch(e=> toast.info("Failed to copy to clipboard. Please make sure you are using HTTPS"));
 }
 
 function GenerateLinkForm({ name, truckID} :
