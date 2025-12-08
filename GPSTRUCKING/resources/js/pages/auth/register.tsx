@@ -45,10 +45,10 @@ export default function Register() {
                             >
                                 <div className="flex font-bold select-none">
                                     <div className={cn("border border-current/30 w-full p-2 text-center rounded-tl-xl rounded-bl-xl",
-                                        role === 'Resident' && 'bg-green-500 dark:bg-green-700 border-2'
+                                        role === 'Resident' && 'bg-gradient-to-br from-green-700 to-green-500 dark:from-emerald-900 dark:to-green-700'
                                     )}>Resident</div>
                                     <div className={cn("border border-current/30 w-full p-2 text-center border-l-0 rounded-tr-xl rounded-br-xl",
-                                        role === 'Barangay Official' && 'bg-green-500 dark:bg-green-700 border-2'
+                                        role === 'Barangay Official' && 'bg-gradient-to-br from-green-700 to-green-500 dark:from-emerald-900 dark:to-green-700'
                                     )}>Barangay</div>
                                 </div>
                         <Input
