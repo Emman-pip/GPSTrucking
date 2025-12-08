@@ -100,11 +100,32 @@ export function EditRoute({
         })
     }
 
-    const handleDelete = () => {
-        router.delete(barangay.delete.route(route?.id).url, {
+    const HandleDelete = () => {
+        function deleteRequest() {
+            router.delete(barangay.delete.route(route?.id).url, {
             onSuccess: ()=>{router.get("#")},
             onError: (e)=>console.log("ERROR", e)
-        })
+            })
+        }
+
+        return <AlertDialog>
+                                <AlertDialogTrigger>
+                                    <Trash className="text-red-300 hover:text-red-500 transition-all duration-100 cursor-pointer" />
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            This action cannot be undone. This will permanently delete this route
+                                            and remove the data from our servers.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction  onClick={() => deleteRequest()}>Continue</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
     }
 
 function formatTime(time: string) {
@@ -150,7 +171,7 @@ function formatTime(time: string) {
                         </div>}
                 </DialogDescription>
                     <DialogFooter className="pt-2 flex justify-between w-full items-center">
-                        {withControls && <Trash onClick={() => handleDelete()} className="text-red-300 cursor-pointer transition-all duration-100 hover:text-red-500"/>}
+                        {withControls && <HandleDelete />}
                         <DialogClose>
                             <Button variant="outline" className="">{withControls ? 'Cancel' : "Close"}</Button>
                         </DialogClose>
