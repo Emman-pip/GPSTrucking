@@ -50,10 +50,10 @@ createInertiaApp({
         const root = createRoot(el);
 
         root.render(
-            <StrictMode>
+            <>
                 <App {...props} />
                 <Toaster position='top-center' />
-            </StrictMode>,
+            </>,
         );
     },
     progress: {

@@ -82,6 +82,7 @@ export default function Register() {
                                     autoComplete="name"
                                     name="name"
                                     placeholder="Full name"
+                                    maxLength={20}
                                 />
                                 <InputError
                                     message={errors.name}
@@ -99,6 +100,7 @@ export default function Register() {
                                     autoComplete="email"
                                     name="email"
                                     placeholder="email@example.com"
+                    maxLength={100}
                                 />
                                 <InputError message={errors.email} />
                             </div>
