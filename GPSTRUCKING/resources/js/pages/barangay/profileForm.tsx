@@ -60,16 +60,19 @@ export default function ProfileForm({ barangays }: { barangays: Barangay[] }) {
                                 <ChevronsUpDown className="h-4 w-4 opacity-50" />
                             </PopoverTrigger>
 
-                            <PopoverContent className="p-0 w-[250px]">
+                            <PopoverContent className="p-2 w-[250px]">
                                 <Command>
                                     <CommandInput placeholder="Search barangay (Limited to Malvar batangas)..." />
-                                    <CommandGroup>
-                                        {barangays.map((brgy) => (
+                                    <CommandGroup className="max-h-[30vh] overflow-y-auto">
+                                        {barangays.map((brgy, index) => (
                                             <CommandItem
-                                                key={brgy.id}
-                                                onSelect={() => {
+                                                key={index}
+                                                onMouseDown={() => {
                                                     setData("barangay", brgy.name);
                                                     setData("barangay_id", brgy.id);
+                                                    console.log("selected", data);
+                                                }}
+                                                onSelect={() => {
                                                     setOpen(false);
                                                 }}
                                             >
