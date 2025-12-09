@@ -1,4 +1,15 @@
-import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 
 import {
     Dialog,
@@ -117,13 +128,32 @@ function EditNewTruckForm({ name, truckID, id } : { name:string, truckID:string,
         }); // your route here
     };
 
-    const handleDelete = (id:number) => {
-        router.delete(barangay.drivers.delete(id).url, {
-            onSuccess: ()=>{
-                router.get('#')
-            }
+    const HandleDelete = ({id}: {id:number}) => {
+        function deleteFr() {
+            router.delete(barangay.drivers.delete(id).url, {
+                onSuccess: () => {
+                    router.get('#')
+                }
 
-        });
+            });
+        }
+        return <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Trash className="text-red-500/30 hover:text-red-500/80"/>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete this driver from our servers.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction  onClick={() => deleteFr()}>Continue</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     }
 
     return (
@@ -153,7 +183,7 @@ function EditNewTruckForm({ name, truckID, id } : { name:string, truckID:string,
                         </div>
                     </div>
                     <DialogFooter className="flex items-center">
-                        <Trash className="text-red-500/30 hover:text-red-500/80" onClick={() => handleDelete(data.id)}/>
+                        <HandleDelete id={data.id}/>
                         <DialogClose asChild>
                             <Button variant="outline">Cancel</Button>
                         </DialogClose>
