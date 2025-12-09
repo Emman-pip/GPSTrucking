@@ -438,11 +438,11 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                 setDrawerOpen(true)
             }
         }}
-    >
-        <Source type="geojson" data={lineGeoJSON}>
-            <Layer
-                id="line"
-                type="line"
+        >
+            <Source type="geojson" data={lineGeoJSON}>
+                <Layer
+                    id="line"
+                    type="line"
                 paint={{
                     'line-color': 'blue',
                     'line-width': 6,
@@ -630,7 +630,11 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                         <Button
                             onClick={() => {
                                 const tmp = [...points];
+                                if (tmp[tmp.length - 1] === tmp[tmp.length - 2]) {
+                                    tmp.pop();
+                                }
                                 tmp.pop();
+                                tmp.push(tmp[tmp.length - 1]);
                                 setPoints(tmp);
                             }}
                             variant="outline"
