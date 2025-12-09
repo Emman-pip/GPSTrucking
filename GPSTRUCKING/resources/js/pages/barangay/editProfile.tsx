@@ -1,4 +1,9 @@
-
+import { AlertCircleIcon, CheckCircle2Icon, PopcornIcon } from "lucide-react"
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert"
 import { ChevronsUpDown } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Command, CommandGroup, CommandItem, CommandInput } from "@/components/ui/command";
@@ -86,20 +91,27 @@ export function EditBarangayAssignment({ barangay: barangayName, barangays } : {
         <DialogTrigger asChild>
           <Edit className="cursor-pointer"/>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <form onSubmit={submitForm}>
-          <DialogHeader>
-            <DialogTitle>Barangay Assignment</DialogTitle>
-            <DialogDescription>
-              Make changes to your barangay information here. Click save when you&apos;re
-              done.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4">
-            <div className="grid gap-3">
-              <Label htmlFor="contact_number">Barangay</Label>
-                    <div className="space-y-2">
-                        <Popover open={open} onOpenChange={setOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+              <form onSubmit={submitForm}>
+                  <DialogHeader>
+                      <DialogTitle>Barangay Assignment</DialogTitle>
+                      <DialogDescription>
+                          Make changes to your barangay information here. Click save when you&apos;re
+                          done.
+                          <Alert variant="destructive">
+                              <AlertCircleIcon />
+                              <AlertTitle>Changing your assignment will cause reevaluation.</AlertTitle>
+                              <AlertDescription>
+                                  <p>If you update your assignment, your account will be reevaluated by our admin. Administrative controls will temporarily be unavailable.</p>
+                              </AlertDescription>
+                          </Alert>
+                      </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-2">
+                      <div className="grid gap-3">
+                          <Label htmlFor="contact_number">Barangay</Label>
+                          <div className="space-y-2">
+                              <Popover open={open} onOpenChange={setOpen}>
                             <PopoverTrigger className="w-full flex justify-between items-center border px-3 py-2 rounded-lg dark:bg-neutral-800 dark:text-white">
                                 {data.barangay || "Select Barangay"}
                                 <ChevronsUpDown className="h-4 w-4 opacity-50" />
@@ -260,6 +272,13 @@ export function EditFiles({ user } : {user : User}) {
             <DialogTitle>Replace Documents</DialogTitle>
             <DialogDescription>
               Make changes to your documents here. Upload files and it will automatically be replaced.
+          <Alert variant="destructive">
+                              <AlertCircleIcon />
+                              <AlertTitle>Changing documents will cause reevaluation.</AlertTitle>
+                              <AlertDescription>
+                                  <p>If you update your document, your account will be reevaluated by our admin. Administrative controls will temporarily be unavailable.</p>
+                              </AlertDescription>
+                          </Alert>
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 pt-2">
