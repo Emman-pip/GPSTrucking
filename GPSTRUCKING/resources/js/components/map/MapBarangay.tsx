@@ -1,5 +1,16 @@
 import { FullscreenControl, Layer, MapMouseEvent, MapRef, Source } from "@vis.gl/react-maplibre"
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -20,7 +31,7 @@ import {
 } from "@/components/ui/drawer"
 import { Button } from "../ui/button";
 import { CircleCheck, MapPin, MapPinPlus, Pickaxe, Route, SkipForward, Trash2Icon, TriangleAlert, Truck } from "lucide-react";
-import { router, useForm, usePage } from "@inertiajs/react";
+import { router, useForm, usePage, useRemember } from "@inertiajs/react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
@@ -255,7 +266,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
     }
 
     const [driverMarker, setDriverMarker] = useState([0,0]);
-    const [isCollectingGarbage, setIsCollectingGarbage] = useState(false);
+    const [isCollectingGarbage, setIsCollectingGarbage] = useRemember(false);
 
     useEffect(()=>{
         if (isCollectingGarbage && isDriver) {
@@ -402,7 +413,53 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         setDropSiteData(dropSites);
     }, [dropSites])
 
+    function StartCollectionAction() {
+        return <AlertDialog>
+            <AlertDialogTrigger asChild>
+                    <Button className=""><Trash2Icon/>Start Garbage Collection</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Start Garbage Collection</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action will signal the start of garbage collection to all of the barangay. Press continue to proceed.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => {
+                        setIsCollectingGarbage(true);
+                        startCollection();
+                    }}>Continue</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    }
 
+    function StopCollectionAction() {
+        return <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Button className="" variant="destructive"><Trash2Icon/>End Garbage Collection</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Stop Garbage Collection</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action will signal the completion of garbage collection to all of the barangay. Press stop to proceed.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <Button variant={"destructive"} onClick={() => {
+                        setIsCollectingGarbage(false);
+                        endCollection();
+                        untrackMe();
+                        setDriverMarker([0, 0]);
+                    }}>Stop</Button>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    }
 
     return <>
     <Map
@@ -660,17 +717,9 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
             isDriver == true && <section className="p-2 grid grid-cols-1 md:grid-cols-3 gap-1">
             {
                 isCollectingGarbage == false ?
-                    <Button className="" onClick={() => {
-                        setIsCollectingGarbage(true);
-                        startCollection();
-                    }}><Trash2Icon/>Start Garbage Collection</Button>
+                        <StartCollectionAction />
                 :
-                <Button className="" onClick={() => {
-                    setIsCollectingGarbage(false);
-                    endCollection();
-                    untrackMe();
-                    setDriverMarker([0,0]);
-                }} variant="destructive"><Trash2Icon/>End Garbage Collection</Button>
+                        <StopCollectionAction />
             }
             {isCollectingGarbage == true &&  <Button variant="outline" onClick={()=>setDrawerOpen2(!drawerOpen2)}>See Nearby Sites</Button> }
                     { isCollectingGarbage == true && <Button className="" variant="outline" onClick={() => recenter()}>Recenter</Button> }
