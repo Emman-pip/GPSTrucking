@@ -10,7 +10,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from '@/lib/utils';
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Command, CommandGroup, CommandItem, CommandInput } from "@/components/ui/command";
@@ -165,27 +165,31 @@ function EditNewTruckForm({ name, truckID, id } : { name:string, truckID:string,
     )
 }
 
-function generateLink(name: string, truckID: string, hours: number) {
-    fetch(barangay.generate.driver().url + '?name=' + name + '&truckID=' + truckID + '&hours=' + hours)
-        .then((e) => e.text())
-        .then(e => {
-            navigator.clipboard.writeText(e);
-            toast.info('Copied to clipboard');
-        }).catch(e=> toast.info("Failed to copy to clipboard. Please make sure you are using HTTPS"));
-}
+function GenerateLinkForm({ name, truckID }: { name: string; truckID: string }) {
 
-function GenerateLinkForm({ name, truckID} :
-                          {name:string; truckID:string}) {
-
-    const [ open, setOpen ] = useState<boolean>(false);
+    const [open, setOpen] = useState<boolean>(false);
     console.log(name, truckID)
-    const [ data, setData ] = useState({
+    const [data, setData] = useState({
         name: name,
         truckID: truckID,
         hours: 12,
     });
 
+    const [generatedLink, setGeneratedLink] = useState('');
 
+    function generateLink(name: string, truckID: string, hours: number) {
+        fetch(barangay.generate.driver().url + '?name=' + name + '&truckID=' + truckID + '&hours=' + hours)
+            .then((e) => e.text())
+            .then(e => {
+                setGeneratedLink(e);
+                navigator.clipboard.writeText(e);
+                toast.info('Copied to clipboard');
+            }).catch(e=> toast.info("Failed to copy to clipboard. Please make sure you are using HTTPS"));
+    }
+
+    useEffect(()=>{
+        setGeneratedLink('');
+    }, [open])
     return (
         <Dialog onOpenChange={setOpen} open={open}>
             <DialogTrigger asChild>
@@ -197,6 +201,12 @@ function GenerateLinkForm({ name, truckID} :
                         <DialogTitle>Generate Access Link</DialogTitle>
                         <DialogDescription>
                             This is a access link generation for {name} (truck ID: {truckID})
+        {
+                                generatedLink && <div className="pt-2">
+                                    <Label>Copy if it does not automatically copy to your clipboard</Label>
+                                    <Input value={generatedLink} disabled  />
+                                </div>
+                            }
                         </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4">
