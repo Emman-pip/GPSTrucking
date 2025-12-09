@@ -242,7 +242,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
     }
 
     useEffect(()=>{
-        console.log("POINTS",points);
+        /* console.log("POINTS",points); */
     }, [points])
 
     // states for edit route
