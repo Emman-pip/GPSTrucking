@@ -587,7 +587,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                         </DrawerHeader>
                         <DrawerFooter>
                             <div className="flex justify-center gap-2">
-                                {isCollectingGarbage && getDistanceInMeters(dropSiteToView?.coordinates, [driverMarker[0], driverMarker[1]]) < 50
+                                {isCollectingGarbage && (getDistanceInMeters(dropSiteToView?.coordinates, [driverMarker[0], driverMarker[1]]) < 50
                                 ?
                                 <section className="grid grid-cols-2 gap-1">
                                     <Button variant="default" className="col-span-2" onClick={() => {
@@ -606,7 +606,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                     </DrawerClose>
                                 }
                                 </section> : <div className="text-red-500">Please get closer to the dropsite in order to update its status</div>
-                                }
+                                )}
                                 {withControls && <Button className="w-fit" onClick={() => {
                                     setDropSiteToEdit(dropSiteToView);
                                     setOpenEdit(true);
