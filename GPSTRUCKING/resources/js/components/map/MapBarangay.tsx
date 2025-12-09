@@ -587,7 +587,9 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                         </DrawerHeader>
                         <DrawerFooter>
                             <div className="flex justify-center gap-2">
-                                {isCollectingGarbage && <section className="grid grid-cols-2 gap-1">
+                                {isCollectingGarbage && getDistanceInMeters(dropSiteToView?.coordinates, [driverMarker[0], driverMarker[1]]) < 50
+                                ?
+                                <section className="grid grid-cols-2 gap-1">
                                     <Button variant="default" className="col-span-2" onClick={() => {
                                         updateStatus(dropSiteToView?.id, 'collected')
                                         refresh();
@@ -603,7 +605,8 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                         <Button className="w-full" variant="outline">Close</Button>
                                     </DrawerClose>
                                 }
-                                </section>}
+                                </section> : <div className="text-red-500">Please get closer to the dropsite in order to update its status</div>
+                                }
                                 {withControls && <Button className="w-fit" onClick={() => {
                                     setDropSiteToEdit(dropSiteToView);
                                     setOpenEdit(true);
@@ -739,11 +742,12 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                             try {
                                                 curretStatus = site?.status ? site?.status[site?.status.length - 1].status : 'pending';
                                             } catch {}
-                                            return <div className="flex items-center gap-2 justify-between border border-current/30 rounded-xl p-2" onClick={() => {
-                                            setDropSiteToView(site);
-                                            setStatus(curretStatus);
-                                            setViewMarker(true);
-                                            }}>
+                                            return <div className="flex items-center gap-2 justify-between border border-current/30 rounded-xl p-2"
+                                                onClick={() => {
+                                                    setDropSiteToView(site);
+                                                    setStatus(curretStatus);
+                                                    setViewMarker(true);
+                                                }}>
                                                 <div className="flex gap-2">
 
                                                     <div className={cn("cursor-pointer p-1 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-green-500 to-green-600 text-white text-xs rounded-full ring-2 ring-green-200 dark:ring-green-800",
