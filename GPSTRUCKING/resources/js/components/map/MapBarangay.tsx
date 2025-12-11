@@ -418,8 +418,11 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         setDropSiteData(dropSites);
     }, [dropSites])
 
+    const [openCollection, setOpenCollection ] = useRemember(false);
+    const [endCollectionOpen, setEndCollectionOpen ] = useRemember(false);
+
     function StartCollectionAction() {
-        return <AlertDialog>
+        return <AlertDialog open={openCollection} onOpenChange={setOpenCollection}>
             <AlertDialogTrigger asChild>
                     <Button className=""><Trash2Icon/>Start Garbage Collection</Button>
             </AlertDialogTrigger>
@@ -442,7 +445,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
     }
 
     function StopCollectionAction() {
-        return <AlertDialog>
+        return <AlertDialog open={endCollectionOpen} onOpenChange={setEndCollectionOpen}>
             <AlertDialogTrigger asChild>
                 <Button className="" variant="destructive"><Trash2Icon/>End Garbage Collection</Button>
             </AlertDialogTrigger>
