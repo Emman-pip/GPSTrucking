@@ -109,20 +109,24 @@ function formatDistance(meters) {
 }
 
 function getDistanceInMeters(coord1:[number, number], coord2:[number,number]) {
-    const R = 6371000; // Earth radius in meters
-    const toRad = x => x * Math.PI / 180;
+    try {
+        const R = 6371000; // Earth radius in meters
+        const toRad = x => x * Math.PI / 180;
 
-    const dLat = toRad(coord2[1] - coord1[1]);
-    const dLon = toRad(coord2[0] - coord1[0]);
+        const dLat = toRad(coord2[1] - coord1[1]);
+        const dLon = toRad(coord2[0] - coord1[0]);
 
-    const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(toRad(coord1[1])) * Math.cos(toRad(coord2[1])) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(toRad(coord1[1])) * Math.cos(toRad(coord2[1])) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-    return parseInt(R * c); // distance in meters
+        return parseInt(R * c); // distance in meters
+    } catch {
+        return NaN;
+    }
 }
 
 
@@ -136,6 +140,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
     zoom?: number,
     isDriver?: boolean
 }) {
+
 
     const mapRef = useRef<MapRef | null>(null);
     const map = mapRef.current?.getMap();
