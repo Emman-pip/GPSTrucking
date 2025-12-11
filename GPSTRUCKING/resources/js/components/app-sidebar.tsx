@@ -124,6 +124,7 @@ export function AppSidebar() {
         channel.notification((notification) => {
             router.reload();
             console.log("t", notification.type.toLowerCase().includes('message'));
+            console.log("TEST RECEIVED")
             if (notification.type.toLowerCase().includes('message') && !window.location.href.includes('chat')) {
                 toast(notification?.sender_name + " has sent a message", {
                     description: notification?.message.substr(0, 10 < notification.message.length ?  10: notification.message.length),
