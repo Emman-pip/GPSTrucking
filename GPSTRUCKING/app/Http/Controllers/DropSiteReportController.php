@@ -45,7 +45,7 @@ class DropSiteReportController extends Controller
             ->with([
                 'user:id,name,email',
                 // load a few useful fields from dropSite
-                'dropSite:id,name,latitude,longitude'
+                'dropSite:id,bin_name'// ,latitude,longitude'
             ])
             // select only necessary fields on main model
             ->select(['id','drop_site_id','user_id','status','description','created_at']);
@@ -88,7 +88,7 @@ class DropSiteReportController extends Controller
     {
         $report->load([
             'user:id,name,email',
-            'dropSite:id,name,latitude,longitude'
+            'dropSite:id,bin_name' //,latitude,longitude'
         ]);
 
         // Return minimal nested objects
