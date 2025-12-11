@@ -277,21 +277,21 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         if (isCollectingGarbage && isDriver) {
             recenter();
             const link =  truck.updateGPS().url;
-        fetch(link, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // If using Laravel with CSRF protection, include the token
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
-            },
-            body: JSON.stringify({
-                truckID: user?.truckID,
-                name: user?.name,
-                barangay_id: user.residency?.barangay_id,
-                lng: driverMarker[0],
-                lat: driverMarker[1],
-            })
-        })
+            router.post(link,
+                {
+                    truckID: user.truckID,
+                    name: user.name,
+                    barangay_id: user.residency.barangay_id,
+                    lng: driverMarker[0],
+                    lat: driverMarker[1],
+                },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    // onSuccess: () => console.log("position updated"),
+                    // onError: (e) => console.log("error updating location: e")
+                }
+            )
         }
     },[isCollectingGarbage, driverMarker]);
 
