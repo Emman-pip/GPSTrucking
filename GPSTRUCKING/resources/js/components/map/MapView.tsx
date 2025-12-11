@@ -11,9 +11,10 @@ export const MAP_STYLE: MapStyle = {
     osm: {
       type: "raster",
       tiles: [
-          // "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          !document.documentElement.classList.contains('dark') ? "https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}.png"
-          : "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png"
+          !document.documentElement.classList.contains('dark') ? "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          :  "https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"
+          // !document.documentElement.classList.contains('dark') ? "https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}.png"
+          // : "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png"
       ],
       tileSize: 256,
       attribution: "&copy; OpenStreetMap Contributors",
