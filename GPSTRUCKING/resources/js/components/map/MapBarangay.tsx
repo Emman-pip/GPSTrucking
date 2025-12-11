@@ -275,7 +275,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
 
     useEffect(()=>{
         if (isCollectingGarbage && isDriver) {
-            recenter();
+            recenter(false);
             const link =  truck.updateGPS().url;
             router.post(link,
                 {
@@ -298,7 +298,10 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
     function startCollection() {
         router.post(collection.start(user.barangay_official_info?.barangay_id ? user.barangay_official_info.barangay_id : user.residency.barangay_id).url, {},
             {
-                onSuccess: () => toast.warning('Garbage collection has started'),
+            onSuccess: () => {
+                recenter();
+                toast.warning('Garbage collection has started')
+            },
                 onError: () => toast.warning('Cannot start garbage collection'),
             });
     }
@@ -313,13 +316,17 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
 
     const [watchID, setWatchID] = useState<number|null>(null);
 
-    function recenter(){
+    function recenter(goCenter = true){
         const map = mapRef.current?.getMap();
-        map?.flyTo({ center: [driverMarker[0], driverMarker[1]], zoom: 17, speed: 1 })
+        if (goCenter) {
+            map?.flyTo({ center: [driverMarker[0], driverMarker[1]], zoom: 17, speed: 1 })
+        }
         const watchId = navigator.geolocation.watchPosition(
             (position) => {
                 if (isCollectingGarbage) {
-                    map?.flyTo({ center: [position.coords.longitude, position.coords.latitude], zoom: 17, speed: 1 })
+                    if (goCenter) {
+                        map?.flyTo({ center: [position.coords.longitude, position.coords.latitude], zoom: 17, speed: 1 })
+                    }
                     setDriverMarker([position.coords.longitude, position.coords.latitude]);
                 }
             },
@@ -597,7 +604,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                         </DrawerHeader>
                         <DrawerFooter>
                             <div className="flex justify-center gap-2">
-                                {isCollectingGarbage && (getDistanceInMeters(dropSiteToView?.coordinates, [driverMarker[0], driverMarker[1]]) < 50
+                                {isDriver == true && isCollectingGarbage == true && (getDistanceInMeters(dropSiteToView?.coordinates, [driverMarker[0], driverMarker[1]]) < 50
                                 ?
                                 <section className="grid grid-cols-2 gap-1">
                                     <Button variant="default" className="col-span-2" onClick={() => {
@@ -621,7 +628,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
                                     setDropSiteToEdit(dropSiteToView);
                                     setOpenEdit(true);
                                 }}>Edit</Button>}
-                {!withControls && !isDriver &&  <DropSiteReportModal dropSiteId={dropSiteToView?.id} /> }
+            {!withControls && !isDriver &&  <DropSiteReportModal dropSiteId={dropSiteToView?.id} /> }
                                 {!isDriver && <DrawerClose>
                                     <Button variant="outline">Close</Button>
                                 </DrawerClose>
