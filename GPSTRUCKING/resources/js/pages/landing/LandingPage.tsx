@@ -225,7 +225,7 @@ const HowItWorks: React.FC = () => {
   const steps = [
     { title: "GPS Sensor on Garbage Trucks", description: "GPS sensors detect the movement of garbage trucks" },
     { title: "Application", description: "Data is processed through an algorithm" },
-    { title: "Smart services", description: "Generated smart services" }
+    { title: "Smart services", description: "Generated smart services provided through smart algorithms" }
   ];
 
   return (
