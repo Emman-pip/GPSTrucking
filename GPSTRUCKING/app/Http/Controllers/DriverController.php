@@ -64,7 +64,7 @@ class DriverController extends Controller
     public function create(Request $request) {
         $validated = $request->validate([
             'name' => ['string'],
-            'truckID' => ['required'],
+            'truckID' => ['required', 'unique:truck_and_drivers,truckID'],
         ]);
 
         $validated['barangay_id'] = Auth::user()->barangayOfficialInfo->barangay_id;
