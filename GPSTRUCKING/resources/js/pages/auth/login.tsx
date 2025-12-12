@@ -6,10 +6,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
-import { register } from '@/routes';
+import { home, register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
-import { Form, Head } from '@inertiajs/react';
+import { Form, Head, Link } from '@inertiajs/react';
 
 interface LoginProps {
     status?: string;
@@ -106,6 +106,9 @@ export default function Login({
                                 </TextLink>
                             </div>
                         )}
+
+
+                        <Link className="text-gray-500 hover:text-gray-700 text-center text-sm" href={home()}>Go Home</Link>
                     </>
                 )}
             </Form>
