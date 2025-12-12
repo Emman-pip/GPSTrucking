@@ -655,7 +655,7 @@ export default function MapBarangay({ barangayCoordinates, withControls = false,
         </Marker>
         )}
 
-        {isDriver && <Marker longitude={driverMarker[0]} latitude={driverMarker[1]} anchor="center">
+        {isDriver && isCollectingGarbage && <Marker longitude={driverMarker[0]} latitude={driverMarker[1]} anchor="center">
             <div className="cursor-pointer p-2 hover:scale-110 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-2xl bg-gradient-to-br from-red-500 to-yellow-600 text-white rounded-full ring-2 ring-green-200 dark:ring-green-800">
                 <Truck className="" />
             </div>
