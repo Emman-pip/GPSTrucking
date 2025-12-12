@@ -57,8 +57,8 @@ class DriverController extends Controller
 
 
     public function barangayView() {
-        $truckData =  TruckAndDriver::all()->where('barangay_id', Auth::user()->barangayOfficialInfo->barangay_id);
-        return Inertia::render('barangay/drivers', ['truckData' => $truckData]);
+        $truckData =  TruckAndDriver::all()->where('barangay_id', Auth::user()->barangayOfficialInfo->barangay_id)->toArray();
+        return Inertia::render('barangay/drivers', ['truckData' => array_values($truckData)]);
     }
 
     public function create(Request $request) {
